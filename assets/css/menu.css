@@ -5,6 +5,9 @@
 
 .menuitem {
     text-align: center;
+    background-color: orange;
+    margin: 4%;
+    padding: 3%;
 }
 
 .menuitem img {
@@ -20,7 +23,8 @@
     .menuitem {
         display: flex;
         text-align: left;
-        margin-bottom: 5%;
+        margin: 2%;
+        padding: 2%;
     }
 
     .desc {
