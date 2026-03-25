@@ -2,7 +2,7 @@
 
 try {
     $dbh = new PDO(
-        "mysql:host=localhost;dbname=_db",
+        "mysql:host=localhost;dbname=paten164_db",
         "root",
         "",
     );
