@@ -1,0 +1,33 @@
+#menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+}
+
+.menuitem {
+    text-align: center;
+}
+
+.menuitem img {
+    max-width: 80%;
+}
+
+@media (max-width: 480px) {
+    #menu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .menuitem {
+        display: flex;
+        text-align: left;
+        margin-bottom: 5%;
+    }
+
+    .desc {
+        margin-left: 5%;
+    }
+
+    .menuitem img {
+        max-width: 40%;
+    }
+}
