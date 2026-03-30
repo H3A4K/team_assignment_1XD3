@@ -18,16 +18,16 @@ window.addEventListener("load", function() {
             const desc = document.createElement("div");
             desc.className = "desc";
 
-            const h2 = document.createElement("h2");
-            h2.textContent = product.productname;
+            const name = document.createElement("h2");
+            name.textContent = product.productname;
 
-            const h3 = document.createElement("h3");
-            h3.textContent = "$" + product.price;
+            const price = document.createElement("h3");
+            price.textContent = "$" + product.price;
 
-            const p = document.createElement("p");
-            p.textContent = product.productdesc;
+            const itemdesc = document.createElement("p");
+            itemdesc.textContent = product.productdesc;
 
-            desc.append(h2, h3, p);
+            desc.append(name, price, itemdesc);
             item.append(img, br, desc); 
             menu.appendChild(item);
         }
