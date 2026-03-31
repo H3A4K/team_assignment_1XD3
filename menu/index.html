@@ -24,6 +24,21 @@
     </nav>
 
     <main>
+        <div id="menu-controls">
+            <input type="text" id="menu-search" placeholder="Search items...">
+            <select id="menu-sort">
+                <option value="default">Sort: Default</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="alpha">Alphabetical</option>
+            </select>
+            <div id="class-filter-wrapper">
+                <button id="class-filter-btn" type="button">Filter by Class <span id="class-filter-arrow">&#9660;</span></button>
+                <div id="class-filter-dropdown" class="hidden">
+                    <!-- class options injected by JS -->
+                </div>
+            </div>
+        </div>
         <div id="menu"></div>
 
         <div id="cd-shadow-layer"></div>
