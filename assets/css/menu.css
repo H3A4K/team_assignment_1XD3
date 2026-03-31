@@ -228,3 +228,41 @@ main {
         gap: 0.5rem;
     }
 }
+
+#menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; 
+}
+
+.menuitem {
+    text-align: center;
+    background-color: orange;
+    margin: 4%;
+    padding: 3%;
+}
+
+.menuitem img {
+    max-width: 80%;
+}
+
+@media (max-width: 480px) {
+    #menu {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .menuitem {
+        display: flex;
+        text-align: left;
+        margin: 2%;
+        padding: 2%;
+    }
+
+    .desc {
+        margin-left: 5%;
+    }
+
+    .menuitem img {
+        max-width: 40%;
+    }
+}
