@@ -3,23 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu | Team Website</title>
+    <title>Menu | Clarence's Kitchen</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/menu.css">
     <script src="../assets/js/menu.js"></script>
 </head>
 <body>
-    <header>
-        <div class="site-title">Team Website</div>
-        <div id="cd-cart-trigger"><a href="#cd-cart">Cart</a></div>
+    <header class="site-header">
+        <div class="site-title">Clarence's Kitchen</div>
+        <div class="header-actions">
+            <div id="cd-cart-trigger"><a class="nav-cta" href="#cd-cart">Cart</a></div>
+            <div class="account-menu">
+                <a class="nav-cta account-trigger" href="../login/index.html" aria-label="Account menu">
+                    <img src="../assets/images/user.png" alt="">
+                    <span>Login/Signup</span>
+                </a>
+                <div class="account-dropdown">
+                    <a href="../login/index.html">Log In</a>
+                    <a href="../signup/index.html">Sign Up</a>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <nav id="main-nav">
+    <nav class="main-nav" aria-label="Main navigation">
         <ul>
-            <li><a href="#0">Home</a></li>
-            <li><a href="#0">About</a></li>
-            <li><a class="current" href="#0">Services</a></li>
-            <li><a href="#0">Gallery</a></li>
-            <li><a href="#0">Contact</a></li>
+            <li><a href="../index.html">Home</a></li>
+            <li><a class="current" href="./index.html">Menu</a></li>
+            <li><a href="../catering/index.html">Catering</a></li>
+            <li><a href="../shop/index.html">Shop</a></li>
         </ul>
     </nav>
 

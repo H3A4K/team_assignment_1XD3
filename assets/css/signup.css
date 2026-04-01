@@ -11,6 +11,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding-top: 9.5rem;
 }
 
 #form {
@@ -77,6 +78,7 @@ input:focus {
 @media (max-width: 480px){
     #content {
         display: block;
+        padding-top: 12rem;
     }
     #form{
         width: 100%;
