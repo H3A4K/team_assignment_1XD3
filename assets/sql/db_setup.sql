@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `orderDate` DATETIME,
     `address` TEXT NOT NULL,
     `fullfilled` BOOLEAN DEFAULT(0),
-    PRIMARY KEY (`orderID`)
+    PRIMARY KEY (`orderID`),
+    FOREIGN KEY (`accountID`) REFERENCES (`userID`)
 );
 
 CREATE TABLE IF NOT EXISTS `orderdetails` (
