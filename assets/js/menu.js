@@ -12,7 +12,7 @@ if (cart && closeIcon && shoppingCartIcon) {
     });
 }
 
-window.addEventListener("load", function() {
+window.addEventListener("load", function () {
 
     const menu = document.getElementById("menu");
     const searchInput = document.getElementById("menu-search");
@@ -20,12 +20,12 @@ window.addEventListener("load", function() {
     const classFilterBtn = document.getElementById("class-filter-btn");
     const classFilterDropdown = document.getElementById("class-filter-dropdown");
 
-    classFilterBtn.addEventListener("click", function(e) {
+    classFilterBtn.addEventListener("click", function (e) {
         e.stopPropagation();
         classFilterDropdown.classList.toggle("hidden");
     });
 
-    document.addEventListener("click", function(e) {
+    document.addEventListener("click", function (e) {
         if (!classFilterDropdown.contains(e.target) && e.target !== classFilterBtn) {
             classFilterDropdown.classList.add("hidden");
         }
@@ -33,7 +33,7 @@ window.addEventListener("load", function() {
 
     let allProducts = [];
     let selectedClasses = new Set(); // empty = show all
-
+    
     function renderMenu(data) {
         menu.innerHTML = "";
 
@@ -70,8 +70,15 @@ window.addEventListener("load", function() {
             const itemdesc = document.createElement("p");
             itemdesc.textContent = product.productDesc;
 
+            const addBtn = document.createElement("button");
+            addBtn.textContent = "Add to cart";
+
+            addBtn.addEventListener("click", function () {
+                console.log(product);
+            });
+
             desc.append(classTag, name, price, itemdesc);
-            item.append(img, br, desc);
+            item.append(img, br, desc, addBtn);
             menu.appendChild(item);
         }
     }
@@ -84,7 +91,7 @@ window.addEventListener("load", function() {
             cb.type = "checkbox";
             cb.value = cls;
             cb.checked = false;
-            cb.addEventListener("change", function() {
+            cb.addEventListener("change", function () {
                 if (this.checked) {
                     selectedClasses.add(cls);
                 } else {
@@ -130,7 +137,7 @@ window.addEventListener("load", function() {
             }
             return response.json();
         })
-        .then(function(data) {
+        .then(function (data) {
             allProducts = data;
             buildClassCheckboxes(data);
             renderMenu(allProducts);
