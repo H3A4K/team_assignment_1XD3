@@ -70,8 +70,11 @@ window.addEventListener("load", function() {
             const itemdesc = document.createElement("p");
             itemdesc.textContent = product.productDesc;
 
+            const addBtn = document.createElement("button");
+            addBtn.textContent = "Add to cart";
+
             desc.append(classTag, name, price, itemdesc);
-            item.append(img, br, desc);
+            item.append(img, br, desc, addBtn);
             menu.appendChild(item);
         }
     }
