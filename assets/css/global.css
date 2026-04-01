@@ -12,6 +12,22 @@ a {
     color: inherit;
 }
 
+.button {
+    background-color: #333;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    
+}
+
+#logoutbtn {
+    border: 0px;
+}
+
 .site-header {
     position: fixed;
     top: 0;

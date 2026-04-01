@@ -1,35 +1,57 @@
+<?php session_start(); ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catering | CK's</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/catering.css">
+    <script src="../assets/js/global.js"></script>
 </head>
+
 <body>
     <header class="site-header">
         <div class="site-title">Clarence’s Kitchen</div>
         <div class="header-actions">
-            <a class="nav-cta" href="../menu/index.html">Order Now</a>
-            <div class="account-menu">
-                <a class="nav-cta account-trigger" href="../login/index.html" aria-label="Account menu">
-                    <img src="../assets/images/user.png" alt="">
-                    <span>Login/Signup</span>
-                </a>
-                <div class="account-dropdown">
-                    <a href="../login/index.html">Log In</a>
-                    <a href="../signup/index.html">Sign Up</a>
+            <a class="nav-cta" href="mailto:clarenceskitchen@gmail.com">Book Catering</a>
+            <?php
+            if (!isset($_SESSION["email"])) {
+            ?>
+                <div class="account-menu">
+                    <a class="nav-cta account-trigger" href="../login" aria-label="Account menu">
+                        <img src="../assets/images/user.png" alt="">
+                        <span>Login/Signup</span>
+                    </a>
+                    <div class="account-dropdown">
+                        <a href="../login">Log In</a>
+                        <a href="../signup">Sign Up</a>
+                    </div>
                 </div>
-            </div>
+            <?php
+            } else {
+            ?>
+                <div class="account-menu" id="logoutbtn">
+                    <a class="nav-cta account-trigger" aria-label="Account menu">
+                        <img src="../assets/images/user.png" alt="">
+                        <span>Logout</span>
+                    </a>
+                    </form>
+                </div>
+
+            <?php
+            }
+            ?>
         </div>
     </header>
 
     <nav class="main-nav" aria-label="Main navigation">
         <ul>
-            <li><a href="../index.html">Home</a></li>
-            <li><a href="../menu/index.html">Menu</a></li>
-            <li><a class="current" href="./index.html">Catering</a></li>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a class="current" href="./">Catering</a></li>
+            <li><a href="../shop">Shop</a></li>
         </ul>
     </nav>
 
@@ -80,4 +102,5 @@
         </section>
     </main>
 </body>
+
 </html>

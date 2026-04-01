@@ -8,7 +8,7 @@ window.addEventListener("load", function () {
     // LOGIN BUTTON
     let loginButton = this.document.getElementById("gotologin");
     loginButton.addEventListener("click", function () {
-        window.location.href = "login.html";
+        window.location.href = "../login/login.html";
     })
 
     // REGISTER 
@@ -140,6 +140,6 @@ function doneRegisteringUser(code) {
     }
     else {
         // Redirect to login page
-        window.location.href = "login.html";
+        window.location.href = "../login";
     }
 }
