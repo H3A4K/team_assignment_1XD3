@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS `products` (
     `price` DOUBLE,
     `productImg` TEXT,
     `productClass` TEXT,
-    PRIMARY KEY (`productID`)
+    PRIMARY KEY (`productID`),
+    FOREIGN KEY (`productClass`) REFERENCES `productClasses`(`name`);
 );
 
 CREATE TABLE IF NOT EXISTS `orders` (
@@ -47,6 +48,15 @@ CREATE TABLE IF NOT EXISTS `promoCodes` (
     `expiryDate` DATETIME,
     PRIMARY KEY (`promoID`)
 );
+
+-- Not for storing user info
+CREATE TABLE IF NOT EXISTS `productClasses` {
+    `name` TEXT,
+    `quantity` INT,
+    `time` DECIMAL(5, 2),
+
+    PRIMARY KEY (`name`);
+}
 
 -- test data 
 
