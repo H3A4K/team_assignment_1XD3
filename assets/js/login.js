@@ -6,7 +6,7 @@ window.addEventListener("load", function () {
     // REGISTER BUTTON
     let registerButton = this.document.getElementById("gotoregister");
     registerButton.addEventListener("click", function () {
-        window.location.href = "../register/register.html";
+        window.location.href = "../signup";
     })
 
     // REGISTER 

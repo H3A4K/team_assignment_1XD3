@@ -22,6 +22,8 @@ if ($email != NULL && $password != NULL) {
     // Check if password matches
     $row = $stmt->fetch();
     if (password_verify($password, $row["password"])) {
+        session_start();
+        $_SESSION["email"] = $email;
         echo "Logged in";
         return;
     }
