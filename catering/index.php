@@ -76,8 +76,8 @@
             <aside class="panel contact-panel" id="contact-info">
                 <h2>Contact The Restaurant</h2>
                 <ul class="contact-list">
-                    <li><strong>Phone:</strong>(647)-438-8589</li>
-                    <li><strong>Email:</strong>clarenceskitchen@gmail.com</li>
+                    <li><strong>Phone:</strong> (647)-438-8589</li>
+                    <li><strong>Email:</strong> clarenceskitchen@gmail.com</li>
                     <li><strong>Address:</strong> 8 Glen Watford Drive, Scarborough, ON</li>
                     <li><strong>Hours:</strong> Mon-Sat, 11:00 AM to 9:00 PM</li>
                 </ul>
