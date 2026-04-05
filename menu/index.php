@@ -52,7 +52,6 @@
             <li><a href="../">Home</a></li>
             <li><a class="current" href="./">Menu</a></li>
             <li><a href="../catering">Catering</a></li>
-            <li><a href="../shop">Shop</a></li>
         </ul>
     </nav>
 

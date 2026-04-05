@@ -16,7 +16,7 @@
     <header class="site-header">
         <div class="site-title">Clarence's Kitchen</div>
         <div class="header-actions">
-            <a class="nav-cta" href="../catering/index.php">Book Catering</a>
+            <a class="nav-cta" href="../menu">Order Now</a>
             <div class="account-menu">
                 <a class="nav-cta account-trigger" href="../login/index.php" aria-label="Account menu">
                     <img src="../assets/images/user.png" alt="">
@@ -35,7 +35,6 @@
             <li><a class="current" href="../index.php">Home</a></li>
             <li><a href="../menu/index.php">Menu</a></li>
             <li><a href="../catering/index.php">Catering</a></li>
-            <li><a href="../shop/index.php">Shop</a></li>
         </ul>
     </nav>
 

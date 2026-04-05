@@ -15,7 +15,7 @@
     <header class="site-header">
         <div class="site-title">Clarence's Kitchen</div>
         <div class="header-actions">
-            <a class="nav-cta" href="./catering/index.html">Book Catering</a>
+            <a class="nav-cta" href="./menu">Order Now</a>
             <?php
             if (!isset($_SESSION["email"])) {
             ?>
@@ -51,7 +51,6 @@
             <li><a class="current" href="./">Home</a></li>
             <li><a href="./menu">Menu</a></li>
             <li><a href="./catering">Catering</a></li>
-            <li><a href="./shop">Shop</a></li>
         </ul>
     </nav>
 
@@ -66,8 +65,8 @@
                     and community gatherings.
                 </p>
                 <div class="hero-actions">
-                    <a class="primary-button" href="./menu/index.html">Browse Menu</a>
-                    <a class="secondary-button" href="./catering/index.html">Plan Catering</a>
+                    <a class="primary-button" href="./menu/">Browse Menu</a>
+                    <a class="secondary-button" href="./catering/">Plan Catering</a>
                 </div>
             </div>
 

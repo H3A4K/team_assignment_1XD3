@@ -15,7 +15,7 @@
     <header class="site-header">
         <div class="site-title">Clarence’s Kitchen</div>
         <div class="header-actions">
-            <a class="nav-cta" href="mailto:clarenceskitchen@gmail.com">Book Catering</a>
+            <a class="nav-cta" href="../menu">Order Now</a>
             <?php
             if (!isset($_SESSION["email"])) {
             ?>
@@ -51,7 +51,6 @@
             <li><a href="../">Home</a></li>
             <li><a href="../menu">Menu</a></li>
             <li><a class="current" href="./">Catering</a></li>
-            <li><a href="../shop">Shop</a></li>
         </ul>
     </nav>
 
