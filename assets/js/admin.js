@@ -5,6 +5,7 @@ let allPromoCodes = [];
 
 function renderProductTable(data) {
     const productTable = document.getElementById("product-table");
+    if (!productTable) return;
 
     productTable.innerHTML = "";
 
@@ -85,6 +86,7 @@ function renderProductTable(data) {
 
 function renderOrderTable(data) {
     const orderTable = document.getElementById("order-table");
+    if (!orderTable) return;
 
     orderTable.innerHTML = "";
 
@@ -159,6 +161,7 @@ function renderOrderTable(data) {
 
 function renderPromoCodeTable(data) {
     const promoCodeTable = document.getElementById("promocodes-table");
+    if (!promoCodeTable) return;
 
     promoCodeTable.innerHTML = "";
 
