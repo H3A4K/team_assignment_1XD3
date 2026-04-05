@@ -85,7 +85,8 @@
       <p id="errormessage">Error</p>
       <div id="btns">
         <button id="submitbtn" class="button">Create Account</button>
-        <button id="gotologin" class="button">Login instead</button>
+        <h3>Already have an account?</h3>
+        <button id="gotologin" class="button">Log in</button>
       </div>
     </div>
   </div>

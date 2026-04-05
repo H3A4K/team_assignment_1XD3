@@ -70,8 +70,8 @@
       <p id="errormessage">Error</p>
       <div id="btns">
         <button id="submitbtn" class="button">Login</button>
-        <button id="gotoregister" class="button">Don't have an account?<br>
-          Click to register</button>
+        <h3>Don't have an account?</h3>
+        <button id="gotoregister" class="button">Sign up</button>
       </div>
     </div>
   </div>
