@@ -12,7 +12,7 @@ window.addEventListener("load", function() {
         display.innerHTML = text;
     }
 
-    fetch("../php/pickup.php")
+    fetch("../assets/php/pickup.php")
         .then(response => response.text())
         .then(success);
 });

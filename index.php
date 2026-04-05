@@ -100,6 +100,8 @@
             </article>
         </section>
     </main>
+
+    <a href="./pickup/">Pickup</a>
 </body>
 
 </html>

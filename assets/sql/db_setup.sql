@@ -8,15 +8,23 @@ CREATE TABLE IF NOT EXISTS `users` (
     PRIMARY KEY (`userID`)
 );
 
+CREATE TABLE IF NOT EXISTS `productClasses` (
+    `classID` INT AUTO_INCREMENT,
+    `name` varchar(255) UNIQUE,
+    `quantity` INT,
+    `time` DECIMAL(5, 2),
+    PRIMARY KEY (`classID`)
+);
+
 CREATE TABLE IF NOT EXISTS `products` (
     `productID` INT AUTO_INCREMENT,
     `productName` TEXT,
     `productDesc` TEXT,
     `price` DOUBLE,
     `productImg` TEXT,
-    `productClass` TEXT,
+    `productClass` varchar(255),
     PRIMARY KEY (`productID`),
-    FOREIGN KEY (`productClass`) REFERENCES `productClasses`(`name`);
+    FOREIGN KEY (`productClass`) REFERENCES `productClasses`(`name`)
 );
 
 CREATE TABLE IF NOT EXISTS `orders` (
@@ -49,29 +57,27 @@ CREATE TABLE IF NOT EXISTS `promoCodes` (
     PRIMARY KEY (`promoID`)
 );
 
--- Not for storing user info
-CREATE TABLE IF NOT EXISTS `productClasses` {
-    `name` TEXT,
-    `quantity` INT,
-    `time` DECIMAL(5, 2),
-
-    PRIMARY KEY (`name`);
-}
-
 -- test data 
 
 DELETE FROM `orderdetails`;
 DELETE FROM `orders`;
 DELETE FROM `promoCodes`;
 DELETE FROM `products`;
+DELETE FROM `productClasses`;
 DELETE FROM `users`;
 
 INSERT INTO `users` (`userID`, `password`, `email`, `phonenumber`, `address`, `ordersdone`) VALUES
-(1, 'hashed_pw_alice', 'alice.nguyen@example.com', '905-555-0101', '12 King St W, Hamilton, ON', 3),
-(2, 'hashed_pw_ben', 'ben.patel@example.com', '905-555-0102', '44 Main St E, Hamilton, ON', 1),
-(3, 'hashed_pw_chloe', 'chloe.martin@example.com', '905-555-0103', '88 Emerson St, Hamilton, ON', 0),
-(4, 'hashed_pw_daniel', 'daniel.ross@example.com', '905-555-0104', '23 Dundurn St S, Hamilton, ON', 2),
-(5, 'hashed_pw_ella', 'ella.kim@example.com', '905-555-0105', '301 James St N, Hamilton, ON', 4);
+(1, '$2y$10$XomCcc9tE4Ay8x.h.exJ4ubTjCVSLvJlppAgqfMJRtU9kk2YskOjW' /* hashed_pw_alice */, 'alice.nguyen@example.com', '905-555-0101', '12 King St W, Hamilton, ON', 3),
+(2, '$2y$10$3OjAgP8bCBLM/iTLB9McsedmH3t7rMsXP/JuCOffvEF7b0vwJEzdO' /* hashed_pw_ben */, 'ben.patel@example.com', '905-555-0102', '44 Main St E, Hamilton, ON', 1),
+(3, '$2y$10$MN90tat/8X3b8IwY/G8ADuij.F/OaMACUArIBkyb5sL1SaOyctmLC' /* hashed_pw_chloe */, 'chloe.martin@example.com', '905-555-0103', '88 Emerson St, Hamilton, ON', 0),
+(4, '$2y$10$ep1kN8ahskXxShxc6uA2Su5074nlCie57wILgX2r.EpWeCijtbk1e' /* hashed_pw_daniel */, 'daniel.ross@example.com', '905-555-0104', '23 Dundurn St S, Hamilton, ON', 2),
+(5, '$2y$10$o3loxrP55ogWQMws8QZ11.RLeN3QO5Ty.RsVZKdPjxPvpqIXI3W.i' /* hashed_pw_ella */, 'ella.kim@example.com', '905-555-0105', '301 James St N, Hamilton, ON', 4);
+
+INSERT INTO `productClasses` (`name`, `quantity`, `time`) VALUES
+('CK Favourites', 4, 10),
+('Side', 8, 5),
+('Drink', 1, 1),
+('Salad', 6, 2.5);
 
 INSERT INTO `products` (`productID`, `productName`, `productDesc`, `price`, `productImg`, `productClass`) VALUES
 (101, 'CK Chicken', 'Juicy chicken wings tossed in your choice of mild classic or spicy tangy sauce, cooked to perfection with a crispy exterior and tender, flavourful interior. A classic crowd-pleaser perfect for sharing. (one pound)', 14.00, 'placeholder.jpg', 'CK Favourites'),

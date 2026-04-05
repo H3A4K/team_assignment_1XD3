@@ -1,8 +1,21 @@
 <?php
 
-include "./connect.php";
+include "connect.php";
+
 
 session_start();
+
+/**
+ * Rounds up to the nearest factor of $x
+ * e.g. $x = 5 rounds to the next factor of 5
+ *      $n = 12, $x = 5 -> 15
+ * @param int $n the number being rounded
+ * @param int $x the base
+ * @return int
+ */
+function roundUpToAny(int $n, int $x) {
+    return ceil($n / $x) * $x;
+}
 
 /**
  * Gets the user's id from their email
@@ -35,21 +48,24 @@ function unassign_array(array $arr, string $key) {
 
 /**
  * Takes an array of associative arrays and returns those arrays as associated to their value at $name
- * @param array $orders
+ * @param array $arr
+ * @param string $name
+ * @param bool $single
  * @return array
  */
-function reorder(array $orders, $name) {
+function reorder(array $arr, string $name, bool $single = false) {
     $out = [];
 
-    foreach($orders as $order) {
-        $class = $order[$name];
-        unset($orders[$name]);
-        if (!array_key_exists($class, $out)) {
-            $out[$class] = [];
-        } 
-        array_push($out[$class], array_filter($order, fn($key) => $key !== $name));
-    }
-
+    foreach($arr as $in_arr) {
+        $class = $in_arr[$name];
+        if ($single) {
+            $out[$class] = array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY);
+        } else if (!array_key_exists($class, $out)) {
+            $out[$class] = [array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY)];
+        } else {
+            array_push($out[$class], array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY));
+        }
+    }   
     return $out;
 }
 
@@ -66,9 +82,14 @@ function get_user_orders(int $user) {
     $stmt->execute([$user]);
 
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    if (!$data) {
+        return [[], -1];
+    }
+
     $orders = unassign_array($data, "orderID");
 
-    $placeholder = implode(" ", array_fill(0, count($orders), '?'));
+    $placeholder = implode(" ,", array_fill(0, count($orders), '?'));
 
     $cmd = "SELECT `quantity`, `orderdetails`.`productID`, `products`.`productClass` FROM `orderdetails`
         JOIN `products` ON `orderdetails`.`productID` = `products`.`productID`
@@ -97,18 +118,19 @@ function get_classes($classes) {
 
     $classes = array_unique($classes);
 
-    $placeholder = implode(" ", array_fill(0, count($classes), '?'));
-
+    $placeholder = implode(" ,", array_fill(0, count($classes), '?'));
     $cmd = "SELECT `time`, `quantity`,`name` FROM `productClasses` WHERE `name` IN ($placeholder)";
     $stmt = $dbh->prepare($cmd);
     $stmt->execute($classes);
 
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function calculate_time($orders) {
+function calculate_time($orders, $concurrent = 5) {
     $orders = reorder($orders, "productClass");
-    $classes = reorder(get_classes(array_keys($orders)), "name");
+    // print_r (get_classes(array_keys($orders)));
+    $classes = reorder(get_classes(array_keys($orders)), "name", true);
     $time = 0;
 
     foreach ($orders as $c => $arr) {
@@ -124,35 +146,44 @@ function calculate_time($orders) {
             }
         }
 
+        $t = [];
         foreach ($productIDs as $_ => $quantity) {
-            $t = $quantity / $class["quantity"] + ($quantity % $class["quantity"] != 0);
-            $t *= $class["time"];
-            $time += $t;
-        }
+            array_push($t, $class["time"] * (ceil($quantity / $class["quantity"])));
+            if (count($t) >= $concurrent) {
+                $time += min($t);
+                $t = [];
+            }
+            // print_r($t);
 
-    }
-    
-    return $time;
+        }
+        if (!empty($t)) {
+            $time += min($t);
+        }
+    }   
+    return roundUpToAny($time, 5);
 }
 
+function main() {
+    if (!isset($_SESSION["email"])) {
+        return "<p>Please login to see and make orders</p>";
+    }
 
-// $display = "";
+    $user = (int)get_user_id($_SESSION["email"]);
+    // $user = (int)get_user_id("alice.nguyen@example.com");
 
-// if (!isset($_SESSION["email"])) {
-//     $display =  "<p>Please login to see and make orders</p>";
-//     die();
-// }
+    [$userOrders, $lowest_time] = get_user_orders($user);
 
-$user = (int)get_user_id("alice.nguyen@example.com");
+    if (!$userOrders || $lowest_time == -1) {
+        return "<p>No order has been made.</p>";
+    }
 
+    // Note that $userOrders will also be represented in $orders
+    $orders = get_all_orders($lowest_time);
 
+    // $user_time = calculate_time($userOrders);
+    $overall_time = calculate_time($orders, 5);
 
-[$userOrders, $lowest_time] = get_user_orders($user);
+    return $overall_time;
+}
 
-// Note that $userOrders will also be represented in $orders
-$orders = get_all_orders($lowest_time);
-
-$user_time = calculate_time($userOrders);
-$overall_time = calculate_time($orders);
-
-echo $overall_time;
+echo main();
