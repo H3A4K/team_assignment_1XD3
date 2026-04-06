@@ -12,6 +12,6 @@ window.addEventListener("load", function () {
 })
 
 function loggedOut(text) {
-    window.location.href = "./";
+    window.location.href = "/team_assignment_1XD3/";
     window.location.reload();
 }

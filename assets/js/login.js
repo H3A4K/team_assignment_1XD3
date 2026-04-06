@@ -6,7 +6,7 @@ window.addEventListener("load", function () {
     // REGISTER BUTTON
     let registerButton = this.document.getElementById("gotoregister");
     registerButton.addEventListener("click", function () {
-        window.location.href = "../signup";
+        window.location.href = "/team_assignment_1XD3/signup/";
     })
 
     // REGISTER 
@@ -87,6 +87,6 @@ function doneLoggingInUser(code) {
         errorElem.style.visibility = "visible";
     }
     else {
-        window.location.href = "../";
+        window.location.href = "/team_assignment_1XD3/";
     }
 }

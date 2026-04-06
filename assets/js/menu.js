@@ -73,8 +73,31 @@ window.addEventListener("load", function () {
             const addBtn = document.createElement("button");
             addBtn.textContent = "Add to cart";
 
-            addBtn.addEventListener("click", function () {
-                console.log(product);
+            addBtn.addEventListener("click", async function () {
+                try {
+                    const response = await fetch("../assets/php/add_to_order.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            productID: product.productID,
+                            quantity: 1
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(result.error || "Failed to add item to order");
+                    }
+
+                    console.log("Added to order:", result);
+                    alert(product.productName + " added to cart");
+                } catch (error) {
+                    console.error(error);
+                    alert(error.message);
+                }
             });
 
             desc.append(classTag, name, price, itemdesc);
