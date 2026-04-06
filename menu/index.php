@@ -75,8 +75,8 @@ if (isset($_SESSION["userID"])) {
     <title>Menu | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/menu.css">
-    <script src="../assets/js/menu.js?v=20260406b" defer></script>
-    <script src="../assets/js/global.js?v=20260406b" defer></script>
+    <script src="../assets/js/menu.js" defer></script>
+    <script src="../assets/js/global.js" defer></script>
 </head>
 
 <body>

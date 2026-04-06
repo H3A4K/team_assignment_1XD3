@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `users` (
     `userID` INT AUTO_INCREMENT,
     `password` TEXT NOT NULL,
-    `email` TEXT UNIQUE,
+    `email` VARCHAR(255) UNIQUE,
     `phonenumber` varchar(25) UNIQUE,
     `address` TEXT,
     `ordersdone` INT DEFAULT(0),
