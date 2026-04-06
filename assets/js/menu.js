@@ -178,7 +178,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 } catch (error) {
                     console.error(error);
                     setCartFeedback(error.message, true);
-                    alert(error.message);
                 }
             });
 
@@ -267,7 +266,6 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (error) {
             console.error(error);
             setCartFeedback(error.message, true);
-            alert(error.message);
         }
     });
 
