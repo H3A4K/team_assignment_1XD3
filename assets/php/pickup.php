@@ -183,7 +183,9 @@ function main() {
     // $user_time = calculate_time($userOrders);
     $overall_time = calculate_time($orders, 5);
 
-    return $overall_time;
+    return json_encode(["time" => $overall_time, "order" => $userOrders]);
+
+    // return $overall_time;
 }
 
 echo main();

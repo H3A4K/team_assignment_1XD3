@@ -6,13 +6,14 @@
  */
 
 window.addEventListener("load", function() {
-    const display = document.querySelector("main");
+    const display = document.getElementById("time");
 
-    function success(text) {
-        display.innerHTML = text;
+    function success(json) {
+        // JSON.parse(json);
+        display.innerHTML = json;
     }
 
     fetch("../assets/php/pickup.php")
-        .then(response => response.text())
+        .then(response => response.json())
         .then(success);
 });

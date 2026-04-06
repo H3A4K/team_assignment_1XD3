@@ -42,7 +42,7 @@
     </nav>
 
     <main>
-        <?= $display ?>
+        <h1>Estimated Wait Time: <span id="time"></span> minutes</h1>
     </main>
 </body>
 </html>
