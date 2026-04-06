@@ -69,9 +69,29 @@ main {
     list-style: none;
 }
 
+.cd-cart-heading {
+    margin-bottom: 0.5rem;
+    color: #111;
+}
+
+.cd-cart-status {
+    margin-bottom: 1rem;
+    color: #666;
+}
+
+.cd-cart-feedback {
+    margin-bottom: 1rem;
+    color: #17653a;
+    font-weight: 700;
+}
+
+.cd-cart-feedback.is-error {
+    color: #b42318;
+}
+
 .cd-cart-items li {
     display: grid;
-    grid-template-columns: 1fr auto auto;
+    grid-template-columns: 1fr auto;
     gap: 1rem;
     align-items: center;
     padding: 1rem 0;
@@ -118,10 +138,18 @@ main {
     border-radius: 10px;
     font-weight: 700;
     margin-bottom: 1rem;
+    border: 0;
+    cursor: pointer;
+}
+
+.checkout-btn:disabled {
+    background-color: #999;
+    cursor: not-allowed;
 }
 
 .cd-go-to-cart {
     text-align: center;
+    color: #666;
 }
 
 .cd-go-to-cart a {
