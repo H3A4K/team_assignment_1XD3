@@ -88,13 +88,13 @@ if (isset($_SESSION["userID"])) {
             if (!isset($_SESSION["email"])) {
             ?>
                 <div class="account-menu">
-                    <a class="nav-cta account-trigger" href="/team_assignment_1XD3/login/" aria-label="Account menu">
+                    <a class="nav-cta account-trigger" href="../login/" aria-label="Account menu">
                         <img src="../assets/images/user.png" alt="">
                         <span>Login/Signup</span>
                     </a>
                     <div class="account-dropdown">
-                        <a href="/team_assignment_1XD3/login/">Log In</a>
-                        <a href="/team_assignment_1XD3/signup/">Sign Up</a>
+                        <a href="../login/">Log In</a>
+                        <a href="../signup/">Sign Up</a>
                     </div>
                 </div>
             <?php
@@ -117,9 +117,9 @@ if (isset($_SESSION["userID"])) {
 
     <nav class="main-nav" aria-label="Main navigation">
         <ul>
-            <li><a href="/team_assignment_1XD3/">Home</a></li>
-            <li><a class="current" href="/team_assignment_1XD3/menu/">Menu</a></li>
-            <li><a href="/team_assignment_1XD3/catering/">Catering</a></li>
+            <li><a href="../">Home</a></li>
+            <li><a class="current" href="../menu/">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
         </ul>
     </nav>
 
