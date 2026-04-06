@@ -175,11 +175,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     setCartFeedback(product.productName + " added to cart.");
                     await refreshCart();
-                    alert(product.productName + " added to cart");
                 } catch (error) {
                     console.error(error);
                     setCartFeedback(error.message, true);
-                    alert(error.message);
                 }
             });
 
@@ -265,11 +263,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             setCartFeedback("Order #" + result.orderID + " completed successfully.");
             await refreshCart();
-            alert("Order completed successfully.");
         } catch (error) {
             console.error(error);
             setCartFeedback(error.message, true);
-            alert(error.message);
         }
     });
 
