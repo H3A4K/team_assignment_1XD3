@@ -1,14 +1,19 @@
 const cart = document.getElementById("cd-cart");
 const closeIcon = document.getElementById("cd-close-icon");
-const shoppingCartIcon = document.getElementById("cd-shoppingcart-icon");
+const cartTriggerLink = document.querySelector("#cd-cart-trigger a");
 
-if (cart && closeIcon && shoppingCartIcon) {
-    closeIcon.addEventListener("click", () => {
-        cart.classList.add("cart-collapsed");
+if (cartTriggerLink && cart) {
+    cartTriggerLink.addEventListener("click", function (e) {
+        if (window.innerWidth <= 900) {
+            e.preventDefault();
+            cart.classList.add("cart-open");
+        }
     });
+}
 
-    shoppingCartIcon.addEventListener("click", () => {
-        cart.classList.remove("cart-collapsed");
+if (closeIcon && cart) {
+    closeIcon.addEventListener("click", function () {
+        cart.classList.remove("cart-open");
     });
 }
 

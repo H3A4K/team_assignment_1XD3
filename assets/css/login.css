@@ -1,94 +1,157 @@
-#logo {
-  width: 300px;
-  margin-right: 5%;
-  margin-top: 5%;
-  justify-self: right;
-  justify-items: right;
+body {
+    background-color: var(--c-cream);
 }
 
 #content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding-top: 9.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: calc(var(--top-offset) + 3rem) 1rem 3rem;
+    min-height: calc(100vh - 80px);
+}
+
+#logo {
+    width: 100px;
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
 }
 
 #form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 5%;
-  padding: 1%;
-  width: 50%;
-  /* justify-items: center; */
-  align-items: center;
-}
-
-#errormessage {
-  text-align: center;
-  color: red;
-}
-
-input {
-  margin: 1%;
-  background-color: white;
-  border-radius: 5px;
-  padding: 2%;
-  font-size: 18px;
-}
-
-label {
-  font-size: 18px;
-}
-
-input:focus {
-  background-color: rgb(220, 220, 220);
+    background: var(--c-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 2rem 2.5rem;
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
 }
 
 .inputcontainer {
-  display: flex;
-  flex-direction: column;
-  width: 50%;
-  margin: 2%;
+    margin-bottom: 1rem;
+    width: 100%;
 }
 
-#topinputs {
-  display: flex;
-  justify-content: center;
+.inputcontainer label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--c-text);
+    margin-bottom: 0.3rem;
 }
 
-#bottominputs {
-  display: flex;
-  justify-content: center;
+.inputcontainer input {
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.92rem;
+    font-family: var(--font);
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin: 0;
 }
 
-#btns {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 1%;
+.inputcontainer input:focus {
+    outline: none;
+    border-color: var(--c-primary);
+    box-shadow: 0 0 0 3px rgba(255, 143, 0, 0.12);
+    background-color: #fff;
+}
+
+.inputcontainer input::placeholder {
+    color: var(--c-text-muted);
 }
 
 #errormessage {
-  visibility: hidden;
+    text-align: center;
+    color: var(--c-red);
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    visibility: hidden;
+    min-height: 1.5em;
 }
 
-@media (max-width: 480px){
+#btns {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+#btns .button,
+#submitbtn {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: 0.9rem;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+}
+
+#submitbtn {
+    background-color: var(--c-dark-brown);
+    color: #fff;
+}
+
+#submitbtn:hover {
+    background-color: var(--c-dark-accent);
+}
+
+#btns h3 {
+    font-size: 0.85rem;
+    color: var(--c-text-secondary);
+    font-weight: 400;
+    margin-top: 0.75rem;
+}
+
+#gotoregister {
+    background-color: transparent;
+    color: var(--c-primary);
+    border: 2px solid var(--c-primary);
+}
+
+#gotoregister:hover {
+    background-color: var(--c-primary-light);
+}
+
+@media (max-width: 768px) {
     #content {
-        display: block;
-        padding-top: 12rem;
+        padding-top: calc(var(--top-offset) + 2rem);
     }
-    #form{
-        width: 100%;
-        justify-items: center;
-    }
+
     #logo {
-        display: flex;
-        margin-top: 1%;
-        justify-self: center;
-        width: 200px;
-        margin-right: 0;
+        width: 140px;
+    }
+
+    .inputcontainer label {
+        font-size: 0.95rem;
+    }
+
+    .inputcontainer input {
+        font-size: 1rem;
+        padding: 0.75rem 0.9rem;
+    }
+
+    #btns .button,
+    #submitbtn {
+        font-size: 1rem;
+        padding: 0.8rem 1rem;
+    }
+
+    #btns h3 {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #form {
+        padding: 1.5rem;
     }
 }

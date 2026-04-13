@@ -1,0 +1,39 @@
+body {
+    background-color: var(--c-body);
+}
+
+main {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: calc(var(--top-offset) + 3rem) 1.5rem 2rem;
+    text-align: center;
+}
+
+main h1 {
+    background-color: var(--c-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 2.5rem 2rem;
+    color: var(--c-text);
+    font-size: 1.15rem;
+    font-weight: 500;
+    line-height: 1.8;
+}
+
+main h1 span {
+    display: inline-block;
+    font-size: clamp(2rem, 6vw, 3.2rem);
+    color: var(--c-primary);
+    font-weight: 800;
+    padding: 0 0.15em;
+}
+
+@media (max-width: 768px) {
+    main {
+        padding: calc(var(--top-offset) + 2rem) 1rem 1.5rem;
+    }
+
+    main h1 {
+        padding: 2rem 1.5rem;
+    }
+}

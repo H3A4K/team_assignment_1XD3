@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <title>Admin Dashboard</title>
+    <script src="../assets/js/global.js" defer></script>
+    <title>Admin Dashboard | Clarence's Kitchen</title>
 </head>
+
 <body>
     <header class="site-header">
-        <div class="site-title">Clarence's Kitchen</div>
+        <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
+        <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
         <div class="header-actions">
-            <!-- <div id="cd-cart-trigger"><a class="nav-cta" href="#cd-cart">Cart</a></div> -->
             <div class="account-menu">
-                <a class="nav-cta account-trigger" href="/team_assignment_1XD3/login/" aria-label="Account menu">
+                <a class="nav-cta account-trigger" href="../login/" aria-label="Logout">
                     <img src="../assets/images/user.png" alt="">
                     <span>Logout</span>
                 </a>
-                <!-- <div class="account-dropdown">
-                    <a href="/team_assignment_1XD3/login/">Log In</a>
-                    <a href="/team_assignment_1XD3/signup/">Sign Up</a>
-                </div> -->
             </div>
         </div>
     </header>
 
-    <nav class="main-nav" aria-label="Main navigation">
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation">
         <ul>
+            <li><a class="current" href="index.html">Dashboard</a></li>
             <li><a href="manageproducts.html">Products</a></li>
             <li><a href="manageorders.html">Orders</a></li>
             <li><a href="managepromo.html">Promo Codes</a></li>
         </ul>
     </nav>
 
-    
-    
+    <main>
+        <h3>Welcome to the Admin Dashboard</h3>
+        <p>Select a section from the navigation above to manage products, orders, or promo codes.</p>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-bottom">
+            <div class="footer-socials">
+                <a href="https://www.instagram.com/clarenceskitchen/" target="_blank" rel="noopener" aria-label="Instagram"><img src="../assets/images/instagram.png" alt="Instagram"></a>
+                <a href="https://www.facebook.com/ClarencesKitchen/" target="_blank" rel="noopener" aria-label="Facebook"><img src="../assets/images/facebook.png" alt="Facebook"></a>
+            </div>
+            <p>&copy; 2026 Clarence's Kitchen. All rights reserved.</p>
+        </div>
+    </footer>
 </body>
+
 </html>
