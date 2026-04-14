@@ -84,6 +84,22 @@ function renderProductTable(data) {
     productTable.appendChild(table);
 }
 
+function reloadProductClassesSelect(data) {
+    console.log("reload product")
+    const classSelect = document.getElementById("productClassesSelect");
+    if (!classSelect) return;
+
+    if (data.length == 0) {
+        const newOption = new Option("No classes available", "empty");
+    }
+    else {
+        for (let i = 0; i < data.length; i++) {
+            const newOption = new Option(data[i].name, data[i].classID);
+            classSelect.add(newOption);
+        }
+    }
+}
+
 function renderOrderTable(data) {
     const orderTable = document.getElementById("order-table");
     if (!orderTable) return;
@@ -261,6 +277,20 @@ function getAllProducts() {
         });
 }
 
+function getProductClasses() {
+    fetch("../assets/php/admin.php?getProductClasses")
+        .then(function (response) {
+            if (!response.ok) {
+                throw new Error("Server returned " + response.status);
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            allProductClasses = data;
+            reloadProductClassesSelect(allProductClasses);
+        });
+}
+
 function getAllOrders() {
     fetch("../assets/php/admin.php?getAllOrders")
     .then(function (response) {
@@ -290,9 +320,11 @@ function getAllPromoCodes() {
 }
 
 
+
 window.addEventListener("load", function () {
     console.log("get products");
     getAllProducts();
+    getProductClasses();
 });
 
 window.addEventListener("load", function () {
@@ -304,3 +336,4 @@ window.addEventListener("load", function () {
     console.log("get promo codes");
     getAllPromoCodes();
 });
+

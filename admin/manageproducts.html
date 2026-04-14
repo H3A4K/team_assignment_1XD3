@@ -41,9 +41,14 @@
         <form id="add-product-form" class="form">
             <input class="form-control" type="text" name="productName" placeholder="Name" required>
             <input class="form-control" type="text" name="productDesc" placeholder="Description" required>
-            <input class="form-control" type="number" step="0.01" name="price" placeholder="Price" required>
-            <input class="form-control" type="text" name="productClass" placeholder="Category" required>
+            <input class="form-control" type="number" step="1.0" name="price" placeholder="Price" required>
+            <!-- <input class="form-control" type="text" name="productClass" placeholder="Category" required> -->
+            <select class="form-control" id="productClassesSelect">
+                <option value="-1">Select product class</option>
+            </select>
             <button class="form-control" type="submit">Add Product</button>
+            
+
         </form>
 
         <h3>Products</h3>

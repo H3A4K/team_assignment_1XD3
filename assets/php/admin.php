@@ -28,9 +28,19 @@ function GetAllPromoCodes() {
     return $promocodes;
 }
 
+function GetProductClasses() {
+    global $dbh;
+    $cmd = "SELECT * from productClasses";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute();
+    $classes = $stmt->fetchAll();
+    return $classes;
+}
+
 $getAllProducts = filter_input(INPUT_GET, "getAllProducts", FILTER_SANITIZE_SPECIAL_CHARS);
 $getAllOrders = filter_input(INPUT_GET, "getAllOrders", FILTER_SANITIZE_SPECIAL_CHARS);
 $getAllPromoCodes = filter_input(INPUT_GET, "getAllPromoCodes", FILTER_SANITIZE_SPECIAL_CHARS);
+$getProductClasses = filter_input(INPUT_GET, "getProductClasses", FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($getAllProducts !== NULL) {
     $products = getAllProducts();
@@ -43,6 +53,10 @@ else if ($getAllOrders !== NULL) {
 else if ($getAllPromoCodes !== NULL) {
     $promocodes = GetAllPromoCodes();
     echo json_encode($promocodes);
+}
+else if ($getProductClasses !== NULL) {
+    $classes = GetProductClasses();
+    echo json_encode($classes);
 }
 
 
