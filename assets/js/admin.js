@@ -45,6 +45,10 @@ function renderProductTable(data) {
     name.innerText = "Product Class";
     headerRow.appendChild(name);
 
+    name = document.createElement("th");
+    name.innerText = "Action";
+    headerRow.appendChild(name);    
+
     table.appendChild(headerRow);
 
     for (const product of data) {
@@ -78,6 +82,14 @@ function renderProductTable(data) {
         cell.innerText = product.productClass;
         productRow.appendChild(cell);
 
+        cell = document.createElement("td");
+        let removeBtn = document.createElement("button");
+        removeBtn.innerText = "Remove";
+        removeBtn.className = "secondary-button";
+        removeBtn.addEventListener("click", () => removeProduct(product));
+        cell.appendChild(removeBtn);
+        productRow.appendChild(cell);
+
         table.appendChild(productRow);
     }
 
@@ -94,7 +106,7 @@ function reloadProductClassesSelect(data) {
     }
     else {
         for (let i = 0; i < data.length; i++) {
-            const newOption = new Option(data[i].name, data[i].classID);
+            const newOption = new Option(data[i].name, data[i].name);
             classSelect.add(newOption);
         }
     }
@@ -319,12 +331,25 @@ function getAllPromoCodes() {
         });
 }
 
-
+let saveProductBtn;
 
 window.addEventListener("load", function () {
     console.log("get products");
     getAllProducts();
     getProductClasses();
+    saveProductBtn = document.getElementById("saveProductBtn");
+    //console.log("saveProductBtn", saveProductBtn);
+    if (saveProductBtn) {
+        saveProductBtn.addEventListener("click", function () {
+            const productNameInput = document.getElementById("productName");
+            const productDescInput = document.getElementById("productDesc");
+            const priceInput = document.getElementById("price");
+            const productClassSelect = document.getElementById("productClassesSelect");
+            let product = { productName: productNameInput.value, productDesc: productDescInput.value, price: priceInput.value, productClass: productClassSelect.value};
+            saveProduct(product);
+            
+        });
+    }
 });
 
 window.addEventListener("load", function () {
@@ -337,3 +362,58 @@ window.addEventListener("load", function () {
     getAllPromoCodes();
 });
 
+function saveProduct(product) {
+    if (!product) {
+        return;
+    }
+    let urlEncodedProduct = "";
+    urlEncodedProduct += "productName=" + product.productName + "&";
+    urlEncodedProduct += "productDesc=" + product.productDesc + "&";
+    urlEncodedProduct += "price=" + product.price + "&";
+    urlEncodedProduct += "productClass=" + product.productClass + "";
+    fetch("../assets/php/admin.php?saveProduct", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: urlEncodedProduct
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("Server returned " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        allProducts = data;
+        renderProductTable(allProducts);
+    });
+
+}
+
+function removeProduct(product) {
+    // alert(product.productName);
+    let result = confirm("Are you sure you want to remove " + product.productName + " " + "from the menu?");
+    if (result) {
+        // alert("Product will be removed");
+        let urlEncodedProduct = "";
+        urlEncodedProduct += "productID=" + product.productID + "";
+        fetch("../assets/php/admin.php?removeProduct", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: urlEncodedProduct
+    })
+    .then(function (response) {
+        if (!response.ok) {
+            throw new Error("Server returned " + response.status);
+        }
+        return response.json();
+    })
+    .then(function (data) {
+        allProducts = data;
+        renderProductTable(allProducts);
+    });
+    }
+}

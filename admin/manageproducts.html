@@ -37,19 +37,17 @@
     </nav>
 
     <main>
-        <h3>Add Item to Menu</h3>
-        <form id="add-product-form" class="form">
-            <input class="form-control" type="text" name="productName" placeholder="Name" required>
-            <input class="form-control" type="text" name="productDesc" placeholder="Description" required>
-            <input class="form-control" type="number" step="1.0" name="price" placeholder="Price" required>
+        <h3>Add/Edit Menu Item</h3>
+        <div id="add-product-form" class="form">
+            <input class="form-control" type="text" id="productName" placeholder="Name" required>
+            <input class="form-control" type="text" id="productDesc" placeholder="Description" required>
+            <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
             <!-- <input class="form-control" type="text" name="productClass" placeholder="Category" required> -->
-            <select class="form-control" id="productClassesSelect">
-                <option value="-1">Select product class</option>
+            <select class="form-control" id="productClassesSelect" name="productClass">
+                <!-- <option value="-1">Select product class</option> -->
             </select>
-            <button class="form-control" type="submit">Add Product</button>
-            
-
-        </form>
+            <button class="form-control" type="submit" id="saveProductBtn">Save</button>
+        </div>
 
         <h3>Products</h3>
         <div id="product-table"></div>
