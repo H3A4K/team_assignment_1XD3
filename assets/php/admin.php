@@ -44,6 +44,13 @@ function insertProduct($productName, $productDesc, $price, $productClass) {
     $stmt->execute([$productName, $productDesc, $price, "placeholder.jpg", $productClass]);
 }
 
+function updateProduct($productID, $productName, $productDesc, $price, $productClass) {
+    global $dbh;
+    $cmd = "UPDATE products SET productName = ?,  productDesc = ?, price = ?, productImg = ?, productClass = ? WHERE productID = ?";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$productName, $productDesc, $price, "placeholder.jpg", $productClass, $productID]);
+}
+
 function removeProduct($productID) {
     global $dbh;
     $cmd = "DELETE FROM products WHERE productID = ?";
@@ -75,11 +82,17 @@ else if ($getProductClasses !== NULL) {
     echo json_encode($classes);
 }
 else if ($saveProduct !== NULL) {
+    $productID = filter_input(INPUT_POST, "productID", FILTER_SANITIZE_SPECIAL_CHARS);
     $productName = filter_input(INPUT_POST, "productName", FILTER_SANITIZE_SPECIAL_CHARS);
     $productDesc = filter_input(INPUT_POST, "productDesc", FILTER_SANITIZE_SPECIAL_CHARS);
     $price = filter_input(INPUT_POST, "price", FILTER_VALIDATE_FLOAT);
     $productClass = filter_input(INPUT_POST, "productClass", FILTER_SANITIZE_SPECIAL_CHARS);
-    insertProduct($productName, $productDesc, $price, $productClass);
+    if ($productID !== NULL && $productID !== "") {
+        updateProduct($productID, $productName, $productDesc, $price, $productClass);
+    }
+    else {
+        insertProduct($productName, $productDesc, $price, $productClass);
+    }    
     $products = getAllProducts();
     echo json_encode($products);
 }

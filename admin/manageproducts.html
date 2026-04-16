@@ -12,6 +12,22 @@
 </head>
 
 <body>
+    <div id="popup" class="popup" >
+        <h3>Add/Edit Menu Item</h3>
+        <div id="add-product-form" class="form">
+            <input class="form-control" style="display: none;" type="text" id="productID" placeholder="ID" >
+            <input class="form-control" type="text" id="productName" placeholder="Name" required>
+            <textarea class="form-control" type="text" rows="3" id="productDesc" placeholder="Description" required></textarea>
+            <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
+            <select class="form-control" id="productClassesSelect" name="productClass">
+            </select>
+        </div>
+        <div>
+            <button class="primary-button" type="submit" id="saveProductBtn">Save</button>
+            <button class="secondary-button" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
     <header class="site-header">
         <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
         <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -36,21 +52,16 @@
         </ul>
     </nav>
 
+        
     <main>
-        <h3>Add/Edit Menu Item</h3>
-        <div id="add-product-form" class="form">
-            <input class="form-control" type="text" id="productName" placeholder="Name" required>
-            <input class="form-control" type="text" id="productDesc" placeholder="Description" required>
-            <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
-            <!-- <input class="form-control" type="text" name="productClass" placeholder="Category" required> -->
-            <select class="form-control" id="productClassesSelect" name="productClass">
-                <!-- <option value="-1">Select product class</option> -->
-            </select>
-            <button class="form-control" type="submit" id="saveProductBtn">Save</button>
+        <div class="toolbar">
+            <p>Products</p>
+            <button id="addProductBtn" class="primary-button last-item">Add Product</button>
         </div>
-
-        <h3>Products</h3>
         <div id="product-table"></div>
+        <div class="toolbar">
+            <button id="bottomAddProductBtn" class="primary-button last-item">Add Product</button>
+        </div>
     </main>
 
     <footer class="site-footer">

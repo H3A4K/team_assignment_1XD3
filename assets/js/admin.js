@@ -83,10 +83,17 @@ function renderProductTable(data) {
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        let editBtn = document.createElement("button");
         let removeBtn = document.createElement("button");
+        editBtn.innerText = "Edit";
         removeBtn.innerText = "Remove";
+        editBtn.className = "secondary-button";
         removeBtn.className = "secondary-button";
+        editBtn.style.marginBottom = "5px";
+        editBtn.style.marginRight = "5px";
+        editBtn.addEventListener("click", () => editProduct(product));
         removeBtn.addEventListener("click", () => removeProduct(product));
+        cell.appendChild(editBtn);
         cell.appendChild(removeBtn);
         productRow.appendChild(cell);
 
@@ -337,19 +344,6 @@ window.addEventListener("load", function () {
     console.log("get products");
     getAllProducts();
     getProductClasses();
-    saveProductBtn = document.getElementById("saveProductBtn");
-    //console.log("saveProductBtn", saveProductBtn);
-    if (saveProductBtn) {
-        saveProductBtn.addEventListener("click", function () {
-            const productNameInput = document.getElementById("productName");
-            const productDescInput = document.getElementById("productDesc");
-            const priceInput = document.getElementById("price");
-            const productClassSelect = document.getElementById("productClassesSelect");
-            let product = { productName: productNameInput.value, productDesc: productDescInput.value, price: priceInput.value, productClass: productClassSelect.value};
-            saveProduct(product);
-            
-        });
-    }
 });
 
 window.addEventListener("load", function () {
@@ -362,11 +356,51 @@ window.addEventListener("load", function () {
     getAllPromoCodes();
 });
 
+const addProductBtn = document.getElementById("addProductBtn");
+const bottomAddProductBtn = document.getElementById("bottomAddProductBtn");
+const popup = document.getElementById("popup");
+const saveBtn = document.getElementById("saveProductBtn");
+const cancelBtn = document.getElementById("cancelBtn");
+
+addProductBtn.addEventListener("click", addProduct);
+bottomAddProductBtn.addEventListener("click", addProduct);
+
+function addProduct() {
+    const productIDInput = document.getElementById("productID");
+    const productNameInput = document.getElementById("productName");
+    const productDescInput = document.getElementById("productDesc");
+    const priceInput = document.getElementById("price");
+    const productClassSelect = document.getElementById("productClassesSelect");
+    productIDInput.value = "";
+    productNameInput.value = "";
+    productDescInput.value = "";
+    priceInput.value = "";
+    productClassSelect.value = "";
+    popup.style.visibility = "visible";
+}
+
+saveBtn.addEventListener("click", function() {
+    const productIDInput = document.getElementById("productID");
+    const productNameInput = document.getElementById("productName");
+    const productDescInput = document.getElementById("productDesc");
+    const priceInput = document.getElementById("price");
+    const productClassSelect = document.getElementById("productClassesSelect");
+    let product = { productID: productIDInput.value, productName: productNameInput.value, productDesc: productDescInput.value, price: priceInput.value, productClass: productClassSelect.value };
+    saveProduct(product);
+    popup.style.visibility = "hidden";
+});
+
+cancelBtn.addEventListener("click", function() {
+    popup.style.visibility = "hidden";
+});
+
+
 function saveProduct(product) {
     if (!product) {
         return;
     }
     let urlEncodedProduct = "";
+    urlEncodedProduct += "productID=" + product.productID + "&";
     urlEncodedProduct += "productName=" + product.productName + "&";
     urlEncodedProduct += "productDesc=" + product.productDesc + "&";
     urlEncodedProduct += "price=" + product.price + "&";
@@ -416,4 +450,18 @@ function removeProduct(product) {
         renderProductTable(allProducts);
     });
     }
+}
+
+function editProduct(product) {
+    const productIDInput = document.getElementById("productID");
+    const productNameInput = document.getElementById("productName");
+    const productDescInput = document.getElementById("productDesc");
+    const priceInput = document.getElementById("price");
+    const productClassSelect = document.getElementById("productClassesSelect");
+    productIDInput.value = product.productID;
+    productNameInput.value = product.productName;
+    productDescInput.value = product.productDesc;
+    priceInput.value = product.price;
+    productClassSelect.value = product.productClass;
+    popup.style.visibility = "visible";    
 }
