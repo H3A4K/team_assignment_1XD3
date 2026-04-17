@@ -7,11 +7,46 @@
     <title>Manage Promos | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="../assets/js/admin.js" defer></script>
+    <!-- <script src="../assets/js/admin.js" defer></script> -->
+    <script src="../assets/js/manage_promo_codes.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
 <body>
+    <div id="popup" class="popup" >
+        <h3>Add/Edit Promo Code</h3>
+        <div id="add-promo-code-form" class="form">
+            <div class="layout-column">
+                <input class="form-control" style="display: none;" type="text" id="promoID" placeholder="ID">
+                <label for="promoCode">Promo Code Name:</label>
+                <input class="form-control" type="text" id="promoCode" placeholder="Promo Code Name" required>
+                <label for="discountType">Discount Type:</label>
+                <select class="form-control" id="discountType">
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed">Fixed</option>
+                </select>
+            </div>
+            
+            <div class="layout-column">
+                <!-- <input class="form-control" type="text" rows="3" id="discountType" placeholder="Discount Type" required></input> -->
+                <label for="discountValue">Discount Value:</label>
+                <input class="form-control" type="number" step="1.0" id="discountValue" placeholder="Discount Value" required>
+                <label for="active">Status:</label>
+                <select class="form-control" id="active">
+                    <option value="0">Inoperative</option>
+                    <option value="1">Active</option>
+                </select>
+                <label for="expiryDate">Expiry Date:</label>
+                <input type="date" id="expiryDate" min="2026-01-01">
+            </div>
+            
+        </div>
+        <div>
+            <button class="primary-button" type="submit" id="savePromoCodeBtn">Save</button>
+            <button class="secondary-button" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
     <header class="site-header">
         <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
         <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -29,6 +64,9 @@
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
         <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
             <li><a href="index.html">Dashboard</a></li>
             <li><a href="manageproducts.html">Products</a></li>
             <li><a href="manageorders.html">Orders</a></li>
@@ -37,18 +75,14 @@
     </nav>
 
     <main>
-        <h3>Add Promo Code</h3>
-        <form id="promo-code-form" class="form">
-            <input class="form-control" type="text" name="promoCode" placeholder="Promo Code" required>
-            <input class="form-control" type="text" name="discountType" placeholder="Discount Type" required>
-            <input class="form-control" type="number" step="0.01" name="discountValue" placeholder="Discount Value" required>
-            <input class="form-control" type="number" name="active" placeholder="Select status" required>
-            <input class="form-control" type="text" name="expiryDate" placeholder="Expiry Date" required>
-            <button class="form-control" type="submit">Add Promo Code</button>
-        </form>
-
-        <h3>Promo Codes</h3>
+        <div class="toolbar">
+            <p>Promo Codes</p>
+            <button id="addPromoCodeBtn" class="primary-button last-item">Add Promo Code</button>
+        </div>
         <div id="promocodes-table"></div>
+        <div class="toolbar">
+            <button id="bottomAddPromoCodeBtn" class="primary-button last-item">Add Promo Code</button>
+        </div>
     </main>
 
     <footer class="site-footer">

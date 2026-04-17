@@ -7,7 +7,8 @@
     <title>Manage Products | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="../assets/js/admin.js" defer></script>
+    <!-- <script src="../assets/js/admin.js" defer></script> -->
+    <script src="../assets/js/manage_products.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
@@ -16,9 +17,13 @@
         <h3>Add/Edit Menu Item</h3>
         <div id="add-product-form" class="form">
             <input class="form-control" style="display: none;" type="text" id="productID" placeholder="ID" >
+            <label for="text">Product Name:</label>
             <input class="form-control" type="text" id="productName" placeholder="Name" required>
+            <label for="text">Product Description:</label>
             <textarea class="form-control" type="text" rows="3" id="productDesc" placeholder="Description" required></textarea>
+            <label for="text">Price:</label>
             <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
+            <label for="text">Product Class:</label>
             <select class="form-control" id="productClassesSelect" name="productClass">
             </select>
         </div>
@@ -45,6 +50,9 @@
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
         <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
             <li><a href="index.html">Dashboard</a></li>
             <li><a class="current" href="manageproducts.html">Products</a></li>
             <li><a href="manageorders.html">Orders</a></li>

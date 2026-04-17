@@ -1,4 +1,6 @@
 <?php 
+session_start();
+
 include "connect.php";
 
 function getAllProducts() {
@@ -37,6 +39,7 @@ function GetProductClasses() {
     return $classes;
 }
 
+// PRODUCTS
 function insertProduct($productName, $productDesc, $price, $productClass) {
     global $dbh;
     $cmd = "INSERT INTO products (productName, productDesc, price, productImg, productClass) VALUES (?, ?, ?, ?, ?)";
@@ -58,12 +61,45 @@ function removeProduct($productID) {
     $stmt->execute([$productID]);
 }
 
+// ORDERS
+function updateOrderStatus($orderID, $fullfilled) {
+    global $dbh;
+    $cmd = "UPDATE orders SET fullfilled = ? WHERE orderID = ?";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$fullfilled, $orderID]);
+}
+
+// PROMO CODES
+function insertPromoCode($promoCode, $discountType, $discountValue, $active, $expiryDate) {
+    global $dbh;
+    $cmd = "INSERT INTO promocodes (promoCode, discountType, discountValue, active, expiryDate) VALUES (?, ?, ?, ?, ?)";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$promoCode, $discountType, $discountValue, $active, $expiryDate]);
+}
+
+function updatePromoCode($promoID, $promoCode, $discountType, $discountValue, $active, $expiryDate) {
+    global $dbh;
+    $cmd = "UPDATE promocodes SET promoCode = ?,  discountType = ?, discountValue = ?, active = ?, expiryDate = ? WHERE promoID = ?";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$promoCode, $discountType, $discountValue, $active, $expiryDate, $promoID]);
+}
+
+function removePromoCode($promoID) {
+    global $dbh;
+    $cmd = "DELETE FROM promocodes WHERE promoID = ?";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$promoID]);
+}
+
 $getAllProducts = filter_input(INPUT_GET, "getAllProducts", FILTER_SANITIZE_SPECIAL_CHARS);
 $getAllOrders = filter_input(INPUT_GET, "getAllOrders", FILTER_SANITIZE_SPECIAL_CHARS);
 $getAllPromoCodes = filter_input(INPUT_GET, "getAllPromoCodes", FILTER_SANITIZE_SPECIAL_CHARS);
 $getProductClasses = filter_input(INPUT_GET, "getProductClasses", FILTER_SANITIZE_SPECIAL_CHARS);
 $saveProduct = filter_input(INPUT_GET, "saveProduct", FILTER_SANITIZE_SPECIAL_CHARS);
 $removeProduct = filter_input(INPUT_GET, "removeProduct", FILTER_SANITIZE_SPECIAL_CHARS);
+$editOrderStatus = filter_input(INPUT_GET, "editOrderStatus", FILTER_SANITIZE_SPECIAL_CHARS);
+$savePromoCode = filter_input(INPUT_GET, "savePromoCode", FILTER_SANITIZE_SPECIAL_CHARS);
+$removePromoCode = filter_input(INPUT_GET, "removePromoCode", FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($getAllProducts !== NULL) {
     $products = getAllProducts();
@@ -101,5 +137,36 @@ else if ($removeProduct !== NULL) {
     removeProduct($productID);
     $products = getAllProducts();
     echo json_encode($products);
-}    
+} 
+else if ($editOrderStatus !== NULL) {
+    $orderID = filter_input(INPUT_POST, "orderID", FILTER_VALIDATE_INT);
+    $fullfilled = filter_input(INPUT_POST, "fullfilled", FILTER_VALIDATE_INT);
+    if ($orderID !== NULL && $orderID !== "") {
+        updateOrderStatus($orderID, $fullfilled);
+    }
+    $orders = getAllOrders();
+    echo json_encode($orders);
+}
+else if ($savePromoCode !== NULL) {
+    $promoID = filter_input(INPUT_POST, "promoID", FILTER_SANITIZE_SPECIAL_CHARS);
+    $promoCode = filter_input(INPUT_POST, "promoCode", FILTER_SANITIZE_SPECIAL_CHARS);
+    $discountType = filter_input(INPUT_POST, "discountType", FILTER_SANITIZE_SPECIAL_CHARS);
+    $discountValue = filter_input(INPUT_POST, "discountValue", FILTER_VALIDATE_FLOAT);
+    $active = filter_input(INPUT_POST, "active", FILTER_SANITIZE_SPECIAL_CHARS);
+    $expiryDate = filter_input(INPUT_POST, "expiryDate", FILTER_SANITIZE_SPECIAL_CHARS);
+    if ($promoID !== NULL && $promoID !== "") {
+        updatePromoCode($promoID, $promoCode, $discountType, $discountValue, $active, $expiryDate);
+    }
+    else {
+        insertPromoCode($promoCode, $discountType, $discountValue, $active, $expiryDate);
+    }    
+    $promoCodes = GetAllPromoCodes();
+    echo json_encode($promoCodes);
+}  
+else if ($removePromoCode !== NULL) {
+    $promoID = filter_input(INPUT_POST, "promoID", FILTER_VALIDATE_INT);
+    removePromoCode($promoID);
+    $promocode = GetAllPromoCodes();
+    echo json_encode($promocode);
+}  
 ?>

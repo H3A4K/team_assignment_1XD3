@@ -56,7 +56,7 @@ main br {
 
 .form {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   background-color: var(--c-card);
@@ -73,6 +73,16 @@ main br {
     background-color: #fff;
     outline: none;
     transition: border-color 0.2s;
+}
+.layout-row {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+.layout-column {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .form-control:focus {
@@ -135,6 +145,25 @@ button.form-control:hover {
 
 #default-in-select {
     color: var(--c-text-muted);
+}
+
+input[type="date"] {
+    padding: 0.55rem 0.85rem;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-family: var(--font);
+    background-color: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background-color: #0070FF;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    filter: invert(1);
 }
 
 @media (max-width: 768px) {
