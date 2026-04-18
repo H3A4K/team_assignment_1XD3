@@ -4,6 +4,12 @@ if (!isset($_SESSION["email"])) {
     header("Location: ../");
     exit();
 }
+
+// Fetch current user info
+$email = $_SESSION["email"];
+$stmt = $dbh->prepare("SELECT email, phonenumber, address, admin FROM users WHERE email=?");
+$stmt->execute([$email]);
+$currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 <!doctype html>
 <html lang="en">
@@ -38,7 +44,7 @@ if (!isset($_SESSION["email"])) {
                     </div>
                 </div>
             <?php } else { ?>
-                <a href="../account/" class="login-status">Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></a>
+                <a href="../account/" class="login-status">Account</a>
                 <div class="account-menu" id="logoutbtn">
                     <a class="nav-cta account-trigger" aria-label="Account menu">
                         <img src="../assets/images/user.png" alt="">
@@ -58,7 +64,7 @@ if (!isset($_SESSION["email"])) {
                 <li class="nav-mobile-only"><a href="../login/">Login</a></li>
                 <li class="nav-mobile-only"><a href="../signup/">Sign Up</a></li>
             <?php } else { ?>
-                <li class="nav-mobile-only nav-mobile-status"><a href="../account/">Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></a></li>
+                <li class="nav-mobile-only nav-mobile-status"><a href="../account/">Account</a></li>
                 <li class="nav-mobile-only"><a href="#" id="mobile-logout">Logout</a></li>
             <?php } ?>
         </ul>
@@ -67,31 +73,14 @@ if (!isset($_SESSION["email"])) {
     <div id="content">
         <div id ="adminandlogo">
             <img src="../assets/images/logo.png" id="logo" />
-            <?php
-            // Check if they're an admin
-            if (!isset($_SESSION["email"])) {
-                return;
-            }
-
-            $email = $_SESSION["email"];
-            $cmd = "SELECT admin FROM users where email=?";
-            $stmt = $dbh->prepare($cmd);
-            $success = $stmt->execute([$email]);
-            if (!$success) {
-                return;
-            }
-            $row = $stmt->fetch();
-            if ($row["admin"] == 1) {
-            ?>
+            <?php if ($currentUser && $currentUser["admin"] == 1) { ?>
             <a class="button" href="../admin" id="adminpanel">Admin Panel</a>
-            <?php
-            }
-            ?>
+            <?php } ?>
         </div>
         <div id="changeForms">
             <div class="inputcontainer">
                 <label for="emailinput">Email</label>
-                <input type="email" id="emailinput" placeholder="email@example.com" />
+                <input type="email" id="emailinput" placeholder="email@example.com" value="<?php echo htmlspecialchars($currentUser["email"] ?? ""); ?>" />
                 <button id="changeemail" class="button">Change Email</button>
             </div>
 
@@ -103,13 +92,13 @@ if (!isset($_SESSION["email"])) {
 
             <div class="inputcontainer">
                 <label for="phoneinput">Phone Number</label>
-                <input type="text" id="phoneinput" placeholder="123-456-7890" />
+                <input type="text" id="phoneinput" placeholder="123-456-7890" value="<?php echo htmlspecialchars($currentUser["phonenumber"] ?? ""); ?>" />
                 <button id="changephone" class="button">Change Phone Number</button>
             </div>
 
             <div class="inputcontainer">
                 <label for="addressinput">Address</label>
-                <input type="text" id="addressinput" placeholder="15 Example Drive" />
+                <input type="text" id="addressinput" placeholder="15 Example Drive" value="<?php echo htmlspecialchars($currentUser["address"] ?? ""); ?>" />
                 <button id="changeaddress" class="button">Change Address</button>
             </div>
             <p id="errormessage">Error</p>
