@@ -1,4 +1,4 @@
-<?php session_start(); 
+<?php session_start();
 include "../assets/php/connect.php";
 if (!isset($_SESSION["email"])) {
     header("Location: ../");
@@ -7,7 +7,7 @@ if (!isset($_SESSION["email"])) {
 
 // Fetch current user info
 $email = $_SESSION["email"];
-$stmt = $dbh->prepare("SELECT email, phonenumber, address, admin FROM users WHERE email=?");
+$stmt = $dbh->prepare("SELECT userID, email, phonenumber, address, admin FROM users WHERE email=?");
 $stmt->execute([$email]);
 $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
@@ -71,10 +71,10 @@ $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
     </nav>
 
     <div id="content">
-        <div id ="adminandlogo">
+        <div id="adminandlogo">
             <img src="../assets/images/logo.png" id="logo" />
             <?php if ($currentUser && $currentUser["admin"] == 1) { ?>
-            <a class="button" href="../admin" id="adminpanel">Admin Panel</a>
+                <a class="button" href="../admin" id="adminpanel">Admin Panel</a>
             <?php } ?>
         </div>
         <div id="changeForms">
@@ -102,6 +102,57 @@ $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
                 <button id="changeaddress" class="button">Change Address</button>
             </div>
             <p id="errormessage">Error</p>
+        </div>
+        <div id="orderhistory">
+            <div class="title">Order History</div>
+            <table>
+                <th>Date</th>
+                <th>Address</th>
+                <th>Items</th>
+                <th>Fullfilled?</th>
+                <?php
+
+
+                // Get User's Orders
+                $acctID = $currentUser["userID"];
+                $cmd = "SELECT * FROM orders WHERE accountID=? ORDER BY orderDate DESC LIMIT 5";
+                $stmt = $dbh->prepare($cmd);
+                $success = $stmt->execute([$acctID]);
+                if ($success) {
+                    while ($row = $stmt->fetch()) {
+                        echo "<tr>";
+                        $date = $row["orderDate"];
+                        $address = $row["address"];
+                        $cmd = "SELECT * FROM orderdetails WHERE orderID=?";
+                        $stmt2 = $dbh->prepare($cmd);
+                        $success = $stmt2->execute([$row["orderID"]]);
+                        if (!$success) return;
+
+                        $fullfilled = $row["fullfilled"];
+                        echo "<td>" . $date . "</td>";
+                        echo "<td>" . $address . "</td>";
+                        echo "<td>";
+                        while ($orderdetails = $stmt2->fetch()) {
+                            $cmd = "SELECT * FROM products WHERE productID=?";
+                            $stmt3 = $dbh->prepare($cmd);
+                            $success = $stmt3->execute([$orderdetails["productID"]]);
+                            if (!$success || $stmt3->rowCount() <= 0) return;
+
+                            echo $orderdetails["quantity"] . "x " . $stmt3->fetch()["productName"] . "<br>";
+                        }
+                        echo "</td>";
+
+                        if ($fullfilled == 1) {
+                            $fullfilled = "Yes";
+                        } else {
+                            $fullfilled = "No";
+                        }
+                        echo "<td>" . $fullfilled . "</td>";
+                        echo "</tr>";
+                    }
+                }
+                ?>
+            </table>
         </div>
 
 

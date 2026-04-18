@@ -97,6 +97,36 @@
     justify-content: center;
 }
 
+.title {
+    font-size: 20px;
+    margin-bottom: 1%;
+    text-align: center;
+    /* border-bottom: 1px solid black; */
+}
+
+#orderhistory {
+    margin-left: 2%;
+}
+
+th {
+    margin: 2%;
+    border-bottom: 1px solid black;
+    width: 140px;
+}
+
+table {
+    border-spacing: 10px 10px;
+}
+
+td {
+    text-align: center;
+    /* margin: 1%;
+    padding: 1%; */
+    width: 33%;
+}
+
+
+
 @media (max-width: 768px) {
     #content {
         flex-direction: column;
@@ -123,5 +153,9 @@
 
     .inputcontainer .button {
         width: 100%;
+    }
+
+    #orderhistory {
+        margin-left: 0;
     }
 }
