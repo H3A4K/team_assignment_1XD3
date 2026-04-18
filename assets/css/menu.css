@@ -222,6 +222,8 @@ main {
     border-radius: var(--radius-md);
     padding: 1.5rem;
     box-shadow: var(--shadow-md);
+    max-height: calc(100vh - var(--top-offset) - 3rem);
+    overflow-y: auto;
 }
 
 /* ----- Promotional banners above the menu ----- */
@@ -536,7 +538,10 @@ main {
    class selectors, so CSS `display: flex` rules silently win. Force the
    `hidden` attribute to always hide these elements. */
 .applied-promocode[hidden],
-#cd-cart-discount-row[hidden] {
+#cd-cart-discount-row[hidden],
+#cd-cart-checkout-panel[hidden],
+#checkout-delivery-fields[hidden],
+#checkout-summary-address-row[hidden] {
     display: none !important;
 }
 
@@ -604,6 +609,130 @@ main {
 .checkout-btn:disabled {
     background-color: var(--c-text-muted);
     cursor: not-allowed;
+}
+
+#cd-cart.checkout-active .cd-cart-promocodes,
+#cd-cart.checkout-active .applied-promocode {
+    display: none;
+}
+
+.checkout-panel-header {
+    margin: 0.75rem 0 0.5rem;
+}
+
+.checkout-panel-header h3 {
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    color: var(--c-text);
+}
+
+.checkout-panel-header p {
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: var(--c-text-muted);
+}
+
+.checkout-summary {
+    margin: 0.9rem 0;
+    padding: 0.9rem 1rem;
+    background-color: var(--c-primary-light);
+    border-radius: var(--radius-sm);
+}
+
+.checkout-summary p {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.86rem;
+    padding: 0.15rem 0;
+}
+
+.checkout-summary span {
+    text-align: right;
+    font-weight: 700;
+    color: var(--c-text);
+}
+
+.checkout-methods {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.checkout-methods legend,
+#checkout-delivery-fields label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-text-muted);
+    margin-bottom: 0.45rem;
+}
+
+.checkout-method-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 0.65rem;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.checkout-method-option:hover {
+    border-color: var(--c-primary);
+    background-color: rgba(255, 143, 0, 0.05);
+}
+
+.checkout-method-option input {
+    margin-top: 0.2rem;
+}
+
+.checkout-method-option strong {
+    display: block;
+    color: var(--c-text);
+    margin-bottom: 0.2rem;
+}
+
+.checkout-method-option small {
+    display: block;
+    color: var(--c-text-muted);
+    line-height: 1.45;
+}
+
+#checkout-delivery-fields {
+    margin-top: 0.85rem;
+}
+
+#checkout-delivery-address {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-family: var(--font);
+    background-color: #fff;
+    outline: none;
+    resize: vertical;
+    min-height: 88px;
+}
+
+#checkout-delivery-address:focus {
+    border-color: var(--c-primary);
+}
+
+.checkout-actions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.checkout-actions .secondary-button,
+.checkout-actions .checkout-btn {
+    flex: 1;
+    margin-bottom: 0;
 }
 
 .cd-go-to-cart {
@@ -758,6 +887,12 @@ main {
     }
 
     #cd-cart.cart-open #cd-cart-checkout-form {
+        margin: 0;
+        padding-top: 0;
+    }
+
+    #cd-cart.cart-open #cd-cart-open-checkout,
+    #cd-cart.cart-open #cd-cart-checkout-panel {
         margin: auto 1.5rem 0;
         padding-top: 1rem;
     }
@@ -766,6 +901,15 @@ main {
         padding: 0.85rem;
         font-size: 1rem;
         border-radius: var(--radius-pill);
+    }
+
+    #cd-cart.cart-open .checkout-actions {
+        flex-direction: column-reverse;
+    }
+
+    #cd-cart.cart-open .checkout-actions .secondary-button,
+    #cd-cart.cart-open .checkout-actions .checkout-btn {
+        width: 100%;
     }
 
     #cd-cart.cart-open .cd-go-to-cart {

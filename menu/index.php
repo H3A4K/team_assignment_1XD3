@@ -7,9 +7,10 @@ $cartItems = [];
 $cartSubtotal = 0;
 $cartDiscount = 0;
 $hasOpenOrder = false;
-$cartStatusMessage = "Log in to view and complete your order.";
+$cartStatusMessage = "Log in to view your cart and checkout.";
 $cartFeedbackMessage = "";
 $cartFeedbackIsError = false;
+$defaultCheckoutAddress = "";
 
 // Load active promotional banners for display above the menu.
 // Admins manage these via /admin/managepromotions.html
@@ -34,6 +35,16 @@ if (isset($_SESSION["userID"])) {
     $cartStatusMessage = "Your cart is empty.";
 
     try {
+        $userStmt = $dbh->prepare("
+            SELECT address
+            FROM users
+            WHERE userID = ?
+            LIMIT 1
+        ");
+        $userStmt->execute([$_SESSION["userID"]]);
+        $currentUser = $userStmt->fetch(PDO::FETCH_ASSOC);
+        $defaultCheckoutAddress = trim($currentUser["address"] ?? "");
+
         $orderStmt = $dbh->prepare("
             SELECT orderID
             FROM orders
@@ -258,10 +269,52 @@ if (isset($_SESSION["userID"])) {
                 <p>Total <span id="cd-cart-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
             </div>
 
-            <form id="cd-cart-checkout-form" action="../assets/php/complete_order_action.php" method="post">
-                <button id="cd-cart-checkout" class="checkout-btn" type="submit" <?php if (!$hasOpenOrder) { ?>disabled<?php } ?>>Complete Order</button>
-            </form>
-            <p class="cd-go-to-cart">Your open order stays here until you complete it.</p>
+            <button id="cd-cart-open-checkout" class="checkout-btn" type="button" <?php if (!$hasOpenOrder) { ?>disabled<?php } ?>>Checkout</button>
+
+            <section id="cd-cart-checkout-panel" hidden>
+                <div class="checkout-panel-header">
+                    <h3>Checkout</h3>
+                    <p>Review your order and choose pickup or delivery before placing it.</p>
+                </div>
+
+                <div class="checkout-summary">
+                    <p>Method <span id="checkout-summary-method">Pickup</span></p>
+                    <p>Order Total <span id="checkout-summary-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
+                    <p id="checkout-summary-address-row" hidden>Delivery To <span id="checkout-summary-address"></span></p>
+                </div>
+
+                <form id="cd-cart-checkout-form">
+                    <fieldset class="checkout-methods">
+                        <legend>Fulfillment</legend>
+                        <label class="checkout-method-option">
+                            <input type="radio" name="fulfillmentMethod" value="pickup" checked>
+                            <span>
+                                <strong>Pickup</strong>
+                                <small>Collect your order when it is ready.</small>
+                            </span>
+                        </label>
+                        <label class="checkout-method-option">
+                            <input type="radio" name="fulfillmentMethod" value="delivery">
+                            <span>
+                                <strong>Delivery</strong>
+                                <small>Send the order to your delivery address.</small>
+                            </span>
+                        </label>
+                    </fieldset>
+
+                    <div id="checkout-delivery-fields" hidden>
+                        <label for="checkout-delivery-address">Delivery address</label>
+                        <textarea id="checkout-delivery-address" name="deliveryAddress" rows="3" placeholder="Enter your delivery address"><?php echo htmlspecialchars($defaultCheckoutAddress); ?></textarea>
+                    </div>
+
+                    <div class="checkout-actions">
+                        <button id="cd-cart-back" class="secondary-button" type="button">Back to Cart</button>
+                        <button id="cd-cart-place-order" class="checkout-btn" type="submit">Place Order</button>
+                    </div>
+                </form>
+            </section>
+
+            <p class="cd-go-to-cart">Your open order stays here until you check out.</p>
         </section>
     </main>
 

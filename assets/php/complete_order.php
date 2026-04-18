@@ -6,6 +6,27 @@ include "promo_requirements.php";
 
 header("Content-Type: application/json");
 
+function getCheckoutPayload(): array {
+    $raw = file_get_contents("php://input");
+    if (!$raw) {
+        return $_POST;
+    }
+
+    $decoded = json_decode($raw, true);
+    return is_array($decoded) ? $decoded : $_POST;
+}
+
+function ordersHasFulfillmentMethodColumn(PDO $dbh): bool {
+    static $hasColumn = null;
+    if ($hasColumn !== null) {
+        return $hasColumn;
+    }
+
+    $stmt = $dbh->query("SHOW COLUMNS FROM orders LIKE 'fulfillmentMethod'");
+    $hasColumn = $stmt !== false && $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    return $hasColumn;
+}
+
 if (!isset($_SESSION["userID"])) {
     http_response_code(401);
     echo json_encode(["error" => "You must be logged in to complete an order"]);
@@ -13,6 +34,9 @@ if (!isset($_SESSION["userID"])) {
 }
 
 $userID = $_SESSION["userID"];
+$payload = getCheckoutPayload();
+$fulfillmentMethod = ($payload["fulfillmentMethod"] ?? "pickup") === "delivery" ? "delivery" : "pickup";
+$deliveryAddress = trim((string) ($payload["deliveryAddress"] ?? ""));
 
 try {
     $dbh->beginTransaction();
@@ -31,6 +55,24 @@ try {
         $dbh->rollBack();
         http_response_code(400);
         echo json_encode(["error" => "There is no open order to complete"]);
+        return;
+    }
+
+    if ($fulfillmentMethod === "delivery" && $deliveryAddress === "") {
+        $addressStmt = $dbh->prepare("
+            SELECT address
+            FROM users
+            WHERE userID = ?
+            LIMIT 1
+        ");
+        $addressStmt->execute([$userID]);
+        $deliveryAddress = trim((string) $addressStmt->fetchColumn());
+    }
+
+    if ($fulfillmentMethod === "delivery" && $deliveryAddress === "") {
+        $dbh->rollBack();
+        http_response_code(400);
+        echo json_encode(["error" => "Delivery orders need a delivery address"]);
         return;
     }
 
@@ -61,12 +103,26 @@ try {
         }
     }
 
-    $updateOrderStmt = $dbh->prepare("
-        UPDATE orders
-        SET fullfilled = 1
-        WHERE accountID = ? AND fullfilled = 0
-    ");
-    $updateOrderStmt->execute([$userID]);
+    $finalAddress = $fulfillmentMethod === "delivery"
+        ? $deliveryAddress
+        : "Pickup at Clarence's Kitchen";
+
+    if (ordersHasFulfillmentMethodColumn($dbh)) {
+        $updateOrderStmt = $dbh->prepare("
+            UPDATE orders
+            SET address = ?, fulfillmentMethod = ?, fullfilled = 1
+            WHERE orderID = ?
+        ");
+        $updateOrderStmt->execute([$finalAddress, $fulfillmentMethod, $order["orderID"]]);
+    } else {
+        $updateOrderStmt = $dbh->prepare("
+            UPDATE orders
+            SET address = ?, fullfilled = 1
+            WHERE orderID = ?
+        ");
+        $updateOrderStmt->execute([$finalAddress, $order["orderID"]]);
+    }
+
     $completedOrders = $updateOrderStmt->rowCount();
 
     $updateUserStmt = $dbh->prepare("
@@ -85,7 +141,9 @@ try {
         "success" => true,
         "message" => "Order completed successfully",
         "orderID" => (int) $order["orderID"],
-        "completedOrders" => $completedOrders
+        "completedOrders" => $completedOrders,
+        "fulfillmentMethod" => $fulfillmentMethod,
+        "redirectUrl" => "../pickup/?order_id=" . (int) $order["orderID"],
     ]);
 } catch (Exception $e) {
     if ($dbh->inTransaction()) {

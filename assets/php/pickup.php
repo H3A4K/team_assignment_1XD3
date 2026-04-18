@@ -2,190 +2,210 @@
 
 include "connect.php";
 
-
 session_start();
 
-/**
- * Rounds up to the nearest factor of $x
- * e.g. $x = 5 rounds to the next factor of 5
- *      $n = 12, $x = 5 -> 15
- * @param int $n the number being rounded
- * @param int $x the base
- * @return int
- */
-function roundUpToAny(int $n, int $x) {
-    return ceil($n / $x) * $x;
+header("Content-Type: application/json");
+
+function roundUpToAny(int|float $n, int $x): int {
+    return (int) (ceil($n / $x) * $x);
 }
 
-/**
- * Gets the user's id from their email
- * @param string $email
- * @return int the User Id
- */
-function get_user_id(string $email) {
-    global $dbh;
-
-    $cmd = "SELECT `userID` FROM `users` WHERE `email`=? LIMIT 1";
-    $stmt = $dbh->prepare($cmd);
-    $stmt->execute([$email]);
-
-    return $stmt->fetchColumn();
-}
-
-/**
- * Takes an array of associative arrays and returns an array of the values responding to the keys.
- * @param array $arr
- * @param string $key
- * @return array
- */
-function unassign_array(array $arr, string $key) {
+function unassign_array(array $arr, string $key): array {
     $out = [];
-    foreach ($arr as $_ => $sub) {
-        array_push($out, $sub[$key]);
+    foreach ($arr as $sub) {
+        $out[] = $sub[$key];
     }
     return $out;
 }
 
-/**
- * Takes an array of associative arrays and returns those arrays as associated to their value at $name
- * @param array $arr
- * @param string $name
- * @param bool $single
- * @return array
- */
-function reorder(array $arr, string $name, bool $single = false) {
+function reorder(array $arr, string $name, bool $single = false): array {
     $out = [];
 
-    foreach($arr as $in_arr) {
+    foreach ($arr as $in_arr) {
         $class = $in_arr[$name];
         if ($single) {
             $out[$class] = array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY);
-        } else if (!array_key_exists($class, $out)) {
+        } elseif (!array_key_exists($class, $out)) {
             $out[$class] = [array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY)];
         } else {
-            array_push($out[$class], array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY));
+            $out[$class][] = array_filter($in_arr, fn($key) => $key !== $name, ARRAY_FILTER_USE_KEY);
         }
-    }   
+    }
+
     return $out;
 }
 
-/**
- * Gets all of the orders associated with the user that are not currently fullfilled
- * @param int $user
- * @return array > productID and Quantity Pairs, and the orders' lowest unfullfilled date/time
- */
-function get_user_orders(int $user) {
-    global $dbh;
-
-    $cmd = "SELECT `orderID`, `orderDate` FROM `orders` WHERE `accountID`=? AND `fullfilled`=0";
-    $stmt = $dbh->prepare($cmd);
-    $stmt->execute([$user]);
-
-    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    if (!$data) {
-        return [[], -1];
+function ordersHasFulfillmentMethodColumn(PDO $dbh): bool {
+    static $hasColumn = null;
+    if ($hasColumn !== null) {
+        return $hasColumn;
     }
 
-    $orders = unassign_array($data, "orderID");
-
-    $placeholder = implode(" ,", array_fill(0, count($orders), '?'));
-
-    $cmd = "SELECT `quantity`, `orderdetails`.`productID`, `products`.`productClass` FROM `orderdetails`
-        JOIN `products` ON `orderdetails`.`productID` = `products`.`productID`
-        WHERE `orderID` IN ($placeholder)";
-    $stmt = $dbh->prepare($cmd);
-    $stmt->execute($orders);
-
-    return [$stmt->fetchAll(PDO::FETCH_ASSOC), min(unassign_array($data, "orderDate"))];
+    $stmt = $dbh->query("SHOW COLUMNS FROM orders LIKE 'fulfillmentMethod'");
+    $hasColumn = $stmt !== false && $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    return $hasColumn;
 }
 
-function get_all_orders($time) {
+function getOrderItems(int $orderID): array {
     global $dbh;
 
-    $cmd = "SELECT `quantity`, `orderdetails`.`productID`, `products`.`productClass` FROM `orderdetails` 
-        JOIN `orders` ON `orderdetails`.`orderID` = `orders`.`orderID` 
+    $cmd = "SELECT `quantity`, `orderdetails`.`productID`, `products`.`productClass`
+        FROM `orderdetails`
         JOIN `products` ON `orderdetails`.`productID` = `products`.`productID`
-        WHERE `orders`.`orderDate`>=?";
+        WHERE `orderID` = ?";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$orderID]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getRequestedOrder(int $userID, ?int $orderID): array {
+    global $dbh;
+
+    $selectFields = ordersHasFulfillmentMethodColumn($dbh)
+        ? "orderID, orderDate, address, fulfillmentMethod"
+        : "orderID, orderDate, address";
+
+    if ($orderID) {
+        $cmd = "SELECT $selectFields
+            FROM `orders`
+            WHERE `orderID` = ? AND `accountID` = ?
+            LIMIT 1";
+        $stmt = $dbh->prepare($cmd);
+        $stmt->execute([$orderID, $userID]);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$order) {
+            return [[], -1, "pickup", ""];
+        }
+
+        return [
+            getOrderItems((int) $order["orderID"]),
+            $order["orderDate"],
+            $order["fulfillmentMethod"] ?? "pickup",
+            $order["address"] ?? "",
+        ];
+    }
+
+    $cmd = "SELECT $selectFields
+        FROM `orders`
+        WHERE `accountID` = ? AND `fullfilled` = 0
+        ORDER BY `orderDate` ASC
+        LIMIT 1";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute([$userID]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$order) {
+        return [[], -1, "pickup", ""];
+    }
+
+    return [
+        getOrderItems((int) $order["orderID"]),
+        $order["orderDate"],
+        $order["fulfillmentMethod"] ?? "pickup",
+        $order["address"] ?? "",
+    ];
+}
+
+function getAllOrdersSince(string $time): array {
+    global $dbh;
+
+    $cmd = "SELECT `quantity`, `orderdetails`.`productID`, `products`.`productClass`
+        FROM `orderdetails`
+        JOIN `orders` ON `orderdetails`.`orderID` = `orders`.`orderID`
+        JOIN `products` ON `orderdetails`.`productID` = `products`.`productID`
+        WHERE `orders`.`orderDate` >= ?";
     $stmt = $dbh->prepare($cmd);
     $stmt->execute([$time]);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function get_classes($classes) {
+function getClasses(array $classes): array {
     global $dbh;
 
     $classes = array_unique($classes);
+    if (empty($classes)) {
+        return [];
+    }
 
-    $placeholder = implode(" ,", array_fill(0, count($classes), '?'));
-    $cmd = "SELECT `time`, `quantity`,`name` FROM `productClasses` WHERE `name` IN ($placeholder)";
+    $placeholder = implode(" ,", array_fill(0, count($classes), "?"));
+    $cmd = "SELECT `time`, `quantity`, `name` FROM `productClasses` WHERE `name` IN ($placeholder)";
     $stmt = $dbh->prepare($cmd);
     $stmt->execute($classes);
-
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function calculate_time($orders, $concurrent = 5) {
+function calculateTime(array $orders, int $concurrent = 5): int {
+    if (empty($orders)) {
+        return 0;
+    }
+
     $orders = reorder($orders, "productClass");
-    // print_r (get_classes(array_keys($orders)));
-    $classes = reorder(get_classes(array_keys($orders)), "name", true);
+    $classes = reorder(getClasses(array_keys($orders)), "name", true);
     $time = 0;
 
-    foreach ($orders as $c => $arr) {
-        $class = $classes[$c];
+    foreach ($orders as $className => $arr) {
+        if (!isset($classes[$className])) {
+            continue;
+        }
+
+        $class = $classes[$className];
         $productIDs = [];
 
-        foreach ($arr as $_ => $order) {
+        foreach ($arr as $order) {
             $prodID = $order["productID"];
-            if (!in_array($prodID, $productIDs)) {
-                $productIDs[$prodID] = $order["quantity"];
+            if (!isset($productIDs[$prodID])) {
+                $productIDs[$prodID] = (int) $order["quantity"];
             } else {
-                $productIDs[$prodID] += $order["quantity"];
+                $productIDs[$prodID] += (int) $order["quantity"];
             }
         }
 
-        $t = [];
-        foreach ($productIDs as $_ => $quantity) {
-            array_push($t, $class["time"] * (ceil($quantity / $class["quantity"])));
-            if (count($t) >= $concurrent) {
-                $time += min($t);
-                $t = [];
+        $batchTimes = [];
+        foreach ($productIDs as $quantity) {
+            $batchTimes[] = (float) $class["time"] * ceil($quantity / $class["quantity"]);
+            if (count($batchTimes) >= $concurrent) {
+                $time += min($batchTimes);
+                $batchTimes = [];
             }
-            // print_r($t);
+        }
 
+        if (!empty($batchTimes)) {
+            $time += min($batchTimes);
         }
-        if (!empty($t)) {
-            $time += min($t);
-        }
-    }   
+    }
+
     return roundUpToAny($time, 5);
 }
 
-function main() {
-    if (!isset($_SESSION["email"])) {
-        return "<p>Please login to see and make orders</p>";
+function main(): string {
+    if (!isset($_SESSION["userID"])) {
+        http_response_code(401);
+        return json_encode(["error" => "Please log in to view your order wait time."]);
     }
 
-    $user = (int)get_user_id($_SESSION["email"]);
-    // $user = (int)get_user_id("alice.nguyen@example.com");
+    $userID = (int) $_SESSION["userID"];
+    $requestedOrderID = filter_input(INPUT_GET, "order_id", FILTER_VALIDATE_INT);
 
-    [$userOrders, $lowest_time] = get_user_orders($user);
+    [$orderItems, $orderTime, $fulfillmentMethod, $address] = getRequestedOrder($userID, $requestedOrderID ?: null);
 
-    if (!$userOrders || $lowest_time == -1) {
-        return "<p>No order has been made.</p>";
+    if (!$orderItems || $orderTime === -1) {
+        http_response_code(404);
+        return json_encode(["error" => "No checked-out order was found for this account."]);
     }
 
-    // Note that $userOrders will also be represented in $orders
-    $orders = get_all_orders($lowest_time);
+    $allOrders = getAllOrdersSince($orderTime);
+    $overallTime = calculateTime($allOrders, 5);
 
-    // $user_time = calculate_time($userOrders);
-    $overall_time = calculate_time($orders, 5);
-
-    return json_encode(["time" => $overall_time, "order" => $userOrders]);
-
-    // return $overall_time;
+    return json_encode([
+        "time" => $overallTime,
+        "order" => $orderItems,
+        "fulfillmentMethod" => $fulfillmentMethod,
+        "address" => $address,
+    ]);
 }
 
 echo main();

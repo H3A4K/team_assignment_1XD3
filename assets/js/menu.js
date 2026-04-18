@@ -29,8 +29,18 @@ document.addEventListener("DOMContentLoaded", function () {
     const cartDiscountRow = document.getElementById("cd-cart-discount-row");
     const cartDiscount = document.getElementById("cd-cart-discount");
     const cartTotal = document.getElementById("cd-cart-total");
-    const checkoutBtn = document.getElementById("cd-cart-checkout");
+    const openCheckoutBtn = document.getElementById("cd-cart-open-checkout");
+    const checkoutPanel = document.getElementById("cd-cart-checkout-panel");
     const checkoutForm = document.getElementById("cd-cart-checkout-form");
+    const checkoutBackBtn = document.getElementById("cd-cart-back");
+    const placeOrderBtn = document.getElementById("cd-cart-place-order");
+    const fulfillmentInputs = document.querySelectorAll("input[name='fulfillmentMethod']");
+    const deliveryFields = document.getElementById("checkout-delivery-fields");
+    const deliveryAddressInput = document.getElementById("checkout-delivery-address");
+    const checkoutSummaryMethod = document.getElementById("checkout-summary-method");
+    const checkoutSummaryTotal = document.getElementById("checkout-summary-total");
+    const checkoutSummaryAddressRow = document.getElementById("checkout-summary-address-row");
+    const checkoutSummaryAddress = document.getElementById("checkout-summary-address");
     const cartFeedback = document.getElementById("cd-cart-feedback");
     const promocodeInput = document.getElementById("promocode-input");
     const promocodeApplyBtn = document.getElementById("promocode-apply-btn");
@@ -38,13 +48,14 @@ document.addEventListener("DOMContentLoaded", function () {
     const appliedPromoLabel = document.getElementById("applied-promocode-label");
     const removePromocodeBtn = document.getElementById("remove-promocode-btn");
 
-    if (!menu || !searchInput || !sortSelect || !classFilterBtn || !classFilterDropdown || !cartItems || !cartStatus || !cartSubtotal || !cartTotal || !checkoutBtn || !checkoutForm || !cartFeedback) {
+    if (!menu || !searchInput || !sortSelect || !classFilterBtn || !classFilterDropdown || !cartItems || !cartStatus || !cartSubtotal || !cartTotal || !openCheckoutBtn || !checkoutPanel || !checkoutForm || !checkoutBackBtn || !placeOrderBtn || !deliveryFields || !deliveryAddressInput || !checkoutSummaryMethod || !checkoutSummaryTotal || !checkoutSummaryAddressRow || !checkoutSummaryAddress || !cartFeedback) {
         console.error("Menu page is missing expected cart or filter elements.");
         return;
     }
 
     let allProducts = [];
     let selectedClasses = new Set();
+    let currentCartData = null;
 
     function formatCurrency(value) {
         return "$" + Number(value).toFixed(2);
@@ -68,7 +79,53 @@ document.addEventListener("DOMContentLoaded", function () {
         cartFeedback.classList.toggle("is-error", isError);
     }
 
+    function getSelectedFulfillmentMethod() {
+        const selected = document.querySelector("input[name='fulfillmentMethod']:checked");
+        return selected ? selected.value : "pickup";
+    }
+
+    function syncCheckoutSummary() {
+        const method = getSelectedFulfillmentMethod();
+        checkoutSummaryMethod.textContent = method === "delivery" ? "Delivery" : "Pickup";
+        checkoutSummaryTotal.textContent = cartTotal.textContent;
+
+        if (method === "delivery") {
+            const address = deliveryAddressInput.value.trim();
+            checkoutSummaryAddress.textContent = address || "Enter a delivery address";
+            checkoutSummaryAddressRow.hidden = false;
+        } else {
+            checkoutSummaryAddress.textContent = "";
+            checkoutSummaryAddressRow.hidden = true;
+        }
+    }
+
+    function syncFulfillmentFields() {
+        const method = getSelectedFulfillmentMethod();
+        const isDelivery = method === "delivery";
+        deliveryFields.hidden = !isDelivery;
+        deliveryAddressInput.required = isDelivery;
+        syncCheckoutSummary();
+    }
+
+    function closeCheckoutPanel() {
+        checkoutPanel.hidden = true;
+        openCheckoutBtn.hidden = false;
+        cart.classList.remove("checkout-active");
+    }
+
+    function openCheckoutPanel() {
+        if (!currentCartData || !currentCartData.loggedIn || !currentCartData.hasOpenOrder || currentCartData.items.length === 0) {
+            return;
+        }
+
+        syncFulfillmentFields();
+        checkoutPanel.hidden = false;
+        openCheckoutBtn.hidden = true;
+        cart.classList.add("checkout-active");
+    }
+
     function renderCart(cartData) {
+        currentCartData = cartData;
         cartItems.innerHTML = "";
         cartSubtotal.textContent = formatCurrency(cartData.subtotal || 0);
         cartTotal.textContent = formatCurrency(cartData.total || 0);
@@ -96,19 +153,21 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (!cartData.loggedIn) {
-            setCartStatus("Log in to view and complete your order.");
-            checkoutBtn.disabled = true;
+            setCartStatus("Log in to view your cart and checkout.");
+            openCheckoutBtn.disabled = true;
+            closeCheckoutPanel();
             return;
         }
 
         if (!cartData.hasOpenOrder || cartData.items.length === 0) {
             setCartStatus("Your cart is empty.");
-            checkoutBtn.disabled = true;
+            openCheckoutBtn.disabled = true;
+            closeCheckoutPanel();
             return;
         }
 
         cartStatus.hidden = true;
-        checkoutBtn.disabled = false;
+        openCheckoutBtn.disabled = false;
 
         for (const item of cartData.items) {
             const li = document.createElement("li");
@@ -138,6 +197,8 @@ document.addEventListener("DOMContentLoaded", function () {
             li.append(itemInfo, right);
             cartItems.appendChild(li);
         }
+
+        syncCheckoutSummary();
     }
 
     async function removeFromCart(orderDetailID, productName) {
@@ -233,7 +294,8 @@ document.addEventListener("DOMContentLoaded", function () {
             setCartFeedback("Cart request failed. Check the browser console for details.", true);
             cartSubtotal.textContent = formatCurrency(0);
             cartTotal.textContent = formatCurrency(0);
-            checkoutBtn.disabled = true;
+            openCheckoutBtn.disabled = true;
+            closeCheckoutPanel();
         }
     }
 
@@ -368,13 +430,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     searchInput.addEventListener("input", applyFiltersAndSort);
     sortSelect.addEventListener("change", applyFiltersAndSort);
+    openCheckoutBtn.addEventListener("click", openCheckoutPanel);
+    checkoutBackBtn.addEventListener("click", closeCheckoutPanel);
+    fulfillmentInputs.forEach((input) => {
+        input.addEventListener("change", syncFulfillmentFields);
+    });
+    deliveryAddressInput.addEventListener("input", syncCheckoutSummary);
     checkoutForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         try {
-            checkoutBtn.disabled = true;
+            const fulfillmentMethod = getSelectedFulfillmentMethod();
+            const deliveryAddress = deliveryAddressInput.value.trim();
+
+            if (fulfillmentMethod === "delivery" && deliveryAddress === "") {
+                throw new Error("Enter a delivery address before placing the order");
+            }
+
+            placeOrderBtn.disabled = true;
+            checkoutBackBtn.disabled = true;
             const response = await fetch("../assets/php/complete_order.php", {
-                method: "POST"
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    fulfillmentMethod,
+                    deliveryAddress
+                })
             });
             const responseText = await response.text();
             const result = JSON.parse(responseText);
@@ -383,11 +466,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(result.error || "Failed to complete order");
             }
 
-            setCartFeedback("Order #" + result.orderID + " completed successfully.");
-            await refreshCart();
+            window.location.href = result.redirectUrl || ("../pickup/?order_id=" + result.orderID);
         } catch (error) {
             console.error(error);
             setCartFeedback(error.message, true);
+        } finally {
+            placeOrderBtn.disabled = false;
+            checkoutBackBtn.disabled = false;
         }
     });
 
