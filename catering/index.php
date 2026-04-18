@@ -62,8 +62,9 @@
             <p class="eyebrow">Catering</p>
             <h1>Let us cater your next event!</h1>
             <p class="hero-copy">
-                This placeholder layout gives the catering page a dedicated landing area,
-                a short booking summary, and clear restaurant contact information.
+                From family dinners to large corporate events, we handle the food
+                so you can focus on your guests. Flexible menus, generous portions, and
+                the same bold flavours you love from our kitchen, delivered on time.
             </p>
         </section>
 
@@ -73,11 +74,37 @@
                 <p>
                     Bring the taste of Clarence's Kitchen to your next event! Whether it's a birthday, office party, family gathering, or any special occasion, our catering menu offers a variety of crowd-pleasing options. We take care of the cooking, so you can focus on enjoying the moment. Our dishes are made fresh, packed with flavour, and served in portions perfect for sharing. Customizable options and dietary accommodations are available to ensure every guest leaves satisfied. Let us make your event unforgettable with delicious, fresh, and convenient catering that everyone will love.
                 </p>
-                <div class="placeholder-box">Package options / event details / order lead times</div>
+                <div class="catering-details">
+                    <div class="catering-section">
+                        <h3>Packages</h3>
+                        <ul>
+                            <li><strong>Small Gathering</strong> &mdash; 10 to 20 guests</li>
+                            <li><strong>Medium Event</strong> &mdash; 20 to 50 guests</li>
+                            <li><strong>Large Celebration</strong> &mdash; 50+ guests, custom menu available</li>
+                        </ul>
+                    </div>
+                    <div class="catering-section">
+                        <h3>What's Included</h3>
+                        <ul>
+                            <li>Choice of mains from our CK Favourites menu</li>
+                            <li>Sides, salads, and assorted beverages</li>
+                            <li>Disposable serving ware and utensils</li>
+                            <li>Dietary accommodations available on request</li>
+                        </ul>
+                    </div>
+                    <div class="catering-section">
+                        <h3>Order Lead Times</h3>
+                        <ul>
+                            <li>Small orders: at least 48 hours notice</li>
+                            <li>Medium events: at least 3 days notice</li>
+                            <li>Large events: 5+ days notice</li>
+                        </ul>
+                    </div>
+                </div>
             </article>
 
             <aside class="panel contact-panel" id="contact-info">
-                <h2>Contact The Restaurant</h2>
+                <h2>Contact Us</h2>
                 <ul class="contact-list">
                     <li><strong>Phone:</strong> (647)-438-8589</li>
                     <li><strong>Email:</strong> clarenceskitchen@gmail.com</li>

@@ -80,14 +80,16 @@ function renderProductTable(data) {
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.style.display = "flex";
+        cell.style.flexDirection = "column";
+        cell.style.alignItems = "stretch";
+        cell.style.gap = "5px";
         let editBtn = document.createElement("button");
         let removeBtn = document.createElement("button");
         editBtn.innerText = "Edit";
         removeBtn.innerText = "Remove";
         editBtn.className = "secondary-button";
         removeBtn.className = "secondary-button";
-        editBtn.style.marginBottom = "5px";
-        editBtn.style.marginRight = "5px";
         editBtn.addEventListener("click", () => editProduct(product));
         removeBtn.addEventListener("click", () => removeProduct(product));
         cell.appendChild(editBtn);
@@ -167,11 +169,17 @@ function addProduct() {
     const productDescInput = document.getElementById("productDesc");
     const priceInput = document.getElementById("price");
     const productClassSelect = document.getElementById("productClassesSelect");
+    const currentProductImgInput = document.getElementById("currentProductImg");
+    const productImgFileInput = document.getElementById("productImgFile");
+    const productImgPreview = document.getElementById("productImgPreview");
     productIDInput.value = "";
     productNameInput.value = "";
     productDescInput.value = "";
     priceInput.value = "";
     productClassSelect.value = "";
+    currentProductImgInput.value = "";
+    productImgFileInput.value = "";
+    productImgPreview.src = "../assets/images/menu/placeholder.jpg";
     popup.style.visibility = "visible";
 }
 
@@ -181,8 +189,21 @@ saveBtn.addEventListener("click", function() {
     const productDescInput = document.getElementById("productDesc");
     const priceInput = document.getElementById("price");
     const productClassSelect = document.getElementById("productClassesSelect");
-    let product = { productID: productIDInput.value, productName: productNameInput.value, productDesc: productDescInput.value, price: priceInput.value, productClass: productClassSelect.value };
-    saveProduct(product);
+    const currentProductImgInput = document.getElementById("currentProductImg");
+    const productImgFileInput = document.getElementById("productImgFile");
+
+    const formData = new FormData();
+    formData.append("productID", productIDInput.value);
+    formData.append("productName", productNameInput.value);
+    formData.append("productDesc", productDescInput.value);
+    formData.append("price", priceInput.value);
+    formData.append("productClass", productClassSelect.value);
+    formData.append("currentProductImg", currentProductImgInput.value);
+    if (productImgFileInput.files && productImgFileInput.files[0]) {
+        formData.append("productImgFile", productImgFileInput.files[0]);
+    }
+
+    saveProduct(formData);
     popup.style.visibility = "hidden";
 });
 
@@ -190,23 +211,30 @@ cancelBtn.addEventListener("click", function() {
     popup.style.visibility = "hidden";
 });
 
+// Live preview when admin picks a new image file
+const productImgFileInput = document.getElementById("productImgFile");
+if (productImgFileInput) {
+    productImgFileInput.addEventListener("change", function(e) {
+        const file = e.target.files && e.target.files[0];
+        const preview = document.getElementById("productImgPreview");
+        if (!file || !preview) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            preview.src = evt.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+}
 
-function saveProduct(product) {
-    if (!product) {
+function saveProduct(formData) {
+    if (!formData) {
         return;
     }
-    let urlEncodedProduct = "";
-    urlEncodedProduct += "productID=" + product.productID + "&";
-    urlEncodedProduct += "productName=" + product.productName + "&";
-    urlEncodedProduct += "productDesc=" + product.productDesc + "&";
-    urlEncodedProduct += "price=" + product.price + "&";
-    urlEncodedProduct += "productClass=" + product.productClass + "";
+    // NOTE: Do NOT set Content-Type header manually — the browser must set
+    // it to multipart/form-data with the correct boundary for file uploads.
     fetch("../assets/php/admin.php?saveProduct", {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: urlEncodedProduct
+        body: formData
     })
     .then(function (response) {
         if (!response.ok) {
@@ -254,10 +282,16 @@ function editProduct(product) {
     const productDescInput = document.getElementById("productDesc");
     const priceInput = document.getElementById("price");
     const productClassSelect = document.getElementById("productClassesSelect");
+    const currentProductImgInput = document.getElementById("currentProductImg");
+    const productImgFileInput = document.getElementById("productImgFile");
+    const productImgPreview = document.getElementById("productImgPreview");
     productIDInput.value = product.productID;
     productNameInput.value = product.productName;
     productDescInput.value = product.productDesc;
     priceInput.value = product.price;
     productClassSelect.value = product.productClass;
+    currentProductImgInput.value = product.productImg || "";
+    productImgFileInput.value = "";
+    productImgPreview.src = "../assets/images/menu/" + (product.productImg || "placeholder.jpg");
     popup.style.visibility = "visible";    
 }

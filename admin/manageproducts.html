@@ -17,15 +17,21 @@
         <h3>Add/Edit Menu Item</h3>
         <div id="add-product-form" class="form">
             <input class="form-control" style="display: none;" type="text" id="productID" placeholder="ID" >
-            <label for="text">Product Name:</label>
+            <input type="hidden" id="currentProductImg" value="">
+            <label for="productName">Product Name:</label>
             <input class="form-control" type="text" id="productName" placeholder="Name" required>
-            <label for="text">Product Description:</label>
+            <label for="productDesc">Product Description:</label>
             <textarea class="form-control" type="text" rows="3" id="productDesc" placeholder="Description" required></textarea>
-            <label for="text">Price:</label>
+            <label for="price">Price:</label>
             <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
-            <label for="text">Product Class:</label>
+            <label for="productClassesSelect">Product Class:</label>
             <select class="form-control" id="productClassesSelect" name="productClass">
             </select>
+            <label for="productImgFile">Product Image:</label>
+            <div class="image-upload-row">
+                <img id="productImgPreview" class="product-img-preview" src="../assets/images/menu/placeholder.jpg" alt="Product image preview">
+                <input class="form-control" type="file" id="productImgFile" accept="image/png,image/jpeg,image/gif,image/webp">
+            </div>
         </div>
         <div>
             <button class="primary-button" type="submit" id="saveProductBtn">Save</button>
@@ -73,11 +79,34 @@
     </main>
 
     <footer class="site-footer">
-        <div class="footer-bottom">
-            <div class="footer-socials">
-                <a href="https://www.instagram.com/clarenceskitchen/" target="_blank" rel="noopener" aria-label="Instagram"><img src="../assets/images/instagram.png" alt="Instagram"></a>
-                <a href="https://www.facebook.com/ClarencesKitchen/" target="_blank" rel="noopener" aria-label="Facebook"><img src="../assets/images/facebook.png" alt="Facebook"></a>
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="../assets/images/logo.png" alt="Clarence's Kitchen" class="footer-logo">
+                <span class="footer-title">Clarence's Kitchen</span>
+                <p>Bold flavour, warm service, and comfort food that shows up.</p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/clarenceskitchen/" target="_blank" rel="noopener" aria-label="Instagram"><img src="../assets/images/instagram.png" alt="Instagram"></a>
+                    <a href="https://www.facebook.com/ClarencesKitchen/" target="_blank" rel="noopener" aria-label="Facebook"><img src="../assets/images/facebook.png" alt="Facebook"></a>
+                </div>
             </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../menu/">Menu</a></li>
+                    <li><a href="../catering/">Catering</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <ul>
+                    <li>(647)-438-8589</li>
+                    <li>clarenceskitchen@gmail.com</li>
+                    <li>8 Glen Watford Drive, Scarborough, ON</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
             <p>&copy; 2026 Clarence's Kitchen. All rights reserved.</p>
         </div>
     </footer>

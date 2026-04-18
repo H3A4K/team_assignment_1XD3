@@ -566,15 +566,6 @@ h3 { font-size: 1.1rem; }
         font-size: 1rem !important;
     }
 
-    .nav-mobile-status {
-        padding: 0.75rem 1.75rem;
-        font-size: 0.88rem;
-        color: rgba(255, 255, 255, 0.45);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
     .primary-button,
     .secondary-button,
     .button {

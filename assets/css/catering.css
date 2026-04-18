@@ -62,18 +62,46 @@ main {
     line-height: 1.7;
 }
 
-.placeholder-box {
-    margin-top: 1.25rem;
-    min-height: 180px;
-    border: 2px dashed var(--c-border);
-    border-radius: var(--radius-md);
+.catering-details {
+    margin-top: 1.5rem;
     display: grid;
-    place-items: center;
-    text-align: center;
-    padding: 1rem;
-    color: var(--c-text-muted);
-    background-color: var(--c-primary-light);
-    font-size: 0.88rem;
+    gap: 1.25rem;
+}
+
+.catering-section h3 {
+    font-size: 0.8rem;
+    color: var(--c-primary);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+}
+
+.catering-section ul {
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+}
+
+.catering-section li {
+    font-size: 0.9rem;
+    color: var(--c-text-secondary);
+    line-height: 1.55;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.catering-section li::before {
+    content: "•";
+    color: var(--c-primary);
+    font-weight: 700;
+    position: absolute;
+    left: 0;
+}
+
+.catering-section strong {
+    color: var(--c-text);
+    font-weight: 600;
 }
 
 .contact-list {
