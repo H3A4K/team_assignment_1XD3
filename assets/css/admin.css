@@ -3,21 +3,6 @@ body {
     position: relative;
 }
 
-/* Admin nav has more items (Dashboard, Products, Orders, Promo Codes,
-   Promotions + public links) so tighten spacing so it fits alongside the
-   site title and logout button without overlapping. */
-.main-nav li a {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.85rem;
-}
-
-@media (min-width: 769px) and (max-width: 1200px) {
-    .main-nav li a {
-        padding: 0.35rem 0.55rem;
-        font-size: 0.8rem;
-    }
-}
-
 main {
     max-width: 1200px;
     margin: 0 auto;
