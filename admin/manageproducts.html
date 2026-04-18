@@ -7,11 +7,32 @@
     <title>Manage Products | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="../assets/js/admin.js" defer></script>
+    <!-- <script src="../assets/js/admin.js" defer></script> -->
+    <script src="../assets/js/manage_products.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
 <body>
+    <div id="popup" class="popup" >
+        <h3>Add/Edit Menu Item</h3>
+        <div id="add-product-form" class="form">
+            <input class="form-control" style="display: none;" type="text" id="productID" placeholder="ID" >
+            <label for="text">Product Name:</label>
+            <input class="form-control" type="text" id="productName" placeholder="Name" required>
+            <label for="text">Product Description:</label>
+            <textarea class="form-control" type="text" rows="3" id="productDesc" placeholder="Description" required></textarea>
+            <label for="text">Price:</label>
+            <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
+            <label for="text">Product Class:</label>
+            <select class="form-control" id="productClassesSelect" name="productClass">
+            </select>
+        </div>
+        <div>
+            <button class="primary-button" type="submit" id="saveProductBtn">Save</button>
+            <button class="secondary-button" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
     <header class="site-header">
         <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
         <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -29,6 +50,9 @@
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
         <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
             <li><a href="index.html">Dashboard</a></li>
             <li><a class="current" href="manageproducts.html">Products</a></li>
             <li><a href="manageorders.html">Orders</a></li>
@@ -36,23 +60,16 @@
         </ul>
     </nav>
 
+        
     <main>
-        <h3>Add Item to Menu</h3>
-        <form id="add-product-form" class="form">
-            <input class="form-control" type="text" name="productName" placeholder="Name" required>
-            <input class="form-control" type="text" name="productDesc" placeholder="Description" required>
-            <input class="form-control" type="number" step="1.0" name="price" placeholder="Price" required>
-            <!-- <input class="form-control" type="text" name="productClass" placeholder="Category" required> -->
-            <select class="form-control" id="productClassesSelect">
-                <option value="-1">Select product class</option>
-            </select>
-            <button class="form-control" type="submit">Add Product</button>
-            
-
-        </form>
-
-        <h3>Products</h3>
+        <div class="toolbar">
+            <p>Products</p>
+            <button id="addProductBtn" class="primary-button last-item">Add Product</button>
+        </div>
         <div id="product-table"></div>
+        <div class="toolbar">
+            <button id="bottomAddProductBtn" class="primary-button last-item">Add Product</button>
+        </div>
     </main>
 
     <footer class="site-footer">

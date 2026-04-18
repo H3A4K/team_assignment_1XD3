@@ -7,11 +7,27 @@
     <title>Manage Orders | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="../assets/js/admin.js" defer></script>
+    <script src="../assets/js/manage_orders.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
 <body>
+    <div id="popup" class="popup">
+        <h3>Change Order Status</h3>
+        <form id="order-status-form" class="form">
+            <input class="form-control" id="orderID" style="display: none;">
+            <label for="fullfilled">Status</label>
+            <select class="form-control" id="fullfilled" required>
+                <option value="1">Completed</option>
+                <option value="0">Incomplete</option>
+            </select>
+        </form>
+        <div>
+            <button class="primary-button" type="submit" id="saveOrderBtn">Save</button>
+            <button class="secondary-button" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
     <header class="site-header">
         <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
         <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
@@ -29,6 +45,9 @@
 
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">
         <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
             <li><a href="index.html">Dashboard</a></li>
             <li><a href="manageproducts.html">Products</a></li>
             <li><a class="current" href="manageorders.html">Orders</a></li>
@@ -37,19 +56,14 @@
     </nav>
 
     <main>
-        <h3>Change Order Status</h3>
-        <form id="order-status-form" class="form">
-            <input class="form-control" type="number" name="orderID" placeholder="Order ID" required>
-            <select class="form-control" name="fullfilled" required>
-                <option id="default-in-select" value="">Select an option</option>
-                <option value="compete">Completed</option>
-                <option value="incomplete">Incomplete</option>
-            </select>
-            <button class="form-control" type="submit">Change Status</button>
-        </form>
-
-        <h3>Orders</h3>
+        <div class="toolbar">
+            <p>Orders</p>
+            <!-- <button id="editOrderBtn" class="primary-button last-item">Change Order Status</button> -->
+        </div>
         <div id="order-table"></div>
+        <!-- <div class="toolbar">
+            <button id="bottomEditOrderBtn" class="primary-button last-item">Change Order Status</button>
+        </div> -->
     </main>
 
     <footer class="site-footer">
