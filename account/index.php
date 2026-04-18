@@ -1,14 +1,20 @@
-<?php session_start(); ?>
+<?php session_start(); 
+include "../assets/php/connect.php";
+if (!isset($_SESSION["email"])) {
+    header("Location: ../");
+    exit();
+}
+?>
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login | Clarence's Kitchen</title>
+    <title>Account | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css" />
-    <link rel="stylesheet" href="../assets/css/login.css" />
-    <script src="../assets/js/login.js" defer></script>
+    <link rel="stylesheet" href="../assets/css/account.css" />
+    <script src="../assets/js/account.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
@@ -59,24 +65,59 @@
     </nav>
 
     <div id="content">
-        <img src="../assets/images/logo.png" id="logo" />
-        <div id="form">
+        <div id ="adminandlogo">
+            <img src="../assets/images/logo.png" id="logo" />
+            <?php
+            // Check if they're an admin
+            if (!isset($_SESSION["email"])) {
+                return;
+            }
+
+            $email = $_SESSION["email"];
+            $cmd = "SELECT admin FROM users where email=?";
+            $stmt = $dbh->prepare($cmd);
+            $success = $stmt->execute([$email]);
+            if (!$success) {
+                return;
+            }
+            $row = $stmt->fetch();
+            if ($row["admin"] == 1) {
+            ?>
+            <a class="button" href="../admin" id="adminpanel">Admin Panel</a>
+            <?php
+            }
+            ?>
+        </div>
+        <div id="changeForms">
             <div class="inputcontainer">
                 <label for="emailinput">Email</label>
                 <input type="email" id="emailinput" placeholder="email@example.com" />
+                <button id="changeemail" class="button">Change Email</button>
             </div>
+
             <div class="inputcontainer">
-                <label for="passwordinput">Password</label>
-                <input type="password" id="passwordinput" />
+                <label for="passinput">Password</label>
+                <input type="password" id="passinput" placeholder="Password123!" />
+                <button id="changepass" class="button">Change Password</button>
+            </div>
+
+            <div class="inputcontainer">
+                <label for="phoneinput">Phone Number</label>
+                <input type="text" id="phoneinput" placeholder="123-456-7890" />
+                <button id="changephone" class="button">Change Phone Number</button>
+            </div>
+
+            <div class="inputcontainer">
+                <label for="addressinput">Address</label>
+                <input type="text" id="addressinput" placeholder="15 Example Drive" />
+                <button id="changeaddress" class="button">Change Address</button>
             </div>
             <p id="errormessage">Error</p>
-            <div id="btns">
-                <button id="submitbtn" class="button">Login</button>
-                <h3>Don't have an account?</h3>
-                <button id="gotoregister" class="button">Sign up</button>
-            </div>
         </div>
+
+
     </div>
+
 
     <footer class="site-footer">
         <div class="footer-inner">

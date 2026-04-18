@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `phonenumber` varchar(25) UNIQUE,
     `address` TEXT,
     `ordersdone` INT DEFAULT(0),
+    `admin` BOOLEAN DEFAULT(0),
     PRIMARY KEY (`userID`)
 );
 
