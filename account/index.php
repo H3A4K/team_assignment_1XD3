@@ -38,7 +38,7 @@ if (!isset($_SESSION["email"])) {
                     </div>
                 </div>
             <?php } else { ?>
-                <span class="login-status">Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></span>
+                <a href="../account/" class="login-status">Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></a>
                 <div class="account-menu" id="logoutbtn">
                     <a class="nav-cta account-trigger" aria-label="Account menu">
                         <img src="../assets/images/user.png" alt="">
@@ -58,7 +58,7 @@ if (!isset($_SESSION["email"])) {
                 <li class="nav-mobile-only"><a href="../login/">Login</a></li>
                 <li class="nav-mobile-only"><a href="../signup/">Sign Up</a></li>
             <?php } else { ?>
-                <li class="nav-mobile-only nav-mobile-status"><span>Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></span></li>
+                <li class="nav-mobile-only nav-mobile-status"><a href="../account/">Logged in as <?php echo htmlspecialchars($_SESSION["email"]); ?></a></li>
                 <li class="nav-mobile-only"><a href="#" id="mobile-logout">Logout</a></li>
             <?php } ?>
         </ul>
