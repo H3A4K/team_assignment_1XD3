@@ -100,8 +100,7 @@ INSERT INTO `productClasses` (`name`, `quantity`, `time`) VALUES
 ('Salad', 2, 2.5);
 
 INSERT INTO `products` (`productID`, `productName`, `productDesc`, `price`, `productImg`, `productClass`) VALUES
-(101, 'Ck Chicken Wings (1 lb)', '*Fan favourite!* 
-Juicy wings tossed in your choice of mild classic or spicy tangy sauce. Crispy outside and tender inside.', 16.99, 'ck-chicken-wings-1-lb.jpg', 'CK Favourites'),
+(101, 'Ck Chicken Wings (1 lb)', '*Fan favourite!* Juicy wings tossed in your choice of mild classic or spicy tangy sauce. Crispy outside and tender inside.', 16.99, 'ck-chicken-wings-1-lb.jpg', 'CK Favourites'),
 (102, 'Cajun Wings (1 lb)', 'Boldly seasoned wings with spices and fried to crispy perfection. Crispy on the outside, juicy on the inside, and tossed in a bold blend of smoky Cajun seasoning.', 16.99, 'cajun-wings-1-lb.jpg', 'CK Favourites'),
 (103, 'CK Loaded Fries', 'Golden fries stacked high and covered in melted cheese, crispy bacon, red onions, and spicy jalapenos. Finished with a drizzle of creamy garlic sauce for the perfect mix of cheesy, smoky, and spicy flavor in every bite.', 14.99, 'ck-loaded-fries.jpg', 'CK Favourites'),
 (104, 'Classic Poutine', 'Crispy golden fries piled high and smothered in rich, savory brown gravy, topped with squeaky, melt in your mouth cheese curds. Every bite is a perfect mix of crunch, creaminess, and pure Canadian comfort.', 11.99, 'classic-poutine.jpg', 'Side'),
