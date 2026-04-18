@@ -26,10 +26,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const cartItems = document.querySelector(".cd-cart-items");
     const cartStatus = document.getElementById("cd-cart-status");
     const cartSubtotal = document.getElementById("cd-cart-subtotal");
+    const cartDiscountRow = document.getElementById("cd-cart-discount-row");
+    const cartDiscount = document.getElementById("cd-cart-discount");
     const cartTotal = document.getElementById("cd-cart-total");
     const checkoutBtn = document.getElementById("cd-cart-checkout");
     const checkoutForm = document.getElementById("cd-cart-checkout-form");
     const cartFeedback = document.getElementById("cd-cart-feedback");
+    const promocodeInput = document.getElementById("promocode-input");
+    const promocodeApplyBtn = document.getElementById("promocode-apply-btn");
+    const appliedPromoBox = document.getElementById("applied-promocode");
+    const appliedPromoLabel = document.getElementById("applied-promocode-label");
+    const removePromocodeBtn = document.getElementById("remove-promocode-btn");
 
     if (!menu || !searchInput || !sortSelect || !classFilterBtn || !classFilterDropdown || !cartItems || !cartStatus || !cartSubtotal || !cartTotal || !checkoutBtn || !checkoutForm || !cartFeedback) {
         console.error("Menu page is missing expected cart or filter elements.");
@@ -66,6 +73,28 @@ document.addEventListener("DOMContentLoaded", function () {
         cartSubtotal.textContent = formatCurrency(cartData.subtotal || 0);
         cartTotal.textContent = formatCurrency(cartData.total || 0);
 
+        // Discount row: only show when there's a real non-zero discount
+        const discountAmount = Number(cartData.discount || 0);
+        if (cartDiscount) {
+            cartDiscount.textContent = discountAmount > 0
+                ? "−" + formatCurrency(discountAmount)
+                : "−$0.00";
+        }
+        if (cartDiscountRow) cartDiscountRow.hidden = !(discountAmount > 0);
+
+        // Applied-promo chip: only show when there's a real non-empty code string
+        const appliedCode = typeof cartData.appliedPromoCode === "string"
+            ? cartData.appliedPromoCode.trim()
+            : "";
+        if (appliedCode && appliedPromoBox && appliedPromoLabel) {
+            appliedPromoLabel.textContent = appliedCode;
+            appliedPromoBox.hidden = false;
+            if (promocodeInput) promocodeInput.value = "";
+        } else {
+            if (appliedPromoLabel) appliedPromoLabel.textContent = "";
+            if (appliedPromoBox) appliedPromoBox.hidden = true;
+        }
+
         if (!cartData.loggedIn) {
             setCartStatus("Log in to view and complete your order.");
             checkoutBtn.disabled = true;
@@ -85,18 +114,106 @@ document.addEventListener("DOMContentLoaded", function () {
             const li = document.createElement("li");
 
             const itemInfo = document.createElement("div");
+            itemInfo.className = "cd-item-info";
             const qty = document.createElement("span");
             qty.className = "cd-qty";
             qty.textContent = item.quantity + "x";
             itemInfo.append(qty, " " + item.productName);
 
+            const right = document.createElement("div");
+            right.className = "cd-item-right";
+
             const price = document.createElement("div");
             price.className = "cd-price";
             price.textContent = formatCurrency(item.lineTotal);
 
-            li.append(itemInfo, price);
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.className = "cd-item-remove";
+            removeBtn.setAttribute("aria-label", "Remove " + item.productName + " from cart");
+            removeBtn.textContent = "×";
+            removeBtn.addEventListener("click", () => removeFromCart(item.orderDetailID, item.productName));
+
+            right.append(price, removeBtn);
+            li.append(itemInfo, right);
             cartItems.appendChild(li);
         }
+    }
+
+    async function removeFromCart(orderDetailID, productName) {
+        if (!orderDetailID) return;
+        try {
+            const response = await fetch("../assets/php/remove_from_order.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ orderDetailID })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Failed to remove item");
+
+            setCartFeedback((productName || "Item") + " removed from cart.");
+            await refreshCart();
+        } catch (error) {
+            console.error(error);
+            setCartFeedback(error.message, true);
+        }
+    }
+
+    async function applyPromocode() {
+        if (!promocodeInput) return;
+        const code = promocodeInput.value.trim();
+        if (code === "") {
+            setCartFeedback("Enter a promo code first.", true);
+            return;
+        }
+        try {
+            promocodeApplyBtn.disabled = true;
+            const response = await fetch("../assets/php/apply_promocode.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ promoCode: code })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Invalid promo code");
+
+            setCartFeedback("Promo code \"" + result.promoCode + "\" applied.");
+            await refreshCart();
+        } catch (error) {
+            console.error(error);
+            setCartFeedback(error.message, true);
+        } finally {
+            promocodeApplyBtn.disabled = false;
+        }
+    }
+
+    async function removePromocode() {
+        try {
+            const response = await fetch("../assets/php/remove_promocode.php", {
+                method: "POST"
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Failed to remove promo code");
+            setCartFeedback("Promo code removed.");
+            await refreshCart();
+        } catch (error) {
+            console.error(error);
+            setCartFeedback(error.message, true);
+        }
+    }
+
+    if (promocodeApplyBtn) {
+        promocodeApplyBtn.addEventListener("click", applyPromocode);
+    }
+    if (promocodeInput) {
+        promocodeInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                applyPromocode();
+            }
+        });
+    }
+    if (removePromocodeBtn) {
+        removePromocodeBtn.addEventListener("click", removePromocode);
     }
 
     async function refreshCart() {

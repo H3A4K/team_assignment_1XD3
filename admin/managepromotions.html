@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Promotions | Clarence's Kitchen</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+    <script src="../assets/js/manage_promotions.js" defer></script>
+    <script src="../assets/js/global.js" defer></script>
+</head>
+
+<body>
+    <div id="popup" class="popup">
+        <h3>Add/Edit Promotion</h3>
+        <div id="add-promotion-form" class="form">
+            <input class="form-control" style="display: none;" type="text" id="promotionID">
+            <input type="hidden" id="currentPromotionImg" value="">
+
+            <label for="title">Title:</label>
+            <input class="form-control" type="text" id="title" placeholder="Wings & Fries" required>
+
+            <label for="eyebrow">Eyebrow (small text above title):</label>
+            <input class="form-control" type="text" id="eyebrow" placeholder="Combo Deal">
+
+            <label for="price">Price (display text):</label>
+            <input class="form-control" type="text" id="price" placeholder="$22.99">
+
+            <label for="badge">Badge (top-left corner):</label>
+            <input class="form-control" type="text" id="badge" placeholder="Only for a Limited Time">
+
+            <label for="description">Description:</label>
+            <textarea class="form-control" rows="3" id="description" placeholder="Describe the promotion..."></textarea>
+
+            <label for="finePrint">Fine Print (one line per rule):</label>
+            <textarea class="form-control" rows="3" id="finePrint" placeholder="*Available for pickup & delivery.&#10;*Not applicable with any other offer."></textarea>
+
+            <label for="theme">Theme (banner color):</label>
+            <select class="form-control" id="theme">
+                <option value="orange">Orange</option>
+                <option value="brown">Brown</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+            </select>
+
+            <label for="ctaLabel">Button Label:</label>
+            <input class="form-control" type="text" id="ctaLabel" placeholder="Order Now" value="Order Now">
+
+            <label for="active">Status:</label>
+            <select class="form-control" id="active">
+                <option value="1">Active (shown on menu page)</option>
+                <option value="0">Inactive (hidden)</option>
+            </select>
+
+            <label for="sortOrder">Sort Order (lower = shown first):</label>
+            <input class="form-control" type="number" id="sortOrder" value="0">
+
+            <label for="promoCode">Promo Code (optional):</label>
+            <input class="form-control" type="text" id="promoCode" placeholder="e.g. WELCOME10">
+            <p class="form-hint">Shown on the promotion card so customers know what to enter at checkout. Must match an existing code in the Promo Codes page for the discount to actually apply.</p>
+
+            <label for="promotionImgFile">Banner Image:</label>
+            <div class="image-upload-row">
+                <img id="promotionImgPreview" class="product-img-preview" src="../assets/images/menu/placeholder.jpg" alt="Promotion banner preview">
+                <input class="form-control" type="file" id="promotionImgFile" accept="image/png,image/jpeg">
+            </div>
+        </div>
+        <div>
+            <button class="primary-button" type="submit" id="savePromotionBtn">Save</button>
+            <button class="secondary-button" id="cancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <a href="../" class="site-title"><img src="../assets/images/logo.png" alt="" class="site-logo">Clarence's Kitchen</a>
+        <button class="hamburger" id="hamburger-toggle" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
+        </button>
+        <div class="header-actions">
+            <div class="account-menu">
+                <a class="nav-cta account-trigger" href="../login/" aria-label="Logout">
+                    <img src="../assets/images/user.png" alt="">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <ul>
+            <li><a href="../">Home</a></li>
+            <li><a href="../menu">Menu</a></li>
+            <li><a href="../catering/">Catering</a></li>
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="manageproducts.html">Products</a></li>
+            <li><a href="manageorders.html">Orders</a></li>
+            <li><a href="managepromo.html">Promo Codes</a></li>
+            <li><a class="current" href="managepromotions.html">Promotions</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="toolbar">
+            <p>Promotions</p>
+            <button id="addPromotionBtn" class="primary-button last-item">Add Promotion</button>
+        </div>
+        <div id="promotion-table"></div>
+        <div class="toolbar">
+            <button id="bottomAddPromotionBtn" class="primary-button last-item">Add Promotion</button>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img src="../assets/images/logo.png" alt="Clarence's Kitchen" class="footer-logo">
+                <span class="footer-title">Clarence's Kitchen</span>
+                <p>Bold flavour, warm service, and comfort food that shows up.</p>
+                <div class="footer-socials">
+                    <a href="https://www.instagram.com/clarenceskitchen/" target="_blank" rel="noopener" aria-label="Instagram"><img src="../assets/images/instagram.png" alt="Instagram"></a>
+                    <a href="https://www.facebook.com/ClarencesKitchen/" target="_blank" rel="noopener" aria-label="Facebook"><img src="../assets/images/facebook.png" alt="Facebook"></a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="../">Home</a></li>
+                    <li><a href="../menu/">Menu</a></li>
+                    <li><a href="../catering/">Catering</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Contact</h4>
+                <ul>
+                    <li>(647)-438-8589</li>
+                    <li>clarenceskitchen@gmail.com</li>
+                    <li>8 Glen Watford Drive, Scarborough, ON</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Clarence's Kitchen. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+
+</html>

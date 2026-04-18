@@ -3,6 +3,21 @@ body {
     position: relative;
 }
 
+/* Admin nav has more items (Dashboard, Products, Orders, Promo Codes,
+   Promotions + public links) so tighten spacing so it fits alongside the
+   site title and logout button without overlapping. */
+.main-nav li a {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .main-nav li a {
+        padding: 0.35rem 0.55rem;
+        font-size: 0.8rem;
+    }
+}
+
 main {
     max-width: 1200px;
     margin: 0 auto;
@@ -166,10 +181,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
-/* Product add/edit and order status popups use stacked rows so fields have
+/* Product, order-status, and promotion popups use stacked rows so fields have
    room to breathe, unlike the promo-code form which uses .layout-column wrappers. */
 #add-product-form,
-#order-status-form {
+#order-status-form,
+#add-promotion-form {
     flex-direction: column;
     max-width: 560px;
     margin-left: auto;
@@ -177,7 +193,8 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 #add-product-form label,
-#order-status-form label {
+#order-status-form label,
+#add-promotion-form label {
     font-size: 0.88rem;
     font-weight: 600;
     color: var(--c-text);
@@ -186,19 +203,31 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 #add-product-form label:first-of-type,
-#order-status-form label:first-of-type {
+#order-status-form label:first-of-type,
+#add-promotion-form label:first-of-type {
     margin-top: 0;
 }
 
 #add-product-form .form-control,
-#order-status-form .form-control {
+#order-status-form .form-control,
+#add-promotion-form .form-control {
     width: 100%;
     box-sizing: border-box;
 }
 
-#add-product-form textarea.form-control {
+#add-product-form textarea.form-control,
+#add-promotion-form textarea.form-control {
     resize: vertical;
     max-width: 100%;
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: var(--c-text-muted);
+    font-style: italic;
+    line-height: 1.45;
+    margin-top: 0.15rem;
+    margin-bottom: 0.25rem;
 }
 
 .image-upload-row {

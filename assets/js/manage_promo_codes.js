@@ -43,6 +43,10 @@ function renderPromoCodeTable(data) {
     headerRow.appendChild(name);
 
     name = document.createElement("th");
+    name.innerText = "Required Products";
+    headerRow.appendChild(name);
+
+    name = document.createElement("th");
     name.innerText = "Action";
     headerRow.appendChild(name); 
 
@@ -84,6 +88,10 @@ function renderPromoCodeTable(data) {
 
         cell = document.createElement("td");
         cell.innerText = promocodes.expiryDate;
+        promoCodeRow.appendChild(cell);
+
+        cell = document.createElement("td");
+        cell.innerText = promocodes.requiredProductIDs || "—";
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
@@ -142,12 +150,14 @@ function addPromoCode() {
     const discountValueInput = document.getElementById("discountValue");
     const statusInput = document.getElementById("active");
     const expiryDateInput = document.getElementById("expiryDate");
+    const requiredProductIDsInput = document.getElementById("requiredProductIDs");
     promoCodeIDInput.value = "";
     promoCodeInput.value = "";
     discountTypeInput.value = "";
     discountValueInput.value = "";
     statusInput.value = "";
     expiryDateInput.value = "";
+    requiredProductIDsInput.value = "";
     popup.style.visibility = "visible";
 }
 
@@ -158,7 +168,16 @@ saveBtn.addEventListener("click", function() {
     const discountValueInput = document.getElementById("discountValue");
     const statusInput = document.getElementById("active");
     const expiryDateInput = document.getElementById("expiryDate");
-    let promoCode = { promoID: promoCodeIDInput.value, promoCode: promoCodeInput.value, discountType: discountTypeInput.value, discountValue: discountValueInput.value, active: statusInput.value, expiryDate: expiryDateInput.value };
+    const requiredProductIDsInput = document.getElementById("requiredProductIDs");
+    let promoCode = {
+        promoID: promoCodeIDInput.value,
+        promoCode: promoCodeInput.value,
+        discountType: discountTypeInput.value,
+        discountValue: discountValueInput.value,
+        active: statusInput.value,
+        expiryDate: expiryDateInput.value,
+        requiredProductIDs: requiredProductIDsInput.value,
+    };
     savePromoCode(promoCode);
     popup.style.visibility = "hidden";
 });
@@ -172,12 +191,13 @@ function savePromoCode(promoCode) {
         return;
     }
     let urlEncodedPromoCode = "";
-    urlEncodedPromoCode += "promoID=" + promoCode.promoID + "&";
-    urlEncodedPromoCode += "promoCode=" + promoCode.promoCode + "&";
-    urlEncodedPromoCode += "discountType=" + promoCode.discountType + "&";
-    urlEncodedPromoCode += "discountValue=" + promoCode.discountValue + "&";
-    urlEncodedPromoCode += "active=" + promoCode.active + "&";
-    urlEncodedPromoCode += "expiryDate=" + promoCode.expiryDate + "";
+    urlEncodedPromoCode += "promoID=" + encodeURIComponent(promoCode.promoID) + "&";
+    urlEncodedPromoCode += "promoCode=" + encodeURIComponent(promoCode.promoCode) + "&";
+    urlEncodedPromoCode += "discountType=" + encodeURIComponent(promoCode.discountType) + "&";
+    urlEncodedPromoCode += "discountValue=" + encodeURIComponent(promoCode.discountValue) + "&";
+    urlEncodedPromoCode += "active=" + encodeURIComponent(promoCode.active) + "&";
+    urlEncodedPromoCode += "expiryDate=" + encodeURIComponent(promoCode.expiryDate) + "&";
+    urlEncodedPromoCode += "requiredProductIDs=" + encodeURIComponent(promoCode.requiredProductIDs || "");
     fetch("../assets/php/admin.php?savePromoCode", {
         method: 'POST',
         headers: {
@@ -224,22 +244,23 @@ function removePromoCode(promocode) {
 }
 
 function editPromoCode(promocode) {
-    //console.log("Date: ", promocode.expiryDate);
     const promoCodeIDInput = document.getElementById("promoID");
     const promoCodeInput = document.getElementById("promoCode");
     const discountTypeInput = document.getElementById("discountType");
     const discountValueInput = document.getElementById("discountValue");
     const statusInput = document.getElementById("active");
     const expiryDateInput = document.getElementById("expiryDate");
+    const requiredProductIDsInput = document.getElementById("requiredProductIDs");
     promoCodeIDInput.value = promocode.promoID;
     promoCodeInput.value = promocode.promoCode;
     discountTypeInput.value = promocode.discountType;
     discountValueInput.value = promocode.discountValue;
     statusInput.value = promocode.active;
-    //expiryDateInput.value = promocode.expiryDate;
     if (promocode.expiryDate) {
         expiryDateInput.valueAsDate = new Date(promocode.expiryDate);
+    } else {
+        expiryDateInput.value = "";
     }
+    requiredProductIDsInput.value = promocode.requiredProductIDs || "";
     popup.style.visibility = "visible";    
-    
 }

@@ -11,6 +11,18 @@ $cartStatusMessage = "Log in to view and complete your order.";
 $cartFeedbackMessage = "";
 $cartFeedbackIsError = false;
 
+// Load active promotional banners for display above the menu.
+// Admins manage these via /admin/managepromotions.html
+$activePromotions = [];
+try {
+    $promoStmt = $dbh->prepare("SELECT * FROM promotions WHERE active = 1 ORDER BY sortOrder ASC, promotionID ASC");
+    $promoStmt->execute();
+    $activePromotions = $promoStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+    // Silently fall back to no promos if the table doesn't exist yet
+    $activePromotions = [];
+}
+
 if (isset($_GET["order_completed"])) {
     $cartFeedbackMessage = "Order completed successfully.";
 } elseif (isset($_GET["order_error"])) {
@@ -127,6 +139,73 @@ if (isset($_SESSION["userID"])) {
     </nav>
 
     <main>
+        <?php if (count($activePromotions) > 0): ?>
+            <section class="promos" aria-label="Current promotions">
+                <?php foreach ($activePromotions as $promo):
+                    // Split price into dollars + cents if admin entered a value like "$22.99"
+                    $priceDisplay = trim($promo["price"] ?? "");
+                    $priceAmount = $priceDisplay;
+                    $priceCents = "";
+                    if (preg_match('/^(\$?\d+)(\.\d{2})$/', $priceDisplay, $m)) {
+                        $priceAmount = $m[1];
+                        $priceCents = $m[2];
+                    }
+
+                    $theme = in_array($promo["theme"] ?? "", ["orange", "brown", "green", "blue"], true)
+                        ? $promo["theme"]
+                        : "orange";
+
+                    // Fine print: one bullet per line
+                    $fineLines = array_filter(
+                        array_map("trim", explode("\n", $promo["finePrint"] ?? "")),
+                        function ($s) { return $s !== ""; }
+                    );
+                ?>
+                    <article class="promo-card">
+                        <div class="promo-banner promo-banner--<?php echo htmlspecialchars($theme); ?>">
+                            <?php if (!empty($promo["badge"])): ?>
+                                <span class="promo-badge"><?php echo htmlspecialchars($promo["badge"]); ?></span>
+                            <?php endif; ?>
+                            <div class="promo-banner-content">
+                                <?php if (!empty($promo["eyebrow"])): ?>
+                                    <p class="promo-eyebrow"><?php echo htmlspecialchars($promo["eyebrow"]); ?></p>
+                                <?php endif; ?>
+                                <h2 class="promo-banner-title"><?php echo htmlspecialchars($promo["title"]); ?></h2>
+                                <?php if ($priceDisplay !== ""): ?>
+                                    <p class="promo-banner-price">
+                                        <span class="promo-price-amount"><?php echo htmlspecialchars($priceAmount); ?></span><?php if ($priceCents !== ""): ?><sup class="promo-price-cents"><?php echo htmlspecialchars($priceCents); ?></sup><?php endif; ?>
+                                    </p>
+                                <?php endif; ?>
+                            </div>
+                            <?php if (!empty($promo["image"])): ?>
+                                <img src="../assets/images/menu/<?php echo htmlspecialchars($promo["image"]); ?>" alt="" class="promo-banner-image" aria-hidden="true">
+                            <?php endif; ?>
+                        </div>
+                        <div class="promo-body">
+                            <?php
+                                $headline = $priceDisplay !== ""
+                                    ? $priceDisplay . " — " . strtoupper($promo["title"])
+                                    : strtoupper($promo["title"]);
+                            ?>
+                            <h3 class="promo-title"><?php echo htmlspecialchars($headline); ?></h3>
+                            <?php if (!empty($promo["description"])): ?>
+                                <p><?php echo htmlspecialchars($promo["description"]); ?></p>
+                            <?php endif; ?>
+                            <?php foreach ($fineLines as $line): ?>
+                                <p class="promo-finepoint"><?php echo htmlspecialchars($line); ?></p>
+                            <?php endforeach; ?>
+                            <?php if (!empty($promo["promoCode"])): ?>
+                                <div class="promo-code-tag">
+                                    <span class="promo-code-label">Use code</span>
+                                    <code class="promo-code-value"><?php echo htmlspecialchars($promo["promoCode"]); ?></code>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </section>
+        <?php endif; ?>
+
         <div id="menu-controls">
             <input type="text" id="menu-search" placeholder="Search items...">
             <select id="menu-sort">
@@ -166,12 +245,16 @@ if (isset($_SESSION["userID"])) {
 
             <div class="cd-cart-promocodes">
                 <input id="promocode-input" placeholder="Discount Code">
-                <button class="secondary-button">Apply</button>
+                <button id="promocode-apply-btn" class="secondary-button" type="button">Apply</button>
+            </div>
+            <div id="applied-promocode" class="applied-promocode" hidden>
+                <span>Applied: <strong id="applied-promocode-label"></strong></span>
+                <button id="remove-promocode-btn" type="button" aria-label="Remove promo code">&times;</button>
             </div>
 
             <div class="cd-cart-total">
                 <p>Subtotal <span id="cd-cart-subtotal">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
-                <p>Discount<span id="cd-cart-discount">$<?php echo number_format($cartDiscount, 2); ?></span></p>
+                <p id="cd-cart-discount-row" hidden>Discount <span id="cd-cart-discount">&minus;$<?php echo number_format($cartDiscount, 2); ?></span></p>
                 <p>Total <span id="cd-cart-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
             </div>
 

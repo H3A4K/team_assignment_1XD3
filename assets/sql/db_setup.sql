@@ -55,7 +55,25 @@ CREATE TABLE IF NOT EXISTS `promoCodes` (
     `discountValue` DOUBLE,
     `active` BOOLEAN,
     `expiryDate` DATETIME,
+    `requiredProductIDs` VARCHAR(255) DEFAULT NULL,
     PRIMARY KEY (`promoID`)
+);
+
+CREATE TABLE IF NOT EXISTS `promotions` (
+    `promotionID` INT AUTO_INCREMENT,
+    `title` VARCHAR(255) NOT NULL,
+    `eyebrow` VARCHAR(100),
+    `price` VARCHAR(50),
+    `badge` VARCHAR(100),
+    `description` TEXT,
+    `finePrint` TEXT,
+    `image` VARCHAR(255),
+    `theme` VARCHAR(20) DEFAULT 'orange',
+    `ctaLabel` VARCHAR(50) DEFAULT 'Order Now',
+    `active` BOOLEAN DEFAULT(1),
+    `sortOrder` INT DEFAULT(0),
+    `promoCode` VARCHAR(50) DEFAULT NULL,
+    PRIMARY KEY (`promotionID`)
 );
 
 -- test data 
@@ -63,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `promoCodes` (
 DELETE FROM `orderdetails`;
 DELETE FROM `orders`;
 DELETE FROM `promoCodes`;
+DELETE FROM `promotions`;
 DELETE FROM `products`;
 DELETE FROM `productClasses`;
 DELETE FROM `users`;
@@ -90,10 +109,21 @@ INSERT INTO `products` (`productID`, `productName`, `productDesc`, `price`, `pro
 (107, 'Iced Latte', 'Espresso with milk poured over ice.', 4.75, 'placeholder.jpg', 'Drink'),
 (108, 'Caesar Salad', 'Romaine, croutons, parmesan, and Caesar dressing.', 6.99, 'placeholder.jpg', 'Salad');
 
-INSERT INTO `promoCodes` (`promoID`, `promoCode`, `discountType`, `discountValue`, `active`, `expiryDate`) VALUES
-(201, 'WELCOME10', 'percentage', 10.00, TRUE, '2026-12-31 00:00:00'),
-(202, 'FREESHIP5', 'fixed', 5.00, TRUE, '2026-09-30 00:00:00'),
-(203, 'SPRING15', 'percentage', 15.00, FALSE, '2026-04-15 00:00:00');
+INSERT INTO `promoCodes` (`promoID`, `promoCode`, `discountType`, `discountValue`, `active`, `expiryDate`, `requiredProductIDs`) VALUES
+(201, 'WELCOME10', 'percentage', 10.00, TRUE, '2026-12-31 00:00:00', NULL),
+(202, 'FREESHIP5', 'fixed', 5.00, TRUE, '2026-09-30 00:00:00', NULL),
+(203, 'SPRING15', 'percentage', 15.00, FALSE, '2026-04-15 00:00:00', NULL),
+(204, 'WINGSFRIES', 'fixed', 3.00, TRUE, '2026-12-31 00:00:00', '101,104');
+
+INSERT INTO `promotions` (`title`, `eyebrow`, `price`, `badge`, `description`, `finePrint`, `image`, `theme`, `ctaLabel`, `active`, `sortOrder`, `promoCode`) VALUES
+('Wings & Fries', 'Combo Deal', '$22.99', 'Only for a Limited Time',
+ 'A full pound of our signature wings paired with a large order of CK Loaded Fries. Classic comfort, bigger portions.',
+ '*Available for both pickup & delivery orders.\n*Not applicable with any other offer or deal.',
+ 'wings.png', 'orange', 'Order Now', TRUE, 1, 'WELCOME10'),
+('Pick 3 Favourites', 'Family Feast', '$39.99', 'New!',
+ 'Any 3 items from our CK Favourites menu plus 2 drinks. Comfortably feeds 3 to 4 people.',
+ '*Available for Pickup Only.\n*Selection of included drinks may vary.',
+ 'placeholder.jpg', 'brown', 'Order Now', TRUE, 2, 'FREESHIP5');
 
 INSERT INTO `orders` (`orderID`, `accountID`, `orderDate`, `address`, `fullfilled`) VALUES
 (301, 1, '2026-03-20 12:14:00', '12 King St W, Hamilton, ON', TRUE),
