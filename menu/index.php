@@ -5,6 +5,7 @@ include "../assets/php/connect.php";
 
 $cartItems = [];
 $cartSubtotal = 0;
+$cartDiscount = 0;
 $hasOpenOrder = false;
 $cartStatusMessage = "Log in to view and complete your order.";
 $cartFeedbackMessage = "";
@@ -163,8 +164,14 @@ if (isset($_SESSION["userID"])) {
                 <?php } ?>
             </ul>
 
+            <div class="cd-cart-promocodes">
+                <input id="promocode-input" placeholder="Discount Code">
+                <button class="secondary-button">Apply</button>
+            </div>
+
             <div class="cd-cart-total">
                 <p>Subtotal <span id="cd-cart-subtotal">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
+                <p>Discount<span id="cd-cart-discount">$<?php echo number_format($cartDiscount, 2); ?></span></p>
                 <p>Total <span id="cd-cart-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
             </div>
 
