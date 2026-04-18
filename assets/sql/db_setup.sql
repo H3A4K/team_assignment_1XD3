@@ -111,7 +111,7 @@ INSERT INTO `products` (`productID`, `productName`, `productDesc`, `price`, `pro
 
 INSERT INTO `promoCodes` (`promoID`, `promoCode`, `discountType`, `discountValue`, `active`, `expiryDate`, `requiredProductIDs`) VALUES
 (201, 'WELCOME10', 'percentage', 10.00, TRUE, '2026-12-31 00:00:00', NULL),
-(202, 'FREESHIP5', 'fixed', 5.00, TRUE, '2026-09-30 00:00:00', NULL),
+(202, 'PICK3', 'fixed', 5.00, TRUE, '2026-09-30 00:00:00', NULL),
 (203, 'SPRING15', 'percentage', 15.00, FALSE, '2026-04-15 00:00:00', NULL),
 (204, 'WINGSFRIES', 'fixed', 3.00, TRUE, '2026-12-31 00:00:00', '101,104');
 
@@ -119,11 +119,11 @@ INSERT INTO `promotions` (`title`, `eyebrow`, `price`, `badge`, `description`, `
 ('Wings & Fries', 'Combo Deal', '$22.99', 'Only for a Limited Time',
  'A full pound of our signature wings paired with a large order of CK Loaded Fries. Classic comfort, bigger portions.',
  '*Available for both pickup & delivery orders.\n*Not applicable with any other offer or deal.',
- 'wings.png', 'orange', 'Order Now', TRUE, 1, 'WELCOME10'),
+ 'wings.png', 'orange', 'Order Now', TRUE, 1, 'WINGSFRIES'),
 ('Pick 3 Favourites', 'Family Feast', '$39.99', 'New!',
  'Any 3 items from our CK Favourites menu plus 2 drinks. Comfortably feeds 3 to 4 people.',
  '*Available for Pickup Only.\n*Selection of included drinks may vary.',
- 'placeholder.jpg', 'brown', 'Order Now', TRUE, 2, 'FREESHIP5');
+ 'placeholder.jpg', 'brown', 'Order Now', TRUE, 2, 'PICK3');
 
 INSERT INTO `orders` (`orderID`, `accountID`, `orderDate`, `address`, `fullfilled`) VALUES
 (301, 1, '2026-03-20 12:14:00', '12 King St W, Hamilton, ON', TRUE),
