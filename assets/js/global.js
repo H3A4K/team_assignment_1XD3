@@ -39,7 +39,8 @@ document.addEventListener("DOMContentLoaded", function () {
             path.includes("login") ||
             path.includes("signup") ||
             path.includes("pickup") ||
-            path.includes("admin");
+            path.includes("admin") ||
+            path.includes("account");
         var prefix = isSubdir ? "../" : "./";
 
         fetch(prefix + "assets/php/logout.php")
@@ -47,7 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 return response.text();
             })
             .then(function () {
-                window.location.href = prefix;
+                if (!path.includes("account")) {
+                    window.location.href = prefix;
+                } else {
+                    window.location.href = "../";
+                }
             });
     }
 

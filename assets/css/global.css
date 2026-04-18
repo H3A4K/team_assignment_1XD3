@@ -203,6 +203,7 @@ h3 { font-size: 1.1rem; }
     font-weight: 600;
     max-width: 240px;
     white-space: nowrap;
+    cursor: pointer;
     overflow: hidden;
     text-overflow: ellipsis;
 }
