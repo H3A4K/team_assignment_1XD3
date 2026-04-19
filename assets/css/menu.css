@@ -923,6 +923,54 @@ main {
         padding: 0.75rem 1.5rem 1.5rem;
         font-size: 0.85rem;
     }
+
+    /* Mobile-only alert for errors/messages */
+    .cart-toast {
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        bottom: 1.25rem;
+        z-index: 1500;
+        background: var(--c-dark-brown);
+        color: #fff;
+        padding: 0.85rem 1.15rem;
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        font-size: 0.95rem;
+        line-height: 1.35;
+        text-align: center;
+        opacity: 0;
+        transform: translateY(14px);
+        pointer-events: none;
+        transition: opacity 0.22s ease, transform 0.22s ease;
+    }
+
+    .cart-toast:not([hidden]) {
+        display: block;
+    }
+
+    .cart-toast[data-visible="true"] {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .cart-toast.is-error {
+        background: var(--c-red);
+    }
+
+    /* Hide alert while the full-screen cart overlay is open — the in-cart
+       feedback banner covers it already and we don't want stacked messages. */
+    body:has(#cd-cart.cart-open) .cart-toast {
+        display: none;
+    }
+}
+
+/* Hide alert entirely on tablet/desktop where the cart is always visible. */
+@media (min-width: 901px) {
+    .cart-toast {
+        display: none !important;
+    }
 }
 
 @media (max-width: 768px) {

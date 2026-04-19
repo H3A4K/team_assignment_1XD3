@@ -73,12 +73,44 @@ document.addEventListener("DOMContentLoaded", function () {
             cartFeedback.hidden = true;
             cartFeedback.textContent = "";
             cartFeedback.classList.remove("is-error");
+            hideCartToast();
             return;
         }
 
         cartFeedback.hidden = false;
         cartFeedback.textContent = message;
         cartFeedback.classList.toggle("is-error", isError);
+        showCartToast(message, isError);
+    }
+
+    const cartToast = document.getElementById("cart-toast");
+    const cartToastMessage = document.getElementById("cart-toast-message");
+    let cartToastTimer = null;
+
+    function showCartToast(message, isError = false) {
+        if (!cartToast || !cartToastMessage) return;
+        cartToastMessage.textContent = message;
+        cartToast.classList.toggle("is-error", isError);
+        cartToast.hidden = false;
+        void cartToast.offsetWidth;
+        cartToast.dataset.visible = "true";
+
+        if (cartToastTimer) clearTimeout(cartToastTimer);
+        cartToastTimer = setTimeout(hideCartToast, 3500);
+    }
+
+    function hideCartToast() {
+        if (!cartToast) return;
+        if (cartToastTimer) {
+            clearTimeout(cartToastTimer);
+            cartToastTimer = null;
+        }
+        cartToast.dataset.visible = "false";
+        setTimeout(function () {
+            if (cartToast.dataset.visible !== "true") {
+                cartToast.hidden = true;
+            }
+        }, 250);
     }
 
     function getSelectedFulfillmentMethod() {
@@ -479,6 +511,10 @@ document.addEventListener("DOMContentLoaded", function () {
             checkoutBackBtn.disabled = false;
         }
     });
+
+    if (cartFeedback && !cartFeedback.hidden && cartFeedback.textContent.trim()) {
+        showCartToast(cartFeedback.textContent.trim(), cartFeedback.classList.contains("is-error"));
+    }
 
     refreshCart();
 

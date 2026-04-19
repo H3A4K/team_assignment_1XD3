@@ -151,6 +151,10 @@ $cartTotal = max(0, $cartSubtotal - $cartDiscount) + $cartTax;
         </ul>
     </nav>
 
+    <div id="cart-toast" class="cart-toast" role="status" aria-live="polite" hidden>
+        <span id="cart-toast-message" class="cart-toast-message"></span>
+    </div>
+
     <main>
         <div class="main-column">
         <?php if (count($activePromotions) > 0): ?>
