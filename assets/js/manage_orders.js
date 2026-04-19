@@ -49,22 +49,27 @@ function renderOrderTable(data) {
         const orderRow = document.createElement("tr");
         let cell = document.createElement("td");
 
+        cell.setAttribute("data-label", "Order ID");
         cell.innerText = order.orderID;
         orderRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Account ID");
         cell.innerText = order.accountID;
         orderRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Order Date");
         cell.innerText = order.orderDate;
         orderRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Address");
         cell.innerText = order.address;
         orderRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Status");
         if (order.fullfilled === 1) {
             cell.innerText = "Completed";
         }
@@ -74,6 +79,7 @@ function renderOrderTable(data) {
         orderRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Action");
         let editBtn = document.createElement("button");
         editBtn.innerText = "Change Status";
         editBtn.className = "secondary-button";

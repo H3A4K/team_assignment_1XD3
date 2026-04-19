@@ -30,26 +30,32 @@ function renderPromotionTable(data) {
         const row = document.createElement("tr");
 
         let cell = document.createElement("td");
+        cell.setAttribute("data-label", "ID");
         cell.innerText = promo.promotionID;
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Title");
         cell.innerText = promo.title || "";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Eyebrow");
         cell.innerText = promo.eyebrow || "";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Price");
         cell.innerText = promo.price || "";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Badge");
         cell.innerText = promo.badge || "";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Image");
         const img = document.createElement("img");
         img.src = "../assets/images/menu/" + (promo.image || "placeholder.jpg");
         img.className = "table-img";
@@ -57,18 +63,22 @@ function renderPromotionTable(data) {
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Theme");
         cell.innerText = promo.theme || "orange";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Active");
         cell.innerText = parseInt(promo.active) === 1 ? "Yes" : "No";
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Order");
         cell.innerText = promo.sortOrder || 0;
         row.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Action");
         cell.style.display = "flex";
         cell.style.flexDirection = "column";
         cell.style.alignItems = "stretch";

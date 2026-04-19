@@ -57,10 +57,12 @@ function renderPromoCodeTable(data) {
         const promoCodeRow = document.createElement("tr");
         let cell = document.createElement("td");
 
+        cell.setAttribute("data-label", "Promo Code ID");
         cell.innerText = promocodes.promoID;
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Promo Code");
         cell.innerText = promocodes.promoCode;
         promoCodeRow.appendChild(cell);
 
@@ -69,6 +71,7 @@ function renderPromoCodeTable(data) {
         // promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Discount Value");
         if (promocodes.discountType === "percentage") {
             cell.innerText = promocodes.discountValue + "%";
         }
@@ -78,6 +81,7 @@ function renderPromoCodeTable(data) {
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Status");
         if (promocodes.active === 1) {
             cell.innerText = "Active";
         }
@@ -87,14 +91,17 @@ function renderPromoCodeTable(data) {
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Expiry Date");
         cell.innerText = promocodes.expiryDate;
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Required Products");
         cell.innerText = promocodes.requiredProductIDs || "—";
         promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Action");
         let editBtn = document.createElement("button");
         let removeBtn = document.createElement("button");
         editBtn.innerText = "Edit";

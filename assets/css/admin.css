@@ -273,17 +273,162 @@ input[type="file"].form-control::file-selector-button:hover {
         padding: calc(var(--top-offset) + 1rem) 1rem 1.5rem;
     }
 
+    .toolbar {
+        flex-wrap: wrap;
+        gap: 0.6rem;
+        font-size: 1.05em;
+        padding: 0.5rem 0;
+    }
+
+    .toolbar p {
+        width: 100%;
+    }
+
+    .last-item {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .toolbar .primary-button,
+    .toolbar .secondary-button {
+        width: 100%;
+    }
+
     .form {
         flex-direction: column;
+        padding: 1rem;
+    }
+
+    .layout-row,
+    .layout-column {
+        flex-direction: column;
+        width: 100%;
     }
 
     .form-control {
         width: 100%;
+        box-sizing: border-box;
+        font-size: 1rem;
+        padding: 0.65rem 0.85rem;
     }
 
+    input[type="date"] {
+        font-size: 1rem;
+        padding: 0.65rem 0.85rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .image-upload-row {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .image-upload-row .form-control {
+        flex-basis: 100%;
+    }
+
+    .popup {
+        top: calc(var(--top-offset) + 0.5rem);
+        left: 0.5rem;
+        right: 0.5rem;
+        width: auto;
+        transform: none;
+        max-height: calc(100dvh - var(--top-offset) - 1rem);
+        padding: 1rem;
+    }
+
+    .popup > div:last-child {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-top: 0.25rem;
+    }
+
+    .popup > div:last-child .primary-button,
+    .popup > div:last-child .secondary-button {
+        width: 100%;
+    }
+
+    /* Tables become stacked cards on mobile */
     .table {
         display: block;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+        background: transparent;
+        box-shadow: none;
+        border-radius: 0;
+        overflow: visible;
+    }
+
+    .table thead,
+    .table tbody {
+        display: block;
+    }
+
+    .table tr {
+        display: block;
+        background: var(--c-card);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        margin-bottom: 1rem;
+        padding: 1rem 1.15rem;
+    }
+
+    .table tr:has(th) {
+        display: none;
+    }
+
+    .table tr:hover td {
+        background-color: transparent;
+    }
+
+    .table td {
+        display: block;
+        position: relative;
+        padding: 0.35rem 0 0.35rem 9rem;
+        border-bottom: 1px dashed var(--c-border);
+        min-height: 1.5rem;
+        text-align: left;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+        padding-top: 0.75rem;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        top: 0.35rem;
+        width: 8.25rem;
+        font-weight: 700;
+        font-size: 0.7rem;
+        color: var(--c-text-secondary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Action column: let buttons flow full-width without the label inset */
+    .table td[data-label="Action"] {
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .table td[data-label="Action"]::before {
+        display: none;
+    }
+
+    .table td[data-label="Action"] button {
+        width: 100%;
+        margin: 0 !important;
+    }
+
+    .table-img {
+        max-width: 96px;
     }
 }

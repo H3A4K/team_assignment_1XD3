@@ -53,22 +53,27 @@ function renderProductTable(data) {
         const productRow = document.createElement("tr");
         let cell = document.createElement("td");
 
+        cell.setAttribute("data-label", "Product ID");
         cell.innerText = product.productID;
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Product Name");
         cell.innerText = product.productName;
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Description");
         cell.innerText = product.productDesc;
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Price");
         cell.innerText = "$" + parseFloat(product.price).toFixed(2);
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Image");
         let img = document.createElement("img");
         img.src = "../assets/images/menu/" + product.productImg;
         img.className = "table-img";
@@ -76,10 +81,12 @@ function renderProductTable(data) {
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Product Class");
         cell.innerText = product.productClass;
         productRow.appendChild(cell);
 
         cell = document.createElement("td");
+        cell.setAttribute("data-label", "Action");
         cell.style.display = "flex";
         cell.style.flexDirection = "column";
         cell.style.alignItems = "stretch";
