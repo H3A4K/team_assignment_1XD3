@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+include "../assets/php/security.php";
+
+$is_user_admin = isAdmin();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -92,15 +101,18 @@
             <li><a href="../">Home</a></li>
             <li><a href="../menu">Menu</a></li>
             <li><a href="../catering/">Catering</a></li>
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="manageproducts.html">Products</a></li>
-            <li><a href="manageorders.html">Orders</a></li>
-            <li><a href="managepromo.html">Promo Codes</a></li>
-            <li><a class="current" href="managepromotions.html">Promotions</a></li>
+            <?php if ($user_is_admin) { ?>
+            <li><a href="index.php">Dashboard</a></li>
+            <li><a href="manageproducts.php">Products</a></li>
+            <li><a href="manageorders.php">Orders</a></li>
+            <li><a href="managepromo.php">Promo Codes</a></li>
+            <li><a class="current" href="managepromotions.php">Promotions</a></li>
+            <?php } ?>
         </ul>
     </nav>
 
     <main>
+        <?php if ($user_is_admin) { ?>
         <div class="toolbar">
             <p>Promotions</p>
             <button id="addPromotionBtn" class="primary-button last-item">Add Promotion</button>
@@ -109,6 +121,11 @@
         <div class="toolbar">
             <button id="bottomAddPromotionBtn" class="primary-button last-item">Add Promotion</button>
         </div>
+        <?php } else { 
+            echo "<h3>";
+            echo $security_error;
+            echo "</h3>";
+            } ?>
     </main>
 
     <footer class="site-footer">

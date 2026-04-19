@@ -3,6 +3,14 @@ session_start();
 
 include "connect.php";
 include "promo_requirements.php";
+include "security.php";
+
+$is_user_admin = isAdmin();
+
+if (!$is_user_admin) {
+    http_response_code(404);
+    exit();
+}
 
 function getAllProducts() {
     global $dbh;

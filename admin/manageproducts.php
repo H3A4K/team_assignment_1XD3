@@ -1,29 +1,49 @@
+<?php
+session_start();
+
+include "../assets/php/security.php";
+
+$is_user_admin = isAdmin();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Orders | Clarence's Kitchen</title>
+    <title>Manage Products | Clarence's Kitchen</title>
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="../assets/css/admin.css">
-    <script src="../assets/js/manage_orders.js" defer></script>
+    <!-- <script src="../assets/js/admin.js" defer></script> -->
+    <script src="../assets/js/manage_products.js" defer></script>
     <script src="../assets/js/global.js" defer></script>
 </head>
 
 <body>
-    <div id="popup" class="popup">
-        <h3>Change Order Status</h3>
-        <form id="order-status-form" class="form">
-            <input class="form-control" id="orderID" style="display: none;">
-            <label for="fullfilled">Status</label>
-            <select class="form-control" id="fullfilled" required>
-                <option value="1">Completed</option>
-                <option value="0">Incomplete</option>
+    <div id="popup" class="popup" >
+        <h3>Add/Edit Menu Item</h3>
+        <div id="add-product-form" class="form">
+            <input class="form-control" style="display: none;" type="text" id="productID" placeholder="ID" >
+            <input type="hidden" id="currentProductImg" value="">
+            <label for="productName">Product Name:</label>
+            <input class="form-control" type="text" id="productName" placeholder="Name" required>
+            <label for="productDesc">Product Description:</label>
+            <textarea class="form-control" type="text" rows="3" id="productDesc" placeholder="Description" required></textarea>
+            <label for="price">Price:</label>
+            <input class="form-control" type="number" step="1.0" id="price" placeholder="Price" required>
+            <label for="productClassesSelect">Product Class:</label>
+            <select class="form-control" id="productClassesSelect" name="productClass">
             </select>
-        </form>
+            <label for="productImgFile">Product Image:</label>
+            <div class="image-upload-row">
+                <img id="productImgPreview" class="product-img-preview" src="../assets/images/menu/placeholder.jpg" alt="Product image preview">
+                <input class="form-control" type="file" id="productImgFile" accept="image/png,image/jpeg">
+            </div>
+        </div>
         <div>
-            <button class="primary-button" type="submit" id="saveOrderBtn">Save</button>
+            <button class="primary-button" type="submit" id="saveProductBtn">Save</button>
             <button class="secondary-button" id="cancelBtn">Cancel</button>
         </div>
     </div>
@@ -48,23 +68,32 @@
             <li><a href="../">Home</a></li>
             <li><a href="../menu">Menu</a></li>
             <li><a href="../catering/">Catering</a></li>
-            <li><a href="index.html">Dashboard</a></li>
-            <li><a href="manageproducts.html">Products</a></li>
-            <li><a class="current" href="manageorders.html">Orders</a></li>
-            <li><a href="managepromo.html">Promo Codes</a></li>
-            <li><a href="managepromotions.html">Promotions</a></li>
+            <?php if ($user_is_admin) { ?>
+            <li><a href="index.php">Dashboard</a></li>
+            <li><a class="current" href="manageproducts.php">Products</a></li>
+            <li><a href="manageorders.php">Orders</a></li>
+            <li><a href="managepromo.php">Promo Codes</a></li>
+            <li><a href="managepromotions.php">Promotions</a></li>
+            <?php } ?>
         </ul>
     </nav>
 
+        
     <main>
+        <?php if ($user_is_admin) { ?>
         <div class="toolbar">
-            <p>Orders</p>
-            <!-- <button id="editOrderBtn" class="primary-button last-item">Change Order Status</button> -->
+            <p>Products</p>
+            <button id="addProductBtn" class="primary-button last-item">Add Product</button>
         </div>
-        <div id="order-table"></div>
-        <!-- <div class="toolbar">
-            <button id="bottomEditOrderBtn" class="primary-button last-item">Change Order Status</button>
-        </div> -->
+        <div id="product-table"></div>
+        <div class="toolbar">
+            <button id="bottomAddProductBtn" class="primary-button last-item">Add Product</button>
+        </div>
+        <?php } else { 
+            echo "<h3>";
+            echo $security_error;
+            echo "</h3>";
+            } ?>
     </main>
 
     <footer class="site-footer">

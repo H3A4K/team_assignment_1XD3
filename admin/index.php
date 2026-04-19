@@ -1,3 +1,12 @@
+<?php
+session_start();
+
+include "../assets/php/security.php";
+
+$is_user_admin = isAdmin();
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,17 +40,26 @@
             <li><a href="../">Home</a></li>
             <li><a href="../menu">Menu</a></li>
             <li><a href="../catering/">Catering</a></li>
-            <li><a class="current" href="index.html">Dashboard</a></li>
-            <li><a href="manageproducts.html">Products</a></li>
-            <li><a href="manageorders.html">Orders</a></li>
-            <li><a href="managepromo.html">Promo Codes</a></li>
-            <li><a href="managepromotions.html">Promotions</a></li>
+            <?php if ($user_is_admin) { ?>
+            <li><a class="current" href="index.php">Dashboard</a></li>
+            <li><a href="manageproducts.php">Products</a></li>
+            <li><a href="manageorders.php">Orders</a></li>
+            <li><a href="managepromo.php">Promo Codes</a></li>
+            <li><a href="managepromotions.php">Promotions</a></li>
+            <?php } ?>
         </ul>
     </nav>
 
     <main>
+        <?php if ($user_is_admin) { ?>
         <h3>Welcome to the Admin Dashboard</h3>
         <p>Select a section from the navigation above to manage products, orders, or promo codes.</p>
+        <?php } else { 
+            echo "<h3>";
+            echo $security_error;
+            echo "</h3>";
+            } ?>
+        
     </main>
 
     <footer class="site-footer">
