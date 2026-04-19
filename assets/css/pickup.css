@@ -40,6 +40,37 @@ main h1 span {
     padding: 0 0.15em;
 }
 
+main #pickup-table {
+    margin-top: 5%;
+    text-decoration: none;
+}
+
+main #pickup-table > li {
+    margin: 1%;
+    display: flex;
+}
+
+main #pickup-table > li:first-child {
+    border-bottom: 1px solid black; 
+}
+
+main #pickup-table > li:last-child {
+    border-top: 1px solid black;
+}
+
+main .product-name, .product-priceperunit {
+    text-align: left;
+    width: 40%;
+}
+
+main .product-quantity, .product-priceperunit, .product-price {
+    width: 20%;
+}
+
+main .product-price {
+    text-align: right;
+}
+
 @media (max-width: 768px) {
     main {
         padding: calc(var(--top-offset) + 2rem) 1rem 1.5rem;

@@ -16,6 +16,7 @@ window.addEventListener("load", function () {
     const timeLabel = document.getElementById("time-label");
     const detail = document.getElementById("pickup-detail");
     const address = document.getElementById("pickup-address");
+    const table = document.getElementById("pickup-table");
     const main = document.querySelector("main");
 
     /**
@@ -56,8 +57,12 @@ window.addEventListener("load", function () {
                     ? "Delivery address: " + data.address
                     : "";
             }
+            if (table) {
+                table.innerHTML = data.orderTable;
+                console.log(data.orderTable);
+            }
 
-            console.log(data.order);
+            // console.log(data.order);
         })
         .catch((error) => {
             showError(error.message);

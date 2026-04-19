@@ -305,14 +305,26 @@ function formatOrder(array $items): string {
     $stmt->execute(get_column($items, "productID"));
     $products = reorder($stmt->fetchAll(PDO::FETCH_ASSOC), "productID", true);
 
-    $out = "<ol id='ordertable'>";
+    // $out = "<ol id='ordertable'>";
+    $total = 0;
+    $out = "<li><span class='product-name'>Product Name</span>
+        <span class='product-quantity'>Quantity</span>
+        <span class='product-priceperunit'>Price Per Unit</span>
+        <span class='product-price'>Price</span></li>";
     foreach ($items as $item) {
         $quantity = $item['quantity'];
         $product = $products[$item['productID']];
         $price = $product["price"] * $quantity;
-        $out .= "<li><span class='name'>$product[productName]</span><span class='quantity'>$quantity</span><span class='priceperunit'>$product[price]</span><span class='price'>$price</span></li>";
+        $out .= "<li><span class='product-name'>$product[productName]</span>
+            <span class='product-quantity'>$quantity</span>
+            <span class='product-priceperunit'>$product[price]</span>
+            <span class='product-price'>$price</span></li>";
+        $total += $price;
     }
-    $out .= "</ol>";
+    $out .= "<li><span class='product-name'>Total</span>
+        <span class='product-quantity'></span>
+        <span class='product-priceperunit'></span>
+        <span class='product-price'>$total</span></li>";
 
     return $out;
 }
