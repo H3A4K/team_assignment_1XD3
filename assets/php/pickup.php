@@ -90,6 +90,28 @@ function ordersHasFulfillmentMethodColumn(PDO $dbh): bool {
 }
 
 /**
+ * Normalizes the fulfillment method for an order. Older databases may
+ * not have the explicit fulfillmentMethod column yet, so fall back to
+ * the stored address to distinguish pickup from delivery.
+ *
+ * @param {array} $order a row from the orders table
+ * @returns "pickup" or "delivery"
+ */
+function resolveFulfillmentMethod(array $order): string {
+    $method = strtolower(trim((string) ($order["fulfillmentMethod"] ?? "")));
+    if ($method === "delivery" || $method === "pickup") {
+        return $method;
+    }
+
+    $address = trim((string) ($order["address"] ?? ""));
+    if ($address !== "" && strcasecmp($address, "Pickup at Clarence's Kitchen") !== 0) {
+        return "delivery";
+    }
+
+    return "pickup";
+}
+
+/**
  * Loads the line items for a specific order, joined with their product
  * class so the timing logic can group items by kitchen station.
  *
@@ -142,7 +164,7 @@ function getRequestedOrder(int $userID, ?int $orderID): array {
         return [
             getOrderItems((int) $order["orderID"]),
             $order["orderDate"],
-            $order["fulfillmentMethod"] ?? "pickup",
+            resolveFulfillmentMethod($order),
             $order["address"] ?? "",
         ];
     }
@@ -163,7 +185,7 @@ function getRequestedOrder(int $userID, ?int $orderID): array {
     return [
         getOrderItems((int) $order["orderID"]),
         $order["orderDate"],
-        $order["fulfillmentMethod"] ?? "pickup",
+        resolveFulfillmentMethod($order),
         $order["address"] ?? "",
     ];
 }
