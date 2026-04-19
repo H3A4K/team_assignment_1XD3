@@ -68,6 +68,12 @@
             <div class="inputcontainer">
                 <label for="passwordinput">Password</label>
                 <input type="password" id="passwordinput" />
+                <ul id="password-requirements" class="password-requirements">
+                    <li id="req-length">At least 6 characters</li>
+                    <li id="req-digit">At least one digit</li>
+                    <li id="req-lower">At least one lowercase letter</li>
+                    <li id="req-upper">At least one uppercase letter</li>
+                </ul>
             </div>
             <div class="inputcontainer">
                 <label for="phoneinput">Phone Number</label>

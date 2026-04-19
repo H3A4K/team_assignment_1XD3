@@ -71,6 +71,7 @@ if (!isset($_SESSION["userID"])) {
         "items" => [],
         "subtotal" => 0,
         "discount" => 0,
+        "tax" => 0,
         "total" => 0,
         "hasOpenOrder" => false,
         "appliedPromoCode" => null
@@ -100,6 +101,7 @@ try {
             "items" => [],
             "subtotal" => 0,
             "discount" => 0,
+            "tax" => 0,
             "total" => 0,
             "hasOpenOrder" => false,
             "appliedPromoCode" => $promoResult["code"],
@@ -134,7 +136,9 @@ try {
 
     $promoResult = resolveAppliedPromo($dbh, $subtotal);
     $discount = $promoResult["amount"];
-    $total = max(0, $subtotal - $discount);
+    $taxable = max(0, $subtotal - $discount);
+    $tax = round($taxable * 0.13, 2);
+    $total = $taxable + $tax;
 
     echo json_encode([
         "loggedIn" => true,
@@ -143,6 +147,7 @@ try {
         "items" => $items,
         "subtotal" => round($subtotal, 2),
         "discount" => round($discount, 2),
+        "tax" => $tax,
         "total" => round($total, 2),
         "appliedPromoCode" => $promoResult["code"],
         "appliedPromoType" => $promoResult["type"],

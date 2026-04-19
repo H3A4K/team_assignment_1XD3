@@ -89,6 +89,8 @@ if (isset($_SESSION["userID"])) {
         $cartFeedbackIsError = true;
     }
 }
+$cartTax = round(max(0, $cartSubtotal - $cartDiscount) * 0.13, 2);
+$cartTotal = max(0, $cartSubtotal - $cartDiscount) + $cartTax;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -150,6 +152,7 @@ if (isset($_SESSION["userID"])) {
     </nav>
 
     <main>
+        <div class="main-column">
         <?php if (count($activePromotions) > 0): ?>
             <section class="promos" aria-label="Current promotions">
                 <?php foreach ($activePromotions as $promo):
@@ -233,6 +236,7 @@ if (isset($_SESSION["userID"])) {
             </div>
         </div>
         <div id="menu"></div>
+        </div>
 
         <div id="cd-shadow-layer"></div>
 
@@ -266,7 +270,8 @@ if (isset($_SESSION["userID"])) {
             <div class="cd-cart-total">
                 <p>Subtotal <span id="cd-cart-subtotal">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
                 <p id="cd-cart-discount-row" hidden>Discount <span id="cd-cart-discount">&minus;$<?php echo number_format($cartDiscount, 2); ?></span></p>
-                <p>Total <span id="cd-cart-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
+                <p id="cd-cart-tax-row">Tax (13%) <span id="cd-cart-tax">$<?php echo number_format($cartTax, 2); ?></span></p>
+                <p>Total <span id="cd-cart-total">$<?php echo number_format($cartTotal, 2); ?></span></p>
             </div>
 
             <button id="cd-cart-open-checkout" class="checkout-btn" type="button" <?php if (!$hasOpenOrder) { ?>disabled<?php } ?>>Checkout</button>
@@ -279,7 +284,8 @@ if (isset($_SESSION["userID"])) {
 
                 <div class="checkout-summary">
                     <p>Method <span id="checkout-summary-method">Pickup</span></p>
-                    <p>Order Total <span id="checkout-summary-total">$<?php echo number_format($cartSubtotal, 2); ?></span></p>
+                    <p>Tax (13%) <span id="checkout-summary-tax">$<?php echo number_format($cartTax, 2); ?></span></p>
+                    <p>Grand Total <span id="checkout-summary-total">$<?php echo number_format($cartTotal, 2); ?></span></p>
                     <p id="checkout-summary-address-row" hidden>Delivery To <span id="checkout-summary-address"></span></p>
                 </div>
 

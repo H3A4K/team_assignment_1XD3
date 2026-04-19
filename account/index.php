@@ -129,9 +129,9 @@ $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
                         if (!$success) return;
 
                         $fullfilled = $row["fullfilled"];
-                        echo "<td>" . $date . "</td>";
-                        echo "<td>" . $address . "</td>";
-                        echo "<td>";
+                        echo "<td data-label='Date'>" . $date . "</td>";
+                        echo "<td data-label='Address'>" . $address . "</td>";
+                        echo "<td data-label='Items'>";
                         while ($orderdetails = $stmt2->fetch()) {
                             $cmd = "SELECT * FROM products WHERE productID=?";
                             $stmt3 = $dbh->prepare($cmd);
@@ -147,7 +147,7 @@ $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
                         } else {
                             $fullfilled = "No";
                         }
-                        echo "<td>" . $fullfilled . "</td>";
+                        echo "<td data-label='Fulfilled'>" . $fullfilled . "</td>";
                         echo "</tr>";
                     }
                 }

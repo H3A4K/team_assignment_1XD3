@@ -65,6 +65,34 @@ body {
     color: var(--c-text-muted);
 }
 
+.password-requirements {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0 0;
+    font-size: 0.75rem;
+    color: var(--c-text-muted);
+}
+
+.password-requirements li {
+    margin-bottom: 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.password-requirements li::before {
+    content: '○';
+    font-size: 0.8rem;
+}
+
+.password-requirements li.met {
+    color: var(--c-green);
+}
+
+.password-requirements li.met::before {
+    content: '●';
+}
+
 #errormessage {
     text-align: center;
     color: var(--c-red);

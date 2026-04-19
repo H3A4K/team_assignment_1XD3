@@ -60,12 +60,20 @@ window.addEventListener("load", function () {
 
     //PASSWORD VALIDITY
     passwordinput.addEventListener("input", function () {
-        let code = isValidPassword(passwordinput.value)
+        let pwd = passwordinput.value;
+        
+        // Update requirements list
+        document.getElementById("req-length").classList.toggle("met", pwd.length >= 6);
+        document.getElementById("req-digit").classList.toggle("met", /\d/.test(pwd));
+        document.getElementById("req-lower").classList.toggle("met", pwd !== "" && pwd.toUpperCase() !== pwd);
+        document.getElementById("req-upper").classList.toggle("met", pwd !== "" && pwd.toLowerCase() !== pwd);
+
+        let code = isValidPassword(pwd)
         if (code == 100) {
             errorElem.style.visibility = "hidden";
             passwordinput.style.backgroundColor = "rgb(200, 255, 200)"
         }
-        else if (passwordinput.value === "") {
+        else if (pwd === "") {
             passwordinput.style.backgroundColor = "white"
             errorElem.style.visibility = "hidden";
         }

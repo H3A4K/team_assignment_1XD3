@@ -106,23 +106,54 @@
 
 #orderhistory {
     margin-left: 2%;
+    min-width: 360px;
+    max-width: 520px;
 }
 
-th {
-    margin: 2%;
-    border-bottom: 1px solid black;
-    width: 140px;
+#orderhistory table,
+#orderhistory tbody,
+#orderhistory td,
+#orderhistory tr {
+    display: block;
 }
 
-table {
-    border-spacing: 10px 10px;
+#orderhistory thead,
+#orderhistory th,
+#orderhistory tr:has(th) {
+    display: none;
 }
 
-td {
-    text-align: center;
-    /* margin: 1%;
-    padding: 1%; */
-    width: 33%;
+#orderhistory tr {
+    background: var(--c-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+    padding: 1.25rem 1.5rem;
+}
+
+#orderhistory td {
+    border: none;
+    position: relative;
+    padding-left: 130px;
+    text-align: left;
+    margin-bottom: 0.5rem;
+    width: auto;
+}
+
+#orderhistory td:last-child {
+    margin-bottom: 0;
+}
+
+#orderhistory td::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 110px;
+    padding-right: 10px;
+    white-space: nowrap;
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--c-text-secondary);
 }
 
 
@@ -157,5 +188,21 @@ td {
 
     #orderhistory {
         margin-left: 0;
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+    }
+
+    #orderhistory tr {
+        padding: 1rem;
+    }
+
+    #orderhistory td {
+        padding-left: 40%;
+    }
+
+    #orderhistory td::before {
+        width: 35%;
+        font-weight: bold;
     }
 }

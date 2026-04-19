@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cartSubtotal = document.getElementById("cd-cart-subtotal");
     const cartDiscountRow = document.getElementById("cd-cart-discount-row");
     const cartDiscount = document.getElementById("cd-cart-discount");
+    const cartTax = document.getElementById("cd-cart-tax");
     const cartTotal = document.getElementById("cd-cart-total");
     const openCheckoutBtn = document.getElementById("cd-cart-open-checkout");
     const checkoutPanel = document.getElementById("cd-cart-checkout-panel");
@@ -38,6 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const deliveryFields = document.getElementById("checkout-delivery-fields");
     const deliveryAddressInput = document.getElementById("checkout-delivery-address");
     const checkoutSummaryMethod = document.getElementById("checkout-summary-method");
+    const checkoutSummaryTax = document.getElementById("checkout-summary-tax");
     const checkoutSummaryTotal = document.getElementById("checkout-summary-total");
     const checkoutSummaryAddressRow = document.getElementById("checkout-summary-address-row");
     const checkoutSummaryAddress = document.getElementById("checkout-summary-address");
@@ -48,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const appliedPromoLabel = document.getElementById("applied-promocode-label");
     const removePromocodeBtn = document.getElementById("remove-promocode-btn");
 
-    if (!menu || !searchInput || !sortSelect || !classFilterBtn || !classFilterDropdown || !cartItems || !cartStatus || !cartSubtotal || !cartTotal || !openCheckoutBtn || !checkoutPanel || !checkoutForm || !checkoutBackBtn || !placeOrderBtn || !deliveryFields || !deliveryAddressInput || !checkoutSummaryMethod || !checkoutSummaryTotal || !checkoutSummaryAddressRow || !checkoutSummaryAddress || !cartFeedback) {
+    if (!menu || !searchInput || !sortSelect || !classFilterBtn || !classFilterDropdown || !cartItems || !cartStatus || !cartSubtotal || !cartTax || !cartTotal || !openCheckoutBtn || !checkoutPanel || !checkoutForm || !checkoutBackBtn || !placeOrderBtn || !deliveryFields || !deliveryAddressInput || !checkoutSummaryMethod || !checkoutSummaryTax || !checkoutSummaryTotal || !checkoutSummaryAddressRow || !checkoutSummaryAddress || !cartFeedback) {
         console.error("Menu page is missing expected cart or filter elements.");
         return;
     }
@@ -87,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function syncCheckoutSummary() {
         const method = getSelectedFulfillmentMethod();
         checkoutSummaryMethod.textContent = method === "delivery" ? "Delivery" : "Pickup";
+        checkoutSummaryTax.textContent = cartTax.textContent;
         checkoutSummaryTotal.textContent = cartTotal.textContent;
 
         if (method === "delivery") {
@@ -128,6 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
         currentCartData = cartData;
         cartItems.innerHTML = "";
         cartSubtotal.textContent = formatCurrency(cartData.subtotal || 0);
+        cartTax.textContent = formatCurrency(cartData.tax || 0);
         cartTotal.textContent = formatCurrency(cartData.total || 0);
 
         // Discount row: only show when there's a real non-zero discount

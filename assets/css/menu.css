@@ -6,15 +6,20 @@ main {
     max-width: 1200px;
     margin: 0 auto;
     padding: calc(var(--top-offset) + 1.5rem) 1.5rem 2rem;
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    grid-template-rows: auto 1fr;
+    display: flex;
     gap: 1.5rem;
-    align-items: start;
+    align-items: flex-start;
+}
+
+.main-column {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 #menu-controls {
-    grid-column: 1;
     display: flex;
     gap: 0.75rem;
     flex-wrap: wrap;
@@ -107,7 +112,6 @@ main {
 }
 
 #menu {
-    grid-column: 1;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 1.25rem;
@@ -214,8 +218,9 @@ main {
 }
 
 #cd-cart {
-    grid-column: 2;
-    grid-row: 1 / -1;
+    width: 320px;
+    flex-shrink: 0;
+    align-self: flex-start;
     position: sticky;
     top: calc(var(--top-offset) + 1.5rem);
     background-color: var(--c-card);
@@ -229,7 +234,6 @@ main {
 /* ----- Promotional banners above the menu ----- */
 
 .promos {
-    grid-column: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1rem;
@@ -725,13 +729,14 @@ main {
 
 .checkout-actions {
     display: flex;
+    flex-direction: column-reverse;
     gap: 0.75rem;
     margin-top: 1rem;
 }
 
 .checkout-actions .secondary-button,
 .checkout-actions .checkout-btn {
-    flex: 1;
+    width: 100%;
     margin-bottom: 0;
 }
 
@@ -766,11 +771,19 @@ main {
 
 @media (max-width: 900px) {
     main {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .main-column {
+        width: 100%;
     }
 
     #cd-cart {
         display: none;
+        width: 100%;
+        height: 100%;
+        height: 100dvh;
+        max-height: none;
         position: fixed;
         top: 0;
         left: 0;
@@ -779,6 +792,7 @@ main {
         z-index: 2000;
         border-radius: 0;
         overflow-y: auto;
+        overflow-x: hidden;
         padding: 0;
         box-shadow: none;
         background-color: var(--c-body);
@@ -895,21 +909,14 @@ main {
     #cd-cart.cart-open #cd-cart-checkout-panel {
         margin: auto 1.5rem 0;
         padding-top: 1rem;
+        width: auto;
+        align-self: stretch;
     }
 
     #cd-cart.cart-open .checkout-btn {
         padding: 0.85rem;
         font-size: 1rem;
         border-radius: var(--radius-pill);
-    }
-
-    #cd-cart.cart-open .checkout-actions {
-        flex-direction: column-reverse;
-    }
-
-    #cd-cart.cart-open .checkout-actions .secondary-button,
-    #cd-cart.cart-open .checkout-actions .checkout-btn {
-        width: 100%;
     }
 
     #cd-cart.cart-open .cd-go-to-cart {
