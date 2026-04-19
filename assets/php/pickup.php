@@ -30,14 +30,14 @@ function roundUpToAny(int|float $n, int $x): int {
 }
 
 /**
- * Pulls a single field out of every row of a result-set style array and
+ * Pulls a single column out of every row of a result-set style array and
  * returns just those values as a flat array.
  *
  * @param {array} $arr the input array of associative arrays (rows)
  * @param {String} $key the key whose value should be pulled from each row
  * @returns a flat array of the values
  */
-function unassign_array(array $arr, string $key): array {
+function get_column(array $arr, string $key): array {
     $out = [];
     foreach ($arr as $sub) {
         $out[] = $sub[$key];
@@ -46,8 +46,7 @@ function unassign_array(array $arr, string $key): array {
 }
 
 /**
- * Groups rows by the value of one of their fields. Used to group order
- * items by their productClass so each class can be timed separately.
+ * Groups rows by the value of one of their fields.
  *
  * @param {array} $arr the input array of associative-array rows
  * @param {String} $name the key to group by (e.g. "productClass")
@@ -269,6 +268,34 @@ function calculateTime(array $orders, int $concurrent = 5): int {
 }
 
 /**
+ * Formats the user's order into an html table, including the prices of the items and total spent
+ *
+ * @param {array} $items an array of order-item rows (quantity, productID, productClass)
+ * @param {int} $concurrent how many batches of the same class the kitchen can cook in parallel (default 5)
+ * @returns the 
+ */
+function formatOrder(array $items): string {
+    global $dbh;
+
+    $placeholder = implode(",", array_fill(0, count($items), "?"));
+    $cmd = "SELECT `price`, `productName`, `productID` FROM `products` WHERE `productID` IN ($placeholder)";
+    $stmt = $dbh->prepare($cmd);
+    $stmt->execute(get_column($items, "productID"));
+    $products = reorder($stmt->fetchAll(PDO::FETCH_ASSOC), "productID", true);
+
+    $out = "<ol id='ordertable'>";
+    foreach ($items as $item) {
+        $quantity = $item['quantity'];
+        $product = $products[$item['productID']];
+        $price = $product["price"] * $quantity;
+        $out .= "<li><span class='name'>$product[productName]</span><span class='quantity'>$quantity</span><span class='priceperunit'>$product[price]</span><span class='price'>$price</span></li>";
+    }
+    $out .= "</ol>";
+
+    return $out;
+}
+
+/**
  * Entry point for this endpoint. Reads the optional order_id query
  * parameter, looks up the relevant order, factors in the backlog of all
  * orders placed since, and returns a JSON string with the estimated
@@ -294,12 +321,15 @@ function main(): string {
         return json_encode(["error" => "No checked-out order was found for this account."]);
     }
 
+    $order_table = formatOrder($orderItems);
+
     $allOrders = getAllOrdersSince($orderTime);
     $overallTime = calculateTime($allOrders, 5);
 
     return json_encode([
         "time" => $overallTime,
         "order" => $orderItems,
+        "orderTable" => $order_table,
         "fulfillmentMethod" => $fulfillmentMethod,
         "address" => $address,
     ]);

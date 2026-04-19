@@ -56,6 +56,8 @@ window.addEventListener("load", function () {
                     ? "Delivery address: " + data.address
                     : "";
             }
+
+            console.log(data.order);
         })
         .catch((error) => {
             showError(error.message);
