@@ -1,4 +1,18 @@
 <?php
+/**
+ * menu/index.php
+ *
+ * The main ordering page. Renders the promotional banners, the search/
+ * filter controls, the menu grid (populated by menu.js), and the
+ * slide-out cart panel showing the logged-in user's open order. Also
+ * contains the inline checkout form used to switch between pickup and
+ * delivery before placing the order. Server-side it pre-loads the
+ * active promotions and the current cart so the first paint already
+ * shows the right data.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 25, 2026
+ */
 session_start();
 
 include "../assets/php/connect.php";
@@ -13,7 +27,6 @@ $cartFeedbackIsError = false;
 $defaultCheckoutAddress = "";
 
 // Load active promotional banners for display above the menu.
-// Admins manage these via /admin/managepromotions.html
 $activePromotions = [];
 try {
     $promoStmt = $dbh->prepare("SELECT * FROM promotions WHERE active = 1 ORDER BY sortOrder ASC, promotionID ASC");

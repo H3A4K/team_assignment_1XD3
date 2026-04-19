@@ -1,5 +1,24 @@
+/**
+ * manage_orders.js
+ *
+ * Client-side script for the admin "Manage Orders" page. Fetches the
+ * full list of customer orders, renders them into a responsive table,
+ * and provides a popup for an admin to flip an order's status between
+ * "Completed" and "Incomplete".
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 16, 2026
+ */
+
 let allOrders = [];
 
+/**
+ * Builds the orders table. Each row shows orderID, accountID, order
+ * date, address, status, and a "Change Status" button that opens the
+ * status-edit popup.
+ *
+ * @param {Array} data array of order objects returned by admin.php?getAllOrders
+ */
 function renderOrderTable(data) {
     const orderTable = document.getElementById("order-table");
     if (!orderTable) return;
@@ -95,6 +114,10 @@ function renderOrderTable(data) {
     orderTable.appendChild(table);
 }
 
+/**
+ * Fetches every order from the server and re-renders the table.
+ * Called on page load and after a successful status change.
+ */
 function getAllOrders() {
     fetch("../assets/php/admin.php?getAllOrders")
     .then(function (response) {
@@ -110,7 +133,6 @@ function getAllOrders() {
 }
 
 window.addEventListener("load", function () {
-    console.log("get orders");
     getAllOrders();
 });
  
@@ -118,6 +140,12 @@ const popup = document.getElementById("popup");
 const saveBtn = document.getElementById("saveOrderBtn");
 const cancelBtn = document.getElementById("cancelBtn");
 
+/**
+ * Opens the status-edit popup pre-filled with the given order's ID
+ * and current status.
+ *
+ * @param {Object} order the order row whose status should be edited
+ */
 function editOrderStatus(order) {
     const orderIDInput = document.getElementById("orderID");
     const orderStatusInput = document.getElementById("fullfilled");
@@ -134,6 +162,12 @@ saveBtn.addEventListener("click", function() {
     popup.style.visibility = "hidden";
 });
 
+/**
+ * POSTs the status-edit form to the server. The backend updates the
+ * order row and returns the refreshed list, which is then re-rendered.
+ *
+ * @param {Object} order the order fields to save (orderID, fullfilled)
+ */
 function saveOrder(order) {
     if (!order) {
         return;

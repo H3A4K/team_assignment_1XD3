@@ -1,4 +1,15 @@
 <?php
+/**
+ * complete_order.php
+ *
+ * JSON checkout endpoint. Marks the user's open order as completed,
+ * stamps it with the chosen fulfillment method (pickup or delivery) and
+ * delivery address, re-verifies any applied promo code one last time, and
+ * returns the URL to redirect to next (the pickup confirmation page).
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 06, 2026
+ */
 
 session_start();
 include "connect.php";
@@ -6,6 +17,13 @@ include "promo_requirements.php";
 
 header("Content-Type: application/json");
 
+/**
+ * Reads the checkout payload from the request. Prefers a JSON body (sent
+ * by the menu page's fetch call) and falls back to standard $_POST data
+ * for form submissions.
+ *
+ * @returns an associative array of checkout fields (e.g. fulfillmentMethod, deliveryAddress)
+ */
 function getCheckoutPayload(): array {
     $raw = file_get_contents("php://input");
     if (!$raw) {
@@ -16,6 +34,14 @@ function getCheckoutPayload(): array {
     return is_array($decoded) ? $decoded : $_POST;
 }
 
+/**
+ * Checks once (and caches the result) whether the orders table actually
+ * has the optional `fulfillmentMethod` column. Lets the app keep running
+ * against older databases that haven't been migrated yet.
+ *
+ * @param {PDO} $dbh the shared database handle
+ * @returns true if the column exists, false otherwise
+ */
 function ordersHasFulfillmentMethodColumn(PDO $dbh): bool {
     static $hasColumn = null;
     if ($hasColumn !== null) {

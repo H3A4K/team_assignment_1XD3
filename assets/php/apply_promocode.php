@@ -1,11 +1,14 @@
 <?php
 /**
- * Validates a promo code and stores it in the session.
- * The actual discount is computed when the cart is fetched (get_cart.php),
- * so the session only needs to remember which code is applied.
+ * apply_promocode.php
  *
- * Accepts JSON body: { "promoCode": "WELCOME10" }
- * Responds with JSON: { success, promoCode, discountType, discountValue }
+ * JSON endpoint that validates a promo code submitted by the user and, if
+ * it's active, not expired, and the cart satisfies all of its product
+ * requirements, stores it in the session so get_cart.php will apply the
+ * discount on every subsequent cart fetch.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 18, 2026
  */
 
 session_start();

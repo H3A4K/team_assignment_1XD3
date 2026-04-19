@@ -1,18 +1,23 @@
 <?php
 /**
- * Helper utilities for promo-code product-requirement validation.
+ * promo_requirements.php
  *
- * A promo code MAY define `requiredProductIDs` as a comma-separated list of
- * product IDs. When it does, the code is only valid while the user's open
- * order contains at least one of EACH listed product. This is validated in:
- *   - apply_promocode.php  (user clicks Apply)
- *   - get_cart.php         (every cart refresh; silently drops stale codes)
- *   - complete_order*.php  (final checkpoint when placing the order)
+ * Helper functions for promo-code product-requirement logic. Admins can
+ * tie a promo code to a list of required product IDs, and these helpers
+ * handle both cleaning admin input and verifying a user's cart meets the
+ * requirements at apply/checkout time.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 18, 2026
  */
 
 /**
- * Canonicalize a comma-separated product-ID list into "1,2,3" form with
- * only unique positive integers. Returns NULL if nothing valid remains.
+ * Cleans up the raw "required product IDs" string coming from the admin
+ * form. Accepts comma- or whitespace-separated IDs, drops non-positive or
+ * duplicate entries, and returns a canonical comma-separated string.
+ *
+ * @param {String} $raw the raw text typed into the admin form (e.g. "101, 103 105")
+ * @returns a comma-separated string of unique positive integer IDs, or NULL if there are none
  */
 function sanitizeRequiredProductIDs($raw) {
     if ($raw === NULL || $raw === "") return NULL;
@@ -29,15 +34,14 @@ function sanitizeRequiredProductIDs($raw) {
 }
 
 /**
- * Checks whether the user's open order satisfies the given requirement list.
+ * Checks whether a user's open order contains every product required by a
+ * promo code. Missing products are resolved to human-readable names so the
+ * UI can tell the user exactly what's missing from their cart.
  *
- * Returns an associative array:
- *   [
- *     "ok"      => bool,
- *     "missing" => array of product NAMES (empty when ok=true)
- *   ]
- *
- * When $requiredProductIDsString is NULL/empty, returns ["ok" => true, "missing" => []].
+ * @param {PDO} $dbh the shared database handle
+ * @param {int} $userID the accountID of the logged-in user
+ * @param {String} $requiredProductIDsString comma-separated list of required product IDs (may be NULL/empty)
+ * @returns an associative array with keys "ok" (bool) and "missing" (array of product names the cart is missing)
  */
 function checkPromoRequirements($dbh, $userID, $requiredProductIDsString) {
     if ($requiredProductIDsString === NULL || trim((string) $requiredProductIDsString) === "") {

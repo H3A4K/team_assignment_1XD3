@@ -1,4 +1,15 @@
 <?php
+/**
+ * admin/index.php
+ *
+ * The admin dashboard landing page. Shows a welcome message and the
+ * admin navigation links (Products, Orders, Promo Codes, Promotions) to
+ * admin users, or a security-error message to anyone who manages to
+ * reach the page without admin rights.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 25, 2026
+ */
 session_start();
 
 include "../assets/php/security.php";

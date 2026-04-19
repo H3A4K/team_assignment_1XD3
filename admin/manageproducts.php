@@ -1,4 +1,16 @@
 <?php
+/**
+ * admin/manageproducts.php
+ *
+ * Admin page for adding, editing, and removing menu products. The
+ * product list is rendered client-side by manage_products.js; the popup
+ * at the top of the page is the add/edit form (name, description, price,
+ * class, and image upload) that the same script shows when the admin
+ * clicks "Add Product" or the per-row "Edit" button.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
 session_start();
 
 include "../assets/php/security.php";

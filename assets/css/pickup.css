@@ -1,3 +1,15 @@
+/**
+ * pickup.css
+ *
+ * Styles for the pickup/delivery confirmation page. Renders the
+ * estimated wait time in a prominent card, with the detail sentence
+ * and delivery address below it. Adds an error-state variant used
+ * when the wait-time endpoint returns a failure.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 12, 2026
+ */
+
 body {
     background-color: var(--c-body);
 }

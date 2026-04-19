@@ -1,3 +1,18 @@
+/**
+ * menu.css
+ *
+ * Styles for the menu page. Lays out the two-column layout (menu grid
+ * on the left, slide-out cart panel on the right), the promotional
+ * banner cards above the menu, the search/sort/filter controls, the
+ * menu-item cards, the cart line items with remove buttons, the
+ * promo-code input, the checkout form (pickup vs delivery), and the
+ * floating cart toast notification. Includes responsive breakpoints
+ * for mobile where the cart becomes a full-screen overlay.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 25, 2026
+ */
+
 body {
     background-color: var(--c-body);
 }
@@ -281,10 +296,6 @@ main {
     background: linear-gradient(135deg, #2E86C1 0%, #1B4F72 100%);
 }
 
-/* Legacy aliases used before theme names were introduced */
-.promo-banner--wings { background: linear-gradient(135deg, #FF8F00 0%, #D94E2B 100%); }
-.promo-banner--feast { background: linear-gradient(135deg, #2F241F 0%, #7A3520 100%); }
-
 .promo-banner-image {
     position: absolute;
     right: -8%;
@@ -426,8 +437,6 @@ main {
     cursor: pointer;
 }
 
-/* Add a bit of space between the last fine-print line and the flex spacer
-   above the button so cards with shorter copy don't feel empty. */
 .promo-body > p:last-of-type {
     margin-bottom: 0.75rem;
 }
@@ -538,9 +547,6 @@ main {
     color: var(--c-text);
 }
 
-/* The browser's default [hidden] { display: none } is equal-specificity with
-   class selectors, so CSS `display: flex` rules silently win. Force the
-   `hidden` attribute to always hide these elements. */
 .applied-promocode[hidden],
 #cd-cart-discount-row[hidden],
 #cd-cart-checkout-panel[hidden],

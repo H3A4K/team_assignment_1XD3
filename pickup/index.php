@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+/**
+ * pickup/index.php
+ *
+ * The post-checkout confirmation page. Displays the estimated wait time
+ * for the order the user just placed, plus whether the order is for
+ * pickup or delivery and the delivery address when applicable. The
+ * actual estimate is fetched by pickup.js from assets/php/pickup.php.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 

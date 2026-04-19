@@ -1,5 +1,25 @@
+/**
+ * manage_promo_codes.js
+ *
+ * Client-side script for the admin "Manage Promo Codes" page. Fetches
+ * the full list of discount promo codes and renders them into a table
+ * with Edit/Remove buttons, and wires up the add/edit popup for the
+ * code text, discount type and value, status, expiry date, and
+ * required product IDs.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 16, 2026
+ */
+
 let allPromoCodes = [];
 
+/**
+ * Builds the promo codes table. Each row shows ID, code text, formatted
+ * discount value, status, expiry date, required product IDs, and
+ * Edit/Remove buttons.
+ *
+ * @param {Array} data array of promo code objects returned by admin.php?getAllPromoCodes
+ */
 function renderPromoCodeTable(data) {
     const promoCodeTable = document.getElementById("promocodes-table");
     if (!promoCodeTable) return;
@@ -25,10 +45,6 @@ function renderPromoCodeTable(data) {
     name = document.createElement("th");
     name.innerText = "Promo Code";
     headerRow.appendChild(name);
-
-    // name = document.createElement("th");
-    // name.innerText = "Discount Type";
-    // headerRow.appendChild(name);
 
     name = document.createElement("th");
     name.innerText = "Discount Value";
@@ -65,10 +81,6 @@ function renderPromoCodeTable(data) {
         cell.setAttribute("data-label", "Promo Code");
         cell.innerText = promocodes.promoCode;
         promoCodeRow.appendChild(cell);
-
-        // cell = document.createElement("td");
-        // cell.innerText = promocodes.discountType;
-        // promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
         cell.setAttribute("data-label", "Discount Value");
@@ -122,6 +134,10 @@ function renderPromoCodeTable(data) {
     promoCodeTable.appendChild(table);
 }
 
+/**
+ * Fetches every promo code from the server and re-renders the table.
+ * Called on page load and after any save/remove.
+ */
 function getAllPromoCodes() {
     fetch("../assets/php/admin.php?getAllPromoCodes")
         .then(function (response) {
@@ -137,7 +153,6 @@ function getAllPromoCodes() {
 }
 
 window.addEventListener("load", function () {
-    console.log("get promo codes");
     getAllPromoCodes();
 });
 
@@ -150,6 +165,10 @@ const cancelBtn = document.getElementById("cancelBtn");
 addPromoCodeBtn.addEventListener("click", addPromoCode);
 bottomAddPromoCodeBtn.addEventListener("click", addPromoCode);
 
+/**
+ * Opens the add-promo-code popup with every field cleared. Save treats
+ * this as an insert because promoID is empty.
+ */
 function addPromoCode() {
     const promoCodeIDInput = document.getElementById("promoID");
     const promoCodeInput = document.getElementById("promoCode");
@@ -193,6 +212,13 @@ cancelBtn.addEventListener("click", function() {
     popup.style.visibility = "hidden";
 });
 
+/**
+ * POSTs the add/edit-promo-code form to the server. When promoID is
+ * set the server updates the row, otherwise inserts a new one. The
+ * refreshed promo code list is rendered back into the table.
+ *
+ * @param {Object} promoCode the fields to save (promoID, promoCode, discountType, discountValue, active, expiryDate, requiredProductIDs)
+ */
 function savePromoCode(promoCode) {
     if (!promoCode) {
         return;
@@ -225,6 +251,12 @@ function savePromoCode(promoCode) {
 
 }
 
+/**
+ * Confirms with the admin and, if accepted, deletes the given promo
+ * code on the server and refreshes the table.
+ *
+ * @param {Object} promocode the promo code row being removed (uses promoID and promoCode)
+ */
 function removePromoCode(promocode) {
     let result = confirm("Are you sure you want to remove the promo code " + promocode.promoCode + "?");
     if (result) {
@@ -250,6 +282,13 @@ function removePromoCode(promocode) {
     }
 }
 
+/**
+ * Opens the popup pre-filled with the given promo code's values so
+ * the admin can edit it. The expiry date control is populated via
+ * valueAsDate so it binds correctly to the <input type="date">.
+ *
+ * @param {Object} promocode the promo code row being edited
+ */
 function editPromoCode(promocode) {
     const promoCodeIDInput = document.getElementById("promoID");
     const promoCodeInput = document.getElementById("promoCode");

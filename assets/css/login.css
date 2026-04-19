@@ -1,3 +1,15 @@
+/**
+ * login.css
+ *
+ * Styles for the login page. Applies a soft cream background, centres
+ * the logo and form in the viewport, styles the email and password
+ * inputs plus the login/signup buttons, and shows the error message
+ * area.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 body {
     background-color: var(--c-cream);
 }

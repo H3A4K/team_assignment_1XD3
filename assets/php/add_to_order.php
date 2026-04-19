@@ -1,4 +1,15 @@
 <?php
+/**
+ * add_to_order.php
+ *
+ * JSON endpoint that adds a product to the logged-in user's open (not yet
+ * checked out) order, creating a fresh order row if they don't already
+ * have one. If the product is already in the order, its quantity is
+ * incremented instead of inserting a duplicate row.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 06, 2026
+ */
 
 session_start();
 include "connect.php";

@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+/**
+ * index.php (root)
+ *
+ * The home page of Clarence's Kitchen. Shows the hero banner, the
+ * three-card feature grid describing the restaurant, and the site-wide
+ * header/footer. Uses the PHP session to decide whether to render the
+ * Login/Signup link or the Account/Logout link in the navigation.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 25, 2026
+ */
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 

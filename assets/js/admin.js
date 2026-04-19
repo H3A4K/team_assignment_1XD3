@@ -1,8 +1,27 @@
+/**
+ * admin.js
+ *
+ * Legacy combined admin dashboard script. Fetches and renders the
+ * products, orders, and promo codes tables and provides the
+ * add/edit/remove product popup. Superseded on the dedicated
+ * Products/Orders/Promo Codes pages by manage_products.js,
+ * manage_orders.js, and manage_promo_codes.js respectively.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
 
 let allProducts = [];
 let allOrders = [];
 let allPromoCodes = [];
 
+/**
+ * Builds the products table on the admin dashboard from the server
+ * response. Each row shows ID, name, description, price, image,
+ * class, and Edit/Remove buttons.
+ *
+ * @param {Array} data array of product objects returned by admin.php?getAllProducts
+ */
 function renderProductTable(data) {
     const productTable = document.getElementById("product-table");
     if (!productTable) return;
@@ -103,6 +122,12 @@ function renderProductTable(data) {
     productTable.appendChild(table);
 }
 
+/**
+ * Populates the product-class <select> in the add/edit popup with the
+ * list of classes returned by the server.
+ *
+ * @param {Array} data array of class objects (each with a `name` field)
+ */
 function reloadProductClassesSelect(data) {
     console.log("reload product")
     const classSelect = document.getElementById("productClassesSelect");
@@ -119,6 +144,13 @@ function reloadProductClassesSelect(data) {
     }
 }
 
+/**
+ * Builds the orders table on the admin dashboard. Each row shows the
+ * orderID, customer accountID, order date, address, and a status cell
+ * ("Completed" or "Incomplete").
+ *
+ * @param {Array} data array of order objects returned by admin.php?getAllOrders
+ */
 function renderOrderTable(data) {
     const orderTable = document.getElementById("order-table");
     if (!orderTable) return;
@@ -194,6 +226,13 @@ function renderOrderTable(data) {
     orderTable.appendChild(table);
 }
 
+/**
+ * Builds the promo codes table on the admin dashboard. Each row shows
+ * the ID, code text, formatted discount value (percentage or dollar
+ * amount), status, and expiry date.
+ *
+ * @param {Array} data array of promo code objects returned by admin.php?getAllPromoCodes
+ */
 function renderPromoCodeTable(data) {
     const promoCodeTable = document.getElementById("promocodes-table");
     if (!promoCodeTable) return;
@@ -220,10 +259,6 @@ function renderPromoCodeTable(data) {
     name.innerText = "Promo Code";
     headerRow.appendChild(name);
 
-    // name = document.createElement("th");
-    // name.innerText = "Discount Type";
-    // headerRow.appendChild(name);
-
     name = document.createElement("th");
     name.innerText = "Discount Value";
     headerRow.appendChild(name);
@@ -249,10 +284,6 @@ function renderPromoCodeTable(data) {
         cell = document.createElement("td");
         cell.innerText = promocodes.promoCode;
         promoCodeRow.appendChild(cell);
-
-        // cell = document.createElement("td");
-        // cell.innerText = promocodes.discountType;
-        // promoCodeRow.appendChild(cell);
 
         cell = document.createElement("td");
         if (promocodes.discountType === "percentage") {
@@ -282,6 +313,10 @@ function renderPromoCodeTable(data) {
     promoCodeTable.appendChild(table);
 }
 
+/**
+ * Fetches every product from the server and re-renders the products
+ * table. Called on page load and after any add/remove/edit action.
+ */
 function getAllProducts() {
     fetch("../assets/php/admin.php?getAllProducts")
         .then(function (response) {
@@ -296,6 +331,10 @@ function getAllProducts() {
         });
 }
 
+/**
+ * Fetches the list of product classes from the server and loads them
+ * into the class <select> in the add/edit popup.
+ */
 function getProductClasses() {
     fetch("../assets/php/admin.php?getProductClasses")
         .then(function (response) {
@@ -310,6 +349,9 @@ function getProductClasses() {
         });
 }
 
+/**
+ * Fetches every order from the server and re-renders the orders table.
+ */
 function getAllOrders() {
     fetch("../assets/php/admin.php?getAllOrders")
     .then(function (response) {
@@ -324,6 +366,10 @@ function getAllOrders() {
         });
 }
 
+/**
+ * Fetches every promo code from the server and re-renders the promo
+ * codes table.
+ */
 function getAllPromoCodes() {
     fetch("../assets/php/admin.php?getAllPromoCodes")
         .then(function (response) {
@@ -341,18 +387,15 @@ function getAllPromoCodes() {
 let saveProductBtn;
 
 window.addEventListener("load", function () {
-    console.log("get products");
     getAllProducts();
     getProductClasses();
 });
 
 window.addEventListener("load", function () {
-    console.log("get orders");
     getAllOrders();
 });
 
 window.addEventListener("load", function () {
-    console.log("get promo codes");
     getAllPromoCodes();
 });
 
@@ -365,6 +408,10 @@ const cancelBtn = document.getElementById("cancelBtn");
 addProductBtn.addEventListener("click", addProduct);
 bottomAddProductBtn.addEventListener("click", addProduct);
 
+/**
+ * Opens the add-product popup with all fields blank (and productID
+ * cleared, so save treats this as an insert rather than an update).
+ */
 function addProduct() {
     const productIDInput = document.getElementById("productID");
     const productNameInput = document.getElementById("productName");
@@ -395,6 +442,13 @@ cancelBtn.addEventListener("click", function() {
 });
 
 
+/**
+ * POSTs the add/edit-product form to the server. If `product.productID`
+ * is set the server updates an existing row, otherwise it inserts a
+ * new one. After the save the products table is re-rendered.
+ *
+ * @param {Object} product the product fields to save (productID, productName, productDesc, price, productClass)
+ */
 function saveProduct(product) {
     if (!product) {
         return;
@@ -425,11 +479,15 @@ function saveProduct(product) {
 
 }
 
+/**
+ * Confirms with the admin and, if accepted, asks the server to delete
+ * the given product. The products table is refreshed after the delete.
+ *
+ * @param {Object} product the product object for the row being removed (uses productID and productName)
+ */
 function removeProduct(product) {
-    // alert(product.productName);
     let result = confirm("Are you sure you want to remove " + product.productName + " " + "from the menu?");
     if (result) {
-        // alert("Product will be removed");
         let urlEncodedProduct = "";
         urlEncodedProduct += "productID=" + product.productID + "";
         fetch("../assets/php/admin.php?removeProduct", {
@@ -452,6 +510,13 @@ function removeProduct(product) {
     }
 }
 
+/**
+ * Opens the popup pre-filled with the given product's values so the
+ * admin can edit it. On save, the filled-in productID tells the server
+ * to UPDATE the existing row rather than INSERT a new one.
+ *
+ * @param {Object} product the product row being edited
+ */
 function editProduct(product) {
     const productIDInput = document.getElementById("productID");
     const productNameInput = document.getElementById("productName");

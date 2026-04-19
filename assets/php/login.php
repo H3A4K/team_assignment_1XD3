@@ -1,4 +1,16 @@
 <?php
+/**
+ * login.php
+ *
+ * Server-side login endpoint. Reads email and password from POST, looks
+ * the user up, verifies the password hash, and either starts a session
+ * (storing userID + email) or echoes a plain-text error message that the
+ * client JavaScript shows to the user.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 include "connect.php";
 session_start();
 
@@ -7,7 +19,7 @@ $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($email != NULL && $password != NULL) {
     // Check if email is an existing user
-    $cmd = "SELECT * FROM users WHERE email=?"; // TODO: change to users
+    $cmd = "SELECT * FROM users WHERE email=?";
     $stmt = $dbh->prepare($cmd);
     $success = $stmt->execute([$email]);
     if (!$success) {

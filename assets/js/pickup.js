@@ -1,3 +1,16 @@
+/**
+ * pickup.js
+ *
+ * Client-side script for the pickup/delivery confirmation page. Calls
+ * assets/php/pickup.php to fetch the estimated wait time for the user's
+ * current (or specifically requested) order, then fills in the wait
+ * time, label, detail sentence, and delivery address on the page. If
+ * the server returns an error, a friendly message replaces the time.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+
 window.addEventListener("load", function () {
     const timeDisplay = document.getElementById("time");
     const timeLabel = document.getElementById("time-label");
@@ -5,6 +18,12 @@ window.addEventListener("load", function () {
     const address = document.getElementById("pickup-address");
     const main = document.querySelector("main");
 
+    /**
+     * Shows an error message in place of the wait time when the
+     * pickup endpoint returns a failure.
+     *
+     * @param {String} message the user-facing error message to display
+     */
     function showError(message) {
         if (timeDisplay) timeDisplay.textContent = "--";
         if (detail) detail.textContent = message;
@@ -39,7 +58,6 @@ window.addEventListener("load", function () {
             }
         })
         .catch((error) => {
-            console.error(error);
             showError(error.message);
         });
 });

@@ -1,4 +1,15 @@
 <?php
+/**
+ * admin/manageorders.php
+ *
+ * Admin page for viewing every customer order and flipping each one
+ * between "Completed" and "Incomplete". The order list is rendered
+ * client-side by manage_orders.js, and the edit popup at the top of
+ * the page is the form used to change an individual order's status.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
 session_start();
 
 include "../assets/php/security.php";

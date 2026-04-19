@@ -1,3 +1,16 @@
+/**
+ * login.js
+ *
+ * Client-side script for the login page. Validates the email and
+ * password fields as the user types (colouring them green/red),
+ * wires the "Sign up" button to navigate to the signup page, and
+ * submits the login form to assets/php/login.php. On success the
+ * user is redirected to the home page.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 window.addEventListener("load", function () {
     const emailinput = this.document.getElementById("emailinput")
     const passwordinput = this.document.getElementById("passwordinput")
@@ -67,6 +80,15 @@ window.addEventListener("load", function () {
 
 
 
+/**
+ * Performs a quick structural check on an email address: must be
+ * non-empty, contain exactly one @, have at least one dot after the @,
+ * and not end with a dot. Good enough for front-end validation before
+ * hitting the server.
+ *
+ * @param {String} email the email address to validate
+ * @returns {Boolean} true if the string looks like a plausible email address
+ */
 function isValidEmail(email) {
     if (email.length <= 0) return false;
     if (!email.includes(".")) return false;
@@ -77,8 +99,14 @@ function isValidEmail(email) {
     return true;
 }
 
+/**
+ * Callback that runs after the login POST completes. Re-enables the
+ * submit button, shows the server's plain-text message if login failed,
+ * and redirects to the home page if it succeeded.
+ *
+ * @param {String} code the plain-text response from login.php (e.g. "Logged in" or an error message)
+ */
 function doneLoggingInUser(code) {
-    console.log(code);
     let loginButton = this.document.getElementById("submitbtn");
     loginButton.disabled = false;
     const errorElem = document.getElementById("errormessage");

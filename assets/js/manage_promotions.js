@@ -1,5 +1,25 @@
+/**
+ * manage_promotions.js
+ *
+ * Client-side script for the admin "Manage Promotions" page. Fetches
+ * the full list of visual promotional banners (the cards shown above
+ * the menu) and renders them into a table with Edit/Remove buttons.
+ * Wires up the add/edit popup including the live banner-image preview
+ * and sends uploads as multipart form data.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 18, 2026
+ */
+
 let allPromotions = [];
 
+/**
+ * Builds the promotions table. Each row shows ID, title, eyebrow,
+ * price text, badge, banner image, theme, active flag, sort order,
+ * and Edit/Remove buttons.
+ *
+ * @param {Array} data array of promotion objects returned by admin.php?getAllPromotions
+ */
 function renderPromotionTable(data) {
     const promotionTable = document.getElementById("promotion-table");
     if (!promotionTable) return;
@@ -101,6 +121,10 @@ function renderPromotionTable(data) {
     promotionTable.appendChild(table);
 }
 
+/**
+ * Fetches every promotion from the server and re-renders the table.
+ * Called on page load and after any save/remove.
+ */
 function getAllPromotions() {
     fetch("../assets/php/admin.php?getAllPromotions")
         .then(r => {
@@ -124,6 +148,11 @@ const cancelBtn = document.getElementById("cancelBtn");
 addBtn.addEventListener("click", addPromotion);
 bottomAddBtn.addEventListener("click", addPromotion);
 
+/**
+ * Opens the add-promotion popup with every field cleared and sensible
+ * defaults (orange theme, "Order Now" label, active, sortOrder 0).
+ * The banner image preview is reset to the placeholder.
+ */
 function addPromotion() {
     document.getElementById("promotionID").value = "";
     document.getElementById("title").value = "";
@@ -143,6 +172,13 @@ function addPromotion() {
     popup.style.visibility = "visible";
 }
 
+/**
+ * Opens the popup pre-filled with the given promotion's values so
+ * the admin can edit it. The banner preview is loaded from the
+ * current image so the admin can see what's already in place.
+ *
+ * @param {Object} promo the promotion row being edited
+ */
 function editPromotion(promo) {
     document.getElementById("promotionID").value = promo.promotionID;
     document.getElementById("title").value = promo.title || "";
@@ -206,6 +242,14 @@ if (promotionImgFileInput) {
     });
 }
 
+/**
+ * POSTs the add/edit-promotion form to the server as multipart form
+ * data so an uploaded banner image is included. When promotionID is
+ * set the server updates the row, otherwise inserts. The refreshed
+ * promotions list in the response is rendered back into the table.
+ *
+ * @param {FormData} formData the built-up form data including any uploaded banner image
+ */
 function savePromotion(formData) {
     if (!formData) return;
     fetch("../assets/php/admin.php?savePromotion", {
@@ -222,6 +266,12 @@ function savePromotion(formData) {
         });
 }
 
+/**
+ * Confirms with the admin and, if accepted, deletes the given
+ * promotion on the server and refreshes the table.
+ *
+ * @param {Object} promo the promotion row being removed (uses promotionID and title)
+ */
 function removePromotion(promo) {
     const confirmed = confirm('Are you sure you want to remove promotion "' + promo.title + '"?');
     if (!confirmed) return;

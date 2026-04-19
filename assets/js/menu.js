@@ -1,3 +1,16 @@
+/**
+ * menu.js
+ *
+ * Client-side script for the menu page. Responsible for loading and
+ * rendering the full menu grid, search/sort/filter controls, the
+ * slide-out cart panel, add/remove-from-cart actions, promo-code
+ * apply/remove, the pickup-vs-delivery checkout form, and a toast
+ * notification that confirms cart changes.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 const cart = document.getElementById("cd-cart");
 const closeIcon = document.getElementById("cd-close-icon");
 const cartTriggerLink = document.querySelector("#cd-cart-trigger a");
@@ -59,15 +72,34 @@ document.addEventListener("DOMContentLoaded", function () {
     let selectedClasses = new Set();
     let currentCartData = null;
 
+    /**
+     * Formats a numeric value as a dollar amount with two decimal places.
+     *
+     * @param {Number} value the amount in dollars (e.g. 12.5)
+     * @returns {String} the formatted string (e.g. "$12.50")
+     */
     function formatCurrency(value) {
         return "$" + Number(value).toFixed(2);
     }
 
+    /**
+     * Shows a status message in the cart panel (e.g. "Your cart is
+     * empty." or the login prompt).
+     *
+     * @param {String} message the message to display
+     */
     function setCartStatus(message) {
         cartStatus.textContent = message;
         cartStatus.hidden = false;
     }
 
+    /**
+     * Sets or clears the cart feedback banner and mirrors it to the
+     * floating toast notification. Passing an empty message clears both.
+     *
+     * @param {String} message the message to display (empty string to clear)
+     * @param {Boolean} isError true for error styling, false for success styling (default false)
+     */
     function setCartFeedback(message, isError = false) {
         if (!message) {
             cartFeedback.hidden = true;
@@ -87,6 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const cartToastMessage = document.getElementById("cart-toast-message");
     let cartToastTimer = null;
 
+    /**
+     * Shows the floating toast message at the top of the page for a
+     * few seconds. Any existing toast is replaced.
+     *
+     * @param {String} message the text to show in the toast
+     * @param {Boolean} isError true for error styling, false for success styling (default false)
+     */
     function showCartToast(message, isError = false) {
         if (!cartToast || !cartToastMessage) return;
         cartToastMessage.textContent = message;
@@ -99,6 +138,10 @@ document.addEventListener("DOMContentLoaded", function () {
         cartToastTimer = setTimeout(hideCartToast, 3500);
     }
 
+    /**
+     * Fades the floating toast message out and hides it from the DOM
+     * once the animation finishes.
+     */
     function hideCartToast() {
         if (!cartToast) return;
         if (cartToastTimer) {
@@ -113,11 +156,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }, 250);
     }
 
+    /**
+     * Reads which fulfillment radio is currently selected in the
+     * checkout form.
+     *
+     * @returns {String} "pickup" or "delivery" (defaults to "pickup" if nothing is selected)
+     */
     function getSelectedFulfillmentMethod() {
         const selected = document.querySelector("input[name='fulfillmentMethod']:checked");
         return selected ? selected.value : "pickup";
     }
 
+    /**
+     * Keeps the read-only checkout summary (method, tax, total, and
+     * optional delivery address) in sync with the form controls above
+     * it and the cart totals on the left.
+     */
     function syncCheckoutSummary() {
         const method = getSelectedFulfillmentMethod();
         checkoutSummaryMethod.textContent = method === "delivery" ? "Delivery" : "Pickup";
@@ -134,6 +188,10 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /**
+     * Shows or hides the delivery address field based on the chosen
+     * fulfillment method, then refreshes the summary.
+     */
     function syncFulfillmentFields() {
         const method = getSelectedFulfillmentMethod();
         const isDelivery = method === "delivery";
@@ -142,12 +200,19 @@ document.addEventListener("DOMContentLoaded", function () {
         syncCheckoutSummary();
     }
 
+    /**
+     * Hides the checkout form and returns the cart to its normal view.
+     */
     function closeCheckoutPanel() {
         checkoutPanel.hidden = true;
         openCheckoutBtn.hidden = false;
         cart.classList.remove("checkout-active");
     }
 
+    /**
+     * Opens the checkout form inside the cart panel. Does nothing if
+     * the user isn't logged in or has no items in their cart.
+     */
     function openCheckoutPanel() {
         if (!currentCartData || !currentCartData.loggedIn || !currentCartData.hasOpenOrder || currentCartData.items.length === 0) {
             return;
@@ -159,6 +224,13 @@ document.addEventListener("DOMContentLoaded", function () {
         cart.classList.add("checkout-active");
     }
 
+    /**
+     * Rebuilds the cart panel from the latest server data. Updates the
+     * status message, subtotal/discount/tax/total rows, applied-promo
+     * chip, and the list of line items (each with a remove button).
+     *
+     * @param {Object} cartData the parsed JSON response from get_cart.php (includes loggedIn, items, subtotal, discount, tax, total, appliedPromoCode, etc.)
+     */
     function renderCart(cartData) {
         currentCartData = cartData;
         cartItems.innerHTML = "";
@@ -237,6 +309,14 @@ document.addEventListener("DOMContentLoaded", function () {
         syncCheckoutSummary();
     }
 
+    /**
+     * Asks the server to remove a single line item from the user's
+     * open order, then refreshes the cart view. Shows a toast
+     * notification confirming the removal.
+     *
+     * @param {Number} orderDetailID the ID of the orderdetails row to delete
+     * @param {String} productName the item's display name, used in the confirmation message
+     */
     async function removeFromCart(orderDetailID, productName) {
         if (!orderDetailID) return;
         try {
@@ -251,11 +331,14 @@ document.addEventListener("DOMContentLoaded", function () {
             setCartFeedback((productName || "Item") + " removed from cart.");
             await refreshCart();
         } catch (error) {
-            console.error(error);
             setCartFeedback(error.message, true);
         }
     }
 
+    /**
+     * Reads the promo code typed into the input and asks the server to
+     * apply it. Refreshes the cart on success so the discount shows up.
+     */
     async function applyPromocode() {
         if (!promocodeInput) return;
         const code = promocodeInput.value.trim();
@@ -276,13 +359,16 @@ document.addEventListener("DOMContentLoaded", function () {
             setCartFeedback("Promo code \"" + result.promoCode + "\" applied.");
             await refreshCart();
         } catch (error) {
-            console.error(error);
             setCartFeedback(error.message, true);
         } finally {
             promocodeApplyBtn.disabled = false;
         }
     }
 
+    /**
+     * Tells the server to drop the applied promo code from the
+     * session, then refreshes the cart.
+     */
     async function removePromocode() {
         try {
             const response = await fetch("../assets/php/remove_promocode.php", {
@@ -293,7 +379,6 @@ document.addEventListener("DOMContentLoaded", function () {
             setCartFeedback("Promo code removed.");
             await refreshCart();
         } catch (error) {
-            console.error(error);
             setCartFeedback(error.message, true);
         }
     }
@@ -313,6 +398,11 @@ document.addEventListener("DOMContentLoaded", function () {
         removePromocodeBtn.addEventListener("click", removePromocode);
     }
 
+    /**
+     * Fetches the latest cart state from the server and re-renders the
+     * cart panel. On failure, shows an error message and disables
+     * checkout.
+     */
     async function refreshCart() {
         try {
             const response = await fetch("../assets/php/get_cart.php");
@@ -325,7 +415,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             renderCart(cartData);
         } catch (error) {
-            console.error(error);
             setCartStatus("Unable to load cart right now.");
             setCartFeedback("Cart request failed. Check the browser console for details.", true);
             cartSubtotal.textContent = formatCurrency(0);
@@ -335,6 +424,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /**
+     * Renders the menu grid for a given list of products. Each card
+     * shows the image, class tag, name, price, description, and an
+     * "Add to cart" button that POSTs to add_to_order.php.
+     *
+     * @param {Array} data the array of product objects to display
+     */
     function renderMenu(data) {
         menu.innerHTML = "";
 
@@ -396,7 +492,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     setCartFeedback(product.productName + " added to cart.");
                     await refreshCart();
                 } catch (error) {
-                    console.error(error);
                     setCartFeedback(error.message, true);
                 }
             });
@@ -407,6 +502,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    /**
+     * Builds the class filter dropdown from the list of unique product
+     * classes found in `data`. Each checkbox toggles membership in
+     * `selectedClasses` and re-runs the filter+sort pipeline.
+     *
+     * @param {Array} data the full list of products (used to derive the available classes)
+     */
     function buildClassCheckboxes(data) {
         classFilterDropdown.innerHTML = "";
         const classes = [...new Set(data.map((p) => p.productClass))].sort();
@@ -429,6 +531,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    /**
+     * Applies the current search query, selected class filters, and
+     * sort option to `allProducts`, then re-renders the menu grid with
+     * the filtered/sorted result.
+     */
     function applyFiltersAndSort() {
         const query = searchInput.value.trim().toLowerCase();
         const sort = sortSelect.value;
@@ -504,7 +611,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             window.location.href = result.redirectUrl || ("../pickup/?order_id=" + result.orderID);
         } catch (error) {
-            console.error(error);
             setCartFeedback(error.message, true);
         } finally {
             placeOrderBtn.disabled = false;
@@ -531,7 +637,6 @@ document.addEventListener("DOMContentLoaded", function () {
             renderMenu(allProducts);
         })
         .catch(function (error) {
-            console.error(error);
             menu.innerHTML = "<p id=\"menu-empty\">Unable to load menu items.</p>";
         });
 });

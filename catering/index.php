@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+/**
+ * catering/index.php
+ *
+ * The catering information page. Purely informational - describes the
+ * catering packages, what's included, lead times, and shows the
+ * restaurant's contact information and social links so customers can
+ * reach out for large orders.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 

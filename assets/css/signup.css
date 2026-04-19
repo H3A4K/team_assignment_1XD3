@@ -1,3 +1,15 @@
+/**
+ * signup.css
+ *
+ * Styles for the signup page. Mirrors the login layout (cream
+ * background, centred form) and adds the password-requirement
+ * checklist with red/green indicators that update as the user types a
+ * password.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 body {
     background-color: var(--c-cream);
 }

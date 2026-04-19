@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+/**
+ * login/index.php
+ *
+ * The customer login page. Renders an email and password form plus a
+ * "Sign up" link for users without an account. The form is submitted
+ * via login.js, which posts to assets/php/login.php and redirects to
+ * the home page on success.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 

@@ -1,3 +1,15 @@
+/**
+ * global.css
+ *
+ * Site-wide stylesheet loaded on every page. Defines the colour, font,
+ * shadow, and radius design tokens (as CSS custom properties on :root)
+ * and styles shared elements: header, mobile hamburger menu, main
+ * navigation, account menu, buttons, footer, and common form controls.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 25, 2026
+ */
+
 :root {
     --c-primary: #FF8F00;
     --c-primary-hover: #E07D00;

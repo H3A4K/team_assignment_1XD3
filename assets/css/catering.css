@@ -1,3 +1,15 @@
+/**
+ * catering.css
+ *
+ * Styles for the catering information page. Lays out the hero section,
+ * the two-panel content grid (catering details on the left, contact
+ * information on the right), the bullet lists, and the social-media
+ * icon row. Collapses to a single column on small screens.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+
 body {
     background-color: var(--c-body);
 }

@@ -1,4 +1,17 @@
-<?php session_start(); ?>
+<?php
+/**
+ * signup/index.php
+ *
+ * The new-customer signup page. Renders a form for email, password,
+ * phone number, and address, with a live password-requirements
+ * checklist. signup.js validates each field on input and posts the
+ * form to assets/php/signup.php, redirecting to login on success.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+session_start();
+?>
 <!doctype html>
 <html lang="en">
 

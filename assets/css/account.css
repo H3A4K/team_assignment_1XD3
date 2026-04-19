@@ -1,6 +1,16 @@
+/**
+ * account.css
+ *
+ * Styles for the logged-in customer's account page. Lays out the four
+ * credential-change form blocks (email, password, phone, address),
+ * styles the admin-panel link and logo, and formats the order history
+ * table with responsive rules for small screens.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 17, 2026
+ */
+
 .inputcontainer {
-    /* display: flex; */
-    /* flex-direction: column; */
     justify-content: center;
     align-items: center;
     margin: 2%;
@@ -43,10 +53,7 @@
     min-width: 20%;
     display: flex;
     flex-direction: column;
-    /* justify-self: center; */
     justify-items: center;
-    /* align-self: center; */
-    /* align-items: center; */
 }
 
 #errormessage {
@@ -102,7 +109,6 @@
     font-weight: 700;
     margin-bottom: 1%;
     text-align: center;
-    /* border-bottom: 1px solid black; */
 }
 
 #orderhistory {

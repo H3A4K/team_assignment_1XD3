@@ -1,4 +1,15 @@
 <?php
+/**
+ * get_cart.php
+ *
+ * JSON endpoint that returns the logged-in user's current cart. Builds a
+ * payload with the line items, subtotal, any applied promo discount, tax,
+ * and grand total so the menu page can render the cart panel on load or
+ * after any add/remove action.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 06, 2026
+ */
 
 session_start();
 include "connect.php";
@@ -7,10 +18,14 @@ include "promo_requirements.php";
 header("Content-Type: application/json");
 
 /**
- * Resolves the currently-applied promo code against the DB and returns
- * [discountAmount, promoCode, discountType, discountValue] given a subtotal.
- * If the stored promo is no longer active / has expired, the session is cleared
- * and a zero discount is returned.
+ * Reads the promo code stored in the user's session and works out how
+ * much it discounts off the given subtotal. Silently drops the code from
+ * the session if it is no longer active, has expired, or if the cart no
+ * longer satisfies the promo's product requirements.
+ *
+ * @param {PDO} $dbh the shared database handle
+ * @param {float} $subtotal the pre-discount cart subtotal in dollars
+ * @returns an associative array with keys "amount" (float discount in dollars), "code" (string|null), "type" (string|null), and "value" (float configured discount value)
  */
 function resolveAppliedPromo($dbh, $subtotal) {
     if (!isset($_SESSION["appliedPromoID"])) {

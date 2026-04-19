@@ -1,11 +1,13 @@
 <?php
 /**
- * Removes a single line item from the logged-in user's open order.
- * Accepts JSON body: { "orderDetailID": 123 }
+ * remove_from_order.php
  *
- * Security: verifies that the target orderDetail belongs to an order whose
- * accountID matches the current session userID AND whose order is still open
- * (fullfilled = 0). A user cannot delete another user's items or finalized ones.
+ * JSON endpoint that deletes a single line item (identified by its
+ * orderDetailID) from the user's open order. Verifies that the line
+ * actually belongs to the logged-in user's open order before deleting.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 18, 2026
  */
 
 session_start();

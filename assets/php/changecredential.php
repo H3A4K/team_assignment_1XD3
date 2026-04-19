@@ -1,4 +1,16 @@
 <?php
+/**
+ * changecredential.php
+ *
+ * Updates one of the logged-in user's account fields: email, password,
+ * phone number, or address. The specific field to update is selected with
+ * the POST `type` parameter, and the new value comes from the matching
+ * POST field. Rejects duplicate emails or phone numbers.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 17, 2026
+ */
+
 include "connect.php";
 session_start();
 

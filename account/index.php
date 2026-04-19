@@ -1,4 +1,16 @@
-<?php session_start();
+<?php
+/**
+ * account/index.php
+ *
+ * The logged-in customer's account page. Shows four forms for updating
+ * email, password, phone number, and address, a link to the admin panel
+ * (for admin users), and the user's five most recent orders pulled from
+ * the database. Redirects unauthenticated visitors back to the home page.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+session_start();
 include "../assets/php/connect.php";
 if (!isset($_SESSION["email"])) {
     header("Location: ../");

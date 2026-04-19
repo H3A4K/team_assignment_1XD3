@@ -1,4 +1,15 @@
 <?php
+/**
+ * complete_order_action.php
+ *
+ * Traditional form-post variant of complete_order.php. Used by older
+ * checkout links that simply submit a form rather than calling the JSON
+ * endpoint. Marks the user's open order as completed and then redirects
+ * them back to the menu page with a success or error query string.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 06, 2026
+ */
 
 session_start();
 include "connect.php";

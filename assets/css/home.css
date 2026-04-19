@@ -1,3 +1,15 @@
+/**
+ * home.css
+ *
+ * Styles specific to the home page. Applies the dark gradient
+ * background, styles the hero section (headline, copy, buttons, and
+ * brand logo panel), and lays out the three-card feature grid below
+ * the hero.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 01, 2026
+ */
+
 body {
     color: #f5f5f5;
     background:

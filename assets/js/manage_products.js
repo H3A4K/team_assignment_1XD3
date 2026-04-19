@@ -1,5 +1,27 @@
+/**
+ * manage_products.js
+ *
+ * Client-side script for the admin "Manage Products" page. Loads the
+ * product list, renders it into a responsive table with Edit/Remove
+ * buttons, and wires up the add/edit popup (including live image
+ * preview when a new image file is selected). Image uploads are sent
+ * as multipart form data so the PHP backend can validate and save
+ * them to disk.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
+
 let allProducts = [];
 
+/**
+ * Builds the products table for the admin page. Each row shows ID,
+ * name, description, price, image, class, and Edit/Remove buttons.
+ * Data-label attributes are added so the responsive mobile CSS can
+ * render the cells as stacked key/value pairs.
+ *
+ * @param {Array} data array of product objects returned by admin.php?getAllProducts
+ */
 function renderProductTable(data) {
     const productTable = document.getElementById("product-table");
     if (!productTable) return;
@@ -109,6 +131,12 @@ function renderProductTable(data) {
     productTable.appendChild(table);
 }
 
+/**
+ * Populates the product-class <select> in the add/edit popup with the
+ * list of classes returned by the server.
+ *
+ * @param {Array} data array of class objects (each with a `name` field)
+ */
 function reloadProductClassesSelect(data) {
     console.log("reload product")
     const classSelect = document.getElementById("productClassesSelect");
@@ -125,6 +153,10 @@ function reloadProductClassesSelect(data) {
     }
 }
 
+/**
+ * Fetches every product from the server and re-renders the products
+ * table. Called on page load and after any save/remove.
+ */
 function getAllProducts() {
     fetch("../assets/php/admin.php?getAllProducts")
         .then(function (response) {
@@ -139,6 +171,10 @@ function getAllProducts() {
         });
 }
 
+/**
+ * Fetches the list of product classes from the server and loads them
+ * into the class <select> inside the add/edit popup.
+ */
 function getProductClasses() {
     fetch("../assets/php/admin.php?getProductClasses")
         .then(function (response) {
@@ -156,7 +192,6 @@ function getProductClasses() {
 let saveProductBtn;
 
 window.addEventListener("load", function () {
-    console.log("get products");
     getAllProducts();
     getProductClasses();
 });
@@ -170,6 +205,11 @@ const cancelBtn = document.getElementById("cancelBtn");
 addProductBtn.addEventListener("click", addProduct);
 bottomAddProductBtn.addEventListener("click", addProduct);
 
+/**
+ * Opens the add-product popup with every field cleared and the image
+ * preview reset to the default placeholder image. Save treats this as
+ * an insert because productID is empty.
+ */
 function addProduct() {
     const productIDInput = document.getElementById("productID");
     const productNameInput = document.getElementById("productName");
@@ -233,12 +273,19 @@ if (productImgFileInput) {
     });
 }
 
+/**
+ * POSTs the add/edit-product form to the server as multipart form
+ * data (so an uploaded image file is included). When productID is set
+ * the server updates, otherwise it inserts. The refreshed product
+ * list in the response is rendered back into the table.
+ *
+ * @param {FormData} formData the built-up form data including any uploaded image
+ */
 function saveProduct(formData) {
     if (!formData) {
         return;
     }
-    // NOTE: Do NOT set Content-Type header manually — the browser must set
-    // it to multipart/form-data with the correct boundary for file uploads.
+
     fetch("../assets/php/admin.php?saveProduct", {
         method: 'POST',
         body: formData
@@ -256,11 +303,15 @@ function saveProduct(formData) {
 
 }
 
+/**
+ * Confirms with the admin and, if accepted, deletes the given product
+ * on the server and refreshes the table.
+ *
+ * @param {Object} product the product row being removed (uses productID and productName)
+ */
 function removeProduct(product) {
-    // alert(product.productName);
     let result = confirm("Are you sure you want to remove " + product.productName + " " + "from the menu?");
     if (result) {
-        // alert("Product will be removed");
         let urlEncodedProduct = "";
         urlEncodedProduct += "productID=" + product.productID + "";
         fetch("../assets/php/admin.php?removeProduct", {
@@ -283,6 +334,13 @@ function removeProduct(product) {
     }
 }
 
+/**
+ * Opens the popup pre-filled with the given product's values so the
+ * admin can edit it. The image preview is loaded from the product's
+ * current image so the admin can see what they already have.
+ *
+ * @param {Object} product the product row being edited
+ */
 function editProduct(product) {
     const productIDInput = document.getElementById("productID");
     const productNameInput = document.getElementById("productName");

@@ -1,3 +1,18 @@
+/**
+ * admin.css
+ *
+ * Styles shared by every admin page (Dashboard, Manage Products,
+ * Manage Orders, Manage Promo Codes, Manage Promotions). Styles the
+ * toolbar with the "Add" button, the data tables rendered by the
+ * JavaScript managers, and the add/edit popup used for every CRUD
+ * operation. Includes responsive rules that convert the admin tables
+ * into stacked card layouts on small screens using data-label
+ * attributes for each cell.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
+
 body {
     background-color: var(--c-body);
     position: relative;
@@ -166,8 +181,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
-/* Product, order-status, and promotion popups use stacked rows so fields have
-   room to breathe, unlike the promo-code form which uses .layout-column wrappers. */
+/* Product, order-status, and promotion popups use stacked rows so fields have room to breathe */
 #add-product-form,
 #order-status-form,
 #add-promotion-form {

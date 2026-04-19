@@ -1,4 +1,16 @@
 <?php
+/**
+ * admin/managepromotions.php
+ *
+ * Admin page for managing the promotional banners displayed above the
+ * menu. These are the visual cards with images, titles, badges, and
+ * fine print - separate from the discount promo codes on the other
+ * admin page. The banner list is rendered by manage_promotions.js; the
+ * popup is the add/edit form including image upload and theme picker.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
 session_start();
 
 include "../assets/php/security.php";

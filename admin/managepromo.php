@@ -1,4 +1,17 @@
 <?php
+/**
+ * admin/managepromo.php
+ *
+ * Admin page for managing discount promo codes (the codes customers
+ * type at checkout). The table of codes is rendered client-side by
+ * manage_promo_codes.js; the popup is the add/edit form where admins
+ * set the code text, discount type and value, status, expiry date, and
+ * any required product IDs that must be in the cart for the code to
+ * apply.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: April 03, 2026
+ */
 session_start();
 
 include "../assets/php/security.php";

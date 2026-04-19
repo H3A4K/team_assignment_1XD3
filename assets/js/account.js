@@ -1,3 +1,16 @@
+/**
+ * account.js
+ *
+ * Client-side script for the account page. Validates the email,
+ * password, and phone inputs as the user types, and wires up the four
+ * "Change ..." buttons so each one posts its specific credential
+ * update to assets/php/changecredential.php. Reloads the page on a
+ * successful update so the new value shows in the form.
+ *
+ * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
+ * Created: March 30, 2026
+ */
+
 window.addEventListener("load", function () {
     const emailinput = this.document.getElementById("emailinput")
     const passwordinput = this.document.getElementById("passinput")
@@ -93,7 +106,6 @@ window.addEventListener("load", function () {
     })
 
     // Change Pass
-    
     passbtn.addEventListener("click", function () {
         if (isValidPassword(passwordinput.value) != 100) {
             errorElem.innerHTML = "Invalid Password";
@@ -119,7 +131,6 @@ window.addEventListener("load", function () {
     })
 
     // Change Phone
-    
     phonebtn.addEventListener("click", function () {
         if (!isValidPhone(phoneinput.value)) {
             errorElem.innerHTML = "Invalid Phone Number";
@@ -164,6 +175,14 @@ window.addEventListener("load", function () {
     })
 })
 
+/**
+ * Callback that runs after any credential-change POST completes.
+ * Re-enables all four action buttons, shows the server's plain-text
+ * message, and reloads the page 5 seconds later when the update
+ * succeeded so the user sees their new value in the form.
+ *
+ * @param {String} text the plain-text response from changecredential.php (e.g. "Success" or an error)
+ */
 function doneChange(text) {
     const emailinput = this.document.getElementById("changeemail")
     const passwordinput = this.document.getElementById("changepass")
@@ -187,6 +206,14 @@ function doneChange(text) {
 }
 
 
+/**
+ * Performs a quick structural check on an email address: must be
+ * non-empty, contain exactly one @, have at least one dot after the @,
+ * and not end with a dot.
+ *
+ * @param {String} email the email address to validate
+ * @returns {Boolean} true if the string looks like a plausible email
+ */
 function isValidEmail(email) {
     if (email.length <= 0) return false;
     if (!email.includes(".")) return false;
@@ -197,6 +224,15 @@ function isValidEmail(email) {
     return true;
 }
 
+/**
+ * Checks a password against four rules and returns a status code so the
+ * UI can show a specific error message. Rules: at least 6 characters,
+ * at least one digit, at least one lowercase letter, at least one
+ * uppercase letter.
+ *
+ * @param {String} pwd the password to check
+ * @returns {Number} 100 if all rules pass, 1 if too short, 2 if missing a digit, 3 if missing a lowercase letter, 4 if missing an uppercase letter
+ */
 function isValidPassword(pwd) {
     if (pwd.length < 6) return 1;
     if (/\d/.test(pwd) == false) return 2;
@@ -206,6 +242,14 @@ function isValidPassword(pwd) {
     return 100;
 }
 
+/**
+ * Checks that a phone number matches a common North-American format.
+ * Accepts optional country code, parentheses around the area code, and
+ * dashes or spaces as separators.
+ *
+ * @param {String} phone the phone number string to test
+ * @returns {Boolean} true if the string matches the accepted pattern
+ */
 function isValidPhone(phone) {
     const pattern = /^(1\s|1)?(\(\d{3}\)|\d{3})(-|\s)?\d{3}(-|\s)?\d{4}$/;
     return pattern.test(phone);
