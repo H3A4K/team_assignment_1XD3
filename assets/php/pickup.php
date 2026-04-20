@@ -336,7 +336,7 @@ function formatOrder(array $items, float $discount): string {
     $out .= table_row("Subtotal", null, null, $total, "line-break");
     
     if ($discount !== (float) 0 || $discount === null) {
-        $out .= table_row("Discount", null, null, $discount, null);
+        $out .= table_row("Discount", null, null, number_format((float) $discount, 2), null);
         $total -= $discount;
     }
 
