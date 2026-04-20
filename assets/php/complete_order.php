@@ -53,6 +53,75 @@ function ordersHasFulfillmentMethodColumn(PDO $dbh): bool {
     return $hasColumn;
 }
 
+/**
+ * Checks once (and caches the result) whether the orders table actually
+ * has the optional `discountTotal` column. Lets the app keep running
+ * against older databases that haven't been migrated yet.
+ *
+ * @param {PDO} $dbh the shared database handle
+ * @returns true if the column exists, false otherwise
+ */
+function ordersHasDiscountTotalColumn(PDO $dbh): bool {
+    static $hasColumn = null;
+    if ($hasColumn !== null) {
+        return $hasColumn;
+    }
+
+    $stmt = $dbh->query("SHOW COLUMNS FROM orders LIKE 'discountTotal'");
+    $hasColumn = $stmt !== false && $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    return $hasColumn;
+}
+
+/**
+ * Calculates the promo discount that applies to the given order at
+ * checkout time. Reads the applied promo code from the user's session,
+ * fetches its discount rule, and applies it to the order's current
+ * subtotal using the same percentage/fixed logic as get_cart.php. This
+ * keeps what gets stamped on the order identical to what the customer
+ * saw in their cart.
+ *
+ * @param {PDO} $dbh the shared database handle
+ * @param {int} $orderID the order row being completed
+ * @returns the discount in dollars (0.00 if no valid promo is applied)
+ */
+function calculateOrderDiscountTotal(PDO $dbh, int $orderID): float {
+    if (!isset($_SESSION["appliedPromoID"])) {
+        return 0.00;
+    }
+
+    $subtotalStmt = $dbh->prepare("
+        SELECT COALESCE(SUM(p.price * od.quantity), 0) AS subtotal
+        FROM orderdetails od
+        INNER JOIN products p ON p.productID = od.productID
+        WHERE od.orderID = ?
+    ");
+    $subtotalStmt->execute([$orderID]);
+    $subtotal = (float) $subtotalStmt->fetchColumn();
+
+    $promoStmt = $dbh->prepare("
+        SELECT discountType, discountValue
+        FROM promocodes
+        WHERE promoID = ?
+        LIMIT 1
+    ");
+    $promoStmt->execute([$_SESSION["appliedPromoID"]]);
+    $promo = $promoStmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$promo) {
+        return 0.00;
+    }
+
+    $discountValue = (float) $promo["discountValue"];
+    if ($promo["discountType"] === "percentage") {
+        $discount = $subtotal * ($discountValue / 100);
+    } else {
+        // fixed-dollar discount; never exceed the subtotal
+        $discount = min($discountValue, $subtotal);
+    }
+
+    return round($discount, 2);
+}
+
 if (!isset($_SESSION["userID"])) {
     http_response_code(401);
     echo json_encode(["error" => "You must be logged in to complete an order"]);
@@ -133,6 +202,12 @@ try {
         ? $deliveryAddress
         : "Pickup at Clarence's Kitchen";
 
+    // Work out the discount that's actually being applied to this order
+    // so it can be stamped on the order row (and echoed back to the client)
+    // as part of the submission. Mirrors the cart's discount calculation
+    // so what the customer saw at checkout is what's persisted.
+    $discountTotal = calculateOrderDiscountTotal($dbh, (int) $order["orderID"]);
+
     if (ordersHasFulfillmentMethodColumn($dbh)) {
         $updateOrderStmt = $dbh->prepare("
             UPDATE orders
@@ -147,6 +222,19 @@ try {
             WHERE orderID = ?
         ");
         $updateOrderStmt->execute([$finalAddress, $order["orderID"]]);
+    }
+
+    // Persist the discount on the order row whenever the orders table has
+    // been migrated to include the column. Kept as a separate UPDATE so the
+    // fulfillment UPDATE above stays identical on databases that haven't
+    // been migrated yet.
+    if (ordersHasDiscountTotalColumn($dbh)) {
+        $updateDiscountStmt = $dbh->prepare("
+            UPDATE orders
+            SET discountTotal = ?
+            WHERE orderID = ?
+        ");
+        $updateDiscountStmt->execute([$discountTotal, $order["orderID"]]);
     }
 
     $completedOrders = $updateOrderStmt->rowCount();
@@ -169,6 +257,7 @@ try {
         "orderID" => (int) $order["orderID"],
         "completedOrders" => $completedOrders,
         "fulfillmentMethod" => $fulfillmentMethod,
+        "discountTotal" => $discountTotal,
         "redirectUrl" => "../pickup/?order_id=" . (int) $order["orderID"],
     ]);
 } catch (Exception $e) {
