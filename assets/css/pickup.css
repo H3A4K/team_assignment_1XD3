@@ -40,7 +40,13 @@ main h1 span {
     padding: 0 0.15em;
 }
 
+main #pickup-table span {
+    font-size: 1rem; /*clamp(1rem, 3vw, 1.6rem);*/
+    color: black;
+}
+
 main #pickup-table {
+    
     margin-top: 5%;
     text-decoration: none;
 }

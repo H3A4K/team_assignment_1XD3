@@ -72,10 +72,10 @@ session_start();
     </nav>
 
     <main>
-        <h1><span id="time-label">Estimated Wait Time</span>: <span id="time">--</span> minutes</h1>
+        
+        <h1><div><span id="time-label">Estimated Wait Time</span>: <span id="time">--</span> minutes </div><div id="pickup-table"></div></h1>
         <p id="pickup-detail"></p>
         <p id="pickup-address"></p>
-        <div id="pickup-table"></div>
     </main>
 
     <footer class="site-footer">
