@@ -145,8 +145,8 @@ function getRequestedOrder(int $userID, ?int $orderID): array {
     global $dbh;
 
     $selectFields = ordersHasFulfillmentMethodColumn($dbh)
-        ? "orderID, orderDate, address, fulfillmentMethod"
-        : "orderID, orderDate, address";
+        ? "orderID, orderDate, address, discountTotal, fulfillmentMethod"
+        : "orderID, orderDate, address, discountTotal";
 
     if ($orderID) {
         $cmd = "SELECT $selectFields
@@ -166,6 +166,7 @@ function getRequestedOrder(int $userID, ?int $orderID): array {
             $order["orderDate"],
             resolveFulfillmentMethod($order),
             $order["address"] ?? "",
+            $order["discountTotal"],
         ];
     }
 
@@ -187,6 +188,7 @@ function getRequestedOrder(int $userID, ?int $orderID): array {
         $order["orderDate"],
         resolveFulfillmentMethod($order),
         $order["address"] ?? "",
+        $order["discountTotal"],
     ];
 }
 
@@ -310,9 +312,10 @@ function table_row(?string $productName, ?string $quantity, ?string $priceperuni
  * Formats the user's order into an html table, including the prices of the items and total spent
  *
  * @param {array} $items an array of order-item rows (quantity, productID, productClass)
+ * @param {float} $discount the dollar amount off of the subtotal by using promocodes
  * @returns the html formated list of ordered items
  */
-function formatOrder(array $items): string {
+function formatOrder(array $items, float $discount): string {
     global $dbh;
 
     $placeholder = implode(",", array_fill(0, count($items), "?"));
@@ -322,7 +325,6 @@ function formatOrder(array $items): string {
     $products = reorder($stmt->fetchAll(PDO::FETCH_ASSOC), "productID", true);
 
     $total = 0;
-    $discount = 0;
     $out = table_row("Product Name", "Quantity", "Price Per Unit", "Price", null);
     foreach ($items as $item) {
         $quantity = $item['quantity'];
@@ -332,9 +334,11 @@ function formatOrder(array $items): string {
         $total += $price;
     }
     $out .= table_row("Subtotal", null, null, $total, "line-break");
-    // $out .= table_row("Discount", null, null, -$discount, null);
-
-    $total -= $discount;
+    
+    if ($discount !== (float) 0 || $discount === null) {
+        $out .= table_row("Discount", null, null, $discount, null);
+        $total -= $discount;
+    }
 
     $tax = round(0.13 * $total, 2);
     $out .= table_row("Tax (13%)", null, null, $tax, null);
@@ -364,14 +368,14 @@ function main(): string {
     $userID = (int) $_SESSION["userID"];
     $requestedOrderID = filter_input(INPUT_GET, "order_id", FILTER_VALIDATE_INT);
 
-    [$orderItems, $orderTime, $fulfillmentMethod, $address] = getRequestedOrder($userID, $requestedOrderID ?: null);
+    [$orderItems, $orderTime, $fulfillmentMethod, $address, $discountTotal] = getRequestedOrder($userID, $requestedOrderID ?: null);
 
     if (!$orderItems || $orderTime === -1) {
         http_response_code(404);
         return json_encode(["error" => "No checked-out order was found for this account."]);
     }
 
-    $order_table = formatOrder($orderItems);
+    $order_table = formatOrder($orderItems, $discountTotal);
 
     $allOrders = getAllOrdersSince($orderTime);
     $overallTime = calculateTime($allOrders, 5);
