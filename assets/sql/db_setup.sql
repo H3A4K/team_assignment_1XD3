@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `orderdetails` (
     FOREIGN KEY (`productID`) REFERENCES `products`(`productID`)
 );
 
-CREATE TABLE IF NOT EXISTS `promoCodes` (
+CREATE TABLE IF NOT EXISTS `promocodes` (
     `promoID` INT AUTO_INCREMENT,
     `promoCode` TEXT,
     `discountType` TEXT,
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `promotions` (
 
 DELETE FROM `orderdetails`;
 DELETE FROM `orders`;
-DELETE FROM `promoCodes`;
+DELETE FROM `promocodes`;
 DELETE FROM `promotions`;
 DELETE FROM `products`;
 DELETE FROM `productClasses`;
@@ -160,7 +160,7 @@ Spaghetti topped with a rich, slow simmered Bolognese sauce made with seasoned g
 (148, 'Red Bull', '', 4.00, 'coca-cola.jpg', 'Drink'),
 (149, 'Alani', '', 4.00, 'coca-cola.jpg', 'Drink');
 
-INSERT INTO `promoCodes` (`promoID`, `promoCode`, `discountType`, `discountValue`, `active`, `expiryDate`, `requiredProductIDs`) VALUES
+INSERT INTO `promocodes` (`promoID`, `promoCode`, `discountType`, `discountValue`, `active`, `expiryDate`, `requiredProductIDs`) VALUES
 (201, 'WELCOME10', 'percentage', 10.00, TRUE, '2026-12-31 00:00:00', NULL),
 (202, 'PICK3', 'fixed', 5.00, TRUE, '2026-09-30 00:00:00', NULL),
 (203, 'SPRING15', 'percentage', 15.00, FALSE, '2026-04-15 00:00:00', NULL),
