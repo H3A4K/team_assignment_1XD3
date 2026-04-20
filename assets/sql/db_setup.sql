@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `address` TEXT NOT NULL,
     `fulfillmentMethod` VARCHAR(20) NOT NULL DEFAULT('pickup'),
     `fullfilled` BOOLEAN DEFAULT(0),
+    "discountTotal" DOUBLE,
     PRIMARY KEY (`orderID`),
     FOREIGN KEY (`accountID`) REFERENCES `users`(`userID`)
 );
@@ -175,13 +176,13 @@ INSERT INTO `promotions` (`title`, `eyebrow`, `price`, `badge`, `description`, `
  '*Available for Pickup Only.\n*Selection of included drinks may vary.',
  'creamy-seafood-pasta.jpg', 'brown', 'Order Now', TRUE, 2, 'PICK3');
 
-INSERT INTO `orders` (`orderID`, `accountID`, `orderDate`, `address`, `fulfillmentMethod`, `fullfilled`) VALUES
-(301, 1, '2026-03-20 12:14:00', '12 King St W, Hamilton, ON', 'delivery', TRUE),
-(302, 2, '2026-03-21 18:45:00', '44 Main St E, Hamilton, ON', 'delivery', TRUE),
-(303, 4, '2026-03-22 13:05:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE),
-(304, 5, '2026-03-23 09:32:00', '301 James St N, Hamilton, ON', 'delivery', TRUE),
-(305, 1, '2026-03-24 19:11:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE),
-(306, 5, '2026-03-25 11:28:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE);
+INSERT INTO `orders` (`orderID`, `accountID`, `orderDate`, `address`, `fulfillmentMethod`, `fullfilled`, `discountTotal`) VALUES
+(301, 1, '2026-03-20 12:14:00', '12 King St W, Hamilton, ON', 'delivery', TRUE, 0),
+(302, 2, '2026-03-21 18:45:00', '44 Main St E, Hamilton, ON', 'delivery', TRUE, 0),
+(303, 4, '2026-03-22 13:05:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE, 0),
+(304, 5, '2026-03-23 09:32:00', '301 James St N, Hamilton, ON', 'delivery', TRUE, 0),
+(305, 1, '2026-03-24 19:11:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE, 0),
+(306, 5, '2026-03-25 11:28:00', 'Pickup at Clarence''s Kitchen', 'pickup', FALSE, 0);
 
 INSERT INTO `orderdetails` (`orderDetailID`, `orderID`, `productID`, `quantity`) VALUES
 (401, 301, 101, 2),
