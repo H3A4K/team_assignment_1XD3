@@ -37,7 +37,7 @@ if (!$productID || !$quantity || $quantity < 1) {
 try {
     $dbh->beginTransaction();
 
-    $userStmt = $dbh->prepare("SELECT address FROM users WHERE userID = ?");
+    $userStmt = $dbh->prepare("SELECT address FROM accounts WHERE userID = ?");
     $userStmt->execute([$userID]);
     $user = $userStmt->fetch(PDO::FETCH_ASSOC);
 

@@ -27,7 +27,7 @@ if ($type !== NULL && $type !== false) {
         $email = filter_input(INPUT_POST, "email", FILTER_VALIDATE_EMAIL);
         if ($email !== NULL && $email !== false) {
             // Check if email exists
-            $cmd = "SELECT email FROM users WHERE email=?";
+            $cmd = "SELECT email FROM accounts WHERE email=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$email]);
             if (!$success || $stmt->rowCount() > 0) {
@@ -35,7 +35,7 @@ if ($type !== NULL && $type !== false) {
                 return;
             }
 
-            $cmd = "UPDATE users SET `email`=? WHERE `email`=?";
+            $cmd = "UPDATE accounts SET `email`=? WHERE `email`=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$email, $current_email]);
             if ($success && $stmt->rowCount() == 1) {
@@ -58,7 +58,7 @@ if ($type !== NULL && $type !== false) {
         $input = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
         if ($input !== NULL && $input !== false) {
             $hashed_password = password_hash($input, PASSWORD_DEFAULT);
-            $cmd = "UPDATE users SET `password`=? WHERE `email`=?";
+            $cmd = "UPDATE accounts SET `password`=? WHERE `email`=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$hashed_password, $current_email]);
             if ($success && $stmt->rowCount() == 1) {
@@ -79,7 +79,7 @@ if ($type !== NULL && $type !== false) {
     if ($type == "phone") {
         $input = filter_input(INPUT_POST, "phone", FILTER_SANITIZE_SPECIAL_CHARS);
         if ($input !== NULL && $input !== false) {
-            $cmd = "SELECT phonenumber FROM users WHERE phonenumber=?";
+            $cmd = "SELECT phonenumber FROM accounts WHERE phonenumber=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$input]);
             if (!$success || $stmt->rowCount() > 0) {
@@ -87,7 +87,7 @@ if ($type !== NULL && $type !== false) {
                 return;
             }
 
-            $cmd = "UPDATE users SET `phonenumber`=? WHERE `email`=?";
+            $cmd = "UPDATE accounts SET `phonenumber`=? WHERE `email`=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$input, $current_email]);
             if ($success && $stmt->rowCount() == 1) {
@@ -108,7 +108,7 @@ if ($type !== NULL && $type !== false) {
     if ($type == "address") {
         $input = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
         if ($input !== NULL && $input !== false) {
-            $cmd = "UPDATE users SET `address`=? WHERE `email`=?";
+            $cmd = "UPDATE accounts SET `address`=? WHERE `email`=?";
             $stmt = $dbh->prepare($cmd);
             $success = $stmt->execute([$input, $current_email]);
             if ($success && $stmt->rowCount() == 1) {

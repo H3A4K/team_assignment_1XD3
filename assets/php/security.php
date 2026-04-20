@@ -19,7 +19,7 @@ $security_error = "";
 /**
  * Checks whether the currently logged-in user has admin privileges.
  *
- * Reads the userID from $_SESSION, looks up the matching row in the users
+ * Reads the userID from $_SESSION, looks up the matching row in the accounts
  * table, and sets the global $user_is_admin flag. Also writes a
  * human-readable message to the global $security_error when the check
  * fails so pages can display it to the user.
@@ -34,7 +34,7 @@ function isAdmin() {
         try {
             $userStmt = $dbh->prepare("
             SELECT admin
-            FROM users
+            FROM accounts
             WHERE userID = ?
             LIMIT 1
         ");

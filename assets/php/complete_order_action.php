@@ -76,7 +76,7 @@ try {
     $completedOrders = $updateOrderStmt->rowCount();
 
     $updateUserStmt = $dbh->prepare("
-        UPDATE users
+        UPDATE accounts
         SET ordersdone = ordersdone + ?
         WHERE userID = ?
     ");

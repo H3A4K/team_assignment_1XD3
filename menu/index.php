@@ -50,7 +50,7 @@ if (isset($_SESSION["userID"])) {
     try {
         $userStmt = $dbh->prepare("
             SELECT address
-            FROM users
+            FROM accounts
             WHERE userID = ?
             LIMIT 1
         ");

@@ -19,7 +19,7 @@ if (!isset($_SESSION["email"])) {
 
 // Fetch current user info
 $email = $_SESSION["email"];
-$stmt = $dbh->prepare("SELECT userID, email, phonenumber, address, admin FROM users WHERE email=?");
+$stmt = $dbh->prepare("SELECT userID, email, phonenumber, address, admin FROM accounts WHERE email=?");
 $stmt->execute([$email]);
 $currentUser = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>

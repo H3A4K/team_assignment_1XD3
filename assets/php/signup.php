@@ -4,7 +4,7 @@
  *
  * Server-side signup endpoint. Validates the submitted email, password,
  * phone number, and address, ensures the email and phone aren't already
- * taken, and creates a new row in the users table with a hashed password.
+ * taken, and creates a new row in the accounts table with a hashed password.
  * Replies with a plain-text status message for the client JavaScript.
  *
  * Authors: Julien Wallace, Daniel Kogan, Alexander Perlock, Neel Patel, Ekaterina Uhalova
@@ -21,7 +21,7 @@ $address = filter_input(INPUT_POST, "address", FILTER_SANITIZE_SPECIAL_CHARS);
 if ($email != NULL && $password != NULL && $phone != NULL && $address != NULL) {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     // Check if user with email already exists
-    $cmd = "SELECT * FROM users WHERE email=?";
+    $cmd = "SELECT * FROM accounts WHERE email=?";
     $stmt = $dbh->prepare($cmd);
     $success = $stmt->execute([$email]);
     if (!$success) {
@@ -35,7 +35,7 @@ if ($email != NULL && $password != NULL && $phone != NULL && $address != NULL) {
     }
 
     // Check if user with a phone number already exists
-    $cmd = "SELECT * FROM users WHERE phonenumber=?";
+    $cmd = "SELECT * FROM accounts WHERE phonenumber=?";
     $stmt = $dbh->prepare($cmd);
     $success = $stmt->execute([$phone]);
     if (!$success) {
@@ -49,7 +49,7 @@ if ($email != NULL && $password != NULL && $phone != NULL && $address != NULL) {
     }
 
     // Otherwise, create the account
-    $cmd = "INSERT INTO users (password, email, phonenumber, address) values (?, ?, ?, ?)";
+    $cmd = "INSERT INTO accounts (password, email, phonenumber, address) values (?, ?, ?, ?)";
     $stmt = $dbh->prepare($cmd);
     $args = [$hashedPassword, $email, $phone, $address];
     $success = $stmt->execute($args);

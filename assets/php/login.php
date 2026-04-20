@@ -19,7 +19,7 @@ $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_SPECIAL_CHARS);
 
 if ($email != NULL && $password != NULL) {
     // Check if email is an existing user
-    $cmd = "SELECT * FROM users WHERE email=?";
+    $cmd = "SELECT * FROM accounts WHERE email=?";
     $stmt = $dbh->prepare($cmd);
     $success = $stmt->execute([$email]);
     if (!$success) {

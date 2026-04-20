@@ -156,7 +156,7 @@ try {
     if ($fulfillmentMethod === "delivery" && $deliveryAddress === "") {
         $addressStmt = $dbh->prepare("
             SELECT address
-            FROM users
+            FROM accounts
             WHERE userID = ?
             LIMIT 1
         ");
@@ -240,7 +240,7 @@ try {
     $completedOrders = $updateOrderStmt->rowCount();
 
     $updateUserStmt = $dbh->prepare("
-        UPDATE users
+        UPDATE accounts
         SET ordersdone = ordersdone + ?
         WHERE userID = ?
     ");

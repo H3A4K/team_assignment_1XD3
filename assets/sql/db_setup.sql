@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `accounts` (
     `userID` INT AUTO_INCREMENT,
     `password` TEXT NOT NULL,
     `email` VARCHAR(255) UNIQUE,
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `fullfilled` BOOLEAN DEFAULT(0),
     `discountTotal` DOUBLE,
     PRIMARY KEY (`orderID`),
-    FOREIGN KEY (`accountID`) REFERENCES `users`(`userID`)
+    FOREIGN KEY (`accountID`) REFERENCES `accounts`(`userID`)
 );
 
 CREATE TABLE IF NOT EXISTS `orderdetails` (
@@ -86,9 +86,9 @@ DELETE FROM `promoCodes`;
 DELETE FROM `promotions`;
 DELETE FROM `products`;
 DELETE FROM `productClasses`;
-DELETE FROM `users`;
+DELETE FROM `accounts`;
 
-INSERT INTO `users` (`userID`, `password`, `email`, `phonenumber`, `address`, `ordersdone`, `admin`) VALUES
+INSERT INTO `accounts` (`userID`, `password`, `email`, `phonenumber`, `address`, `ordersdone`, `admin`) VALUES
 (1, '$2y$10$XomCcc9tE4Ay8x.h.exJ4ubTjCVSLvJlppAgqfMJRtU9kk2YskOjW' /* hashed_pw_alice */, 'alice.nguyen@example.com', '905-555-0101', '12 King St W, Hamilton, ON', 3, 0),
 (2, '$2y$10$3OjAgP8bCBLM/iTLB9McsedmH3t7rMsXP/JuCOffvEF7b0vwJEzdO' /* hashed_pw_ben */, 'ben.patel@example.com', '905-555-0102', '44 Main St E, Hamilton, ON', 1, 0),
 (3, '$2y$10$MN90tat/8X3b8IwY/G8ADuij.F/OaMACUArIBkyb5sL1SaOyctmLC' /* hashed_pw_chloe */, 'chloe.martin@example.com', '905-555-0103', '88 Emerson St, Hamilton, ON', 0, 0),
