@@ -15,7 +15,7 @@ body {
 }
 
 main {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto;
     padding: calc(var(--top-offset) + 3rem) 1.5rem 2rem;
     text-align: center;
@@ -41,12 +41,12 @@ main h1 span {
 }
 
 main #pickup-table span {
-    font-size: 1rem; /*clamp(1rem, 3vw, 1.6rem);*/
+    font-size: clamp(0.5rem, 3vw, 1rem);
     color: black;
 }
 
 main #pickup-table {
-    
+
     margin-top: 5%;
     text-decoration: none;
 }
@@ -60,7 +60,7 @@ main #pickup-table > li:first-child {
     border-bottom: 1px solid black; 
 }
 
-main #pickup-table > li:last-child {
+.line-break {
     border-top: 1px solid black;
 }
 

@@ -32,6 +32,39 @@ window.addEventListener("load", function () {
         if (main) main.classList.add("pickup-error");
     }
 
+    /**
+     * Adds the Subtotal, Discount, Tax, and Total to the order table
+     */
+    // function addTotalsToTable() {
+    //     fetch("../assets/php/get_cart.php")
+    //     .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
+    //     .then(({ ok, data }) => {
+    //         if (!ok) {
+    //             throw new Error(data.error || "Unable to load your discounts and total.");
+    //         }
+    //         if (data.hasOpenOrder == false) { console.log("B"); }
+    //         if (table) {
+    //             const add_element = (name, value) => {
+    //                 const li = document.createElement("li");
+    //                 li.innerHTML = `<span class='product-name'>${name}</span>
+    //                     <span class='product-quantity'></span>
+    //                     <span class='product-priceperunit'></span>
+    //                     <span class='product-price'>${value}</span></li>`;
+    //                 table.append(li);
+    //             }
+
+    //             add_element("Subtotal", data.subtotal);
+    //             if (data.discount != 0) { add_element("Discount", data.discount); }
+    //             add_element("Tax", data.tax);
+    //             add_element("Total", data.total);
+
+    //         }
+    //         })
+    //     .catch((error) => {
+    //         showError(error.message);
+    //     });
+    // }
+
     fetch("../assets/php/pickup.php" + window.location.search)
         .then((response) => response.json().then((data) => ({ ok: response.ok, data })))
         .then(({ ok, data }) => {
@@ -59,12 +92,10 @@ window.addEventListener("load", function () {
             }
             if (table) {
                 table.innerHTML = data.orderTable;
-                console.log(data.orderTable);
+                // addTotalsToTable();
             }
-
-            // console.log(data.order);
         })
         .catch((error) => {
             showError(error.message);
-        });
+        });    
 });

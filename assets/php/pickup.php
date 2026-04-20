@@ -292,9 +292,25 @@ function calculateTime(array $orders, int $concurrent = 5): int {
 /**
  * Formats the user's order into an html table, including the prices of the items and total spent
  *
+ * @param {string} $productName the name of the product that was purchased
+ * @param {string} $quantity the quantity of the product that was purchased
+ * @param {string} $priceperunit the price per unit of the product that was purchased
+ * @param {string} $price the total price of the product that was purchased
+ * @param {string} $class the html class of the list element
+ * @returns the html formated row
+ */
+function table_row(?string $productName, ?string $quantity, ?string $priceperunit, ?string $price, ?string $class): string {
+    return "<li class=$class><span class='product-name'>$productName</span>
+        <span class='product-quantity'>$quantity</span>
+        <span class='product-priceperunit'>$priceperunit</span>
+        <span class='product-price'>$price</span></li>";
+}
+
+/**
+ * Formats the user's order into an html table, including the prices of the items and total spent
+ *
  * @param {array} $items an array of order-item rows (quantity, productID, productClass)
- * @param {int} $concurrent how many batches of the same class the kitchen can cook in parallel (default 5)
- * @returns the 
+ * @returns the html formated list of ordered items
  */
 function formatOrder(array $items): string {
     global $dbh;
@@ -305,26 +321,26 @@ function formatOrder(array $items): string {
     $stmt->execute(get_column($items, "productID"));
     $products = reorder($stmt->fetchAll(PDO::FETCH_ASSOC), "productID", true);
 
-    // $out = "<ol id='ordertable'>";
     $total = 0;
-    $out = "<li><span class='product-name'>Product Name</span>
-        <span class='product-quantity'>Quantity</span>
-        <span class='product-priceperunit'>Price Per Unit</span>
-        <span class='product-price'>Price</span></li>";
+    $discount = 0;
+    $out = table_row("Product Name", "Quantity", "Price Per Unit", "Price", null);
     foreach ($items as $item) {
         $quantity = $item['quantity'];
         $product = $products[$item['productID']];
         $price = $product["price"] * $quantity;
-        $out .= "<li><span class='product-name'>$product[productName]</span>
-            <span class='product-quantity'>$quantity</span>
-            <span class='product-priceperunit'>$product[price]</span>
-            <span class='product-price'>$price</span></li>";
+        $out .= table_row($product["productName"], $quantity, $product["price"], $price, null);
         $total += $price;
     }
-    $out .= "<li><span class='product-name'>Total</span>
-        <span class='product-quantity'></span>
-        <span class='product-priceperunit'></span>
-        <span class='product-price'>$total</span></li>";
+    $out .= table_row("Subtotal", null, null, $total, "line-break");
+    // $out .= table_row("Discount", null, null, -$discount, null);
+
+    $total -= $discount;
+
+    $tax = round(0.13 * $total, 2);
+    $out .= table_row("Tax (13%)", null, null, $tax, null);
+    $total += $tax;
+
+    $out .= table_row("Total", null, null, $total, "line-break");
 
     return $out;
 }
