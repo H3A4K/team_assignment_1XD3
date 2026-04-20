@@ -34,7 +34,6 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `orderDate` DATETIME,
     `address` TEXT NOT NULL,
     `fulfillmentMethod` VARCHAR(20) NOT NULL DEFAULT('pickup'),
-    `discountTotal` DECIMAL(10, 2) NOT NULL DEFAULT(0.00),
     `fullfilled` BOOLEAN DEFAULT(0),
     `discountTotal` DOUBLE,
     PRIMARY KEY (`orderID`),
