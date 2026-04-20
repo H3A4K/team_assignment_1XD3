@@ -334,9 +334,11 @@ function formatOrder(array $items, float $discount): string {
         $total += $price;
     }
     $out .= table_row("Subtotal", null, null, $total, "line-break");
-    $out .= table_row("Discount", null, null, $discount, null);
-
-    $total -= $discount;
+    
+    if ($discount !== (float) 0 || $discount === null) {
+        $out .= table_row("Discount", null, null, $discount, null);
+        $total -= $discount;
+    }
 
     $tax = round(0.13 * $total, 2);
     $out .= table_row("Tax (13%)", null, null, $tax, null);
