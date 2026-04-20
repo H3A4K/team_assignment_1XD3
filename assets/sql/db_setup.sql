@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
     `address` TEXT NOT NULL,
     `fulfillmentMethod` VARCHAR(20) NOT NULL DEFAULT('pickup'),
     `fullfilled` BOOLEAN DEFAULT(0),
-    "discountTotal" DOUBLE,
+    `discountTotal` DOUBLE,
     PRIMARY KEY (`orderID`),
     FOREIGN KEY (`accountID`) REFERENCES `users`(`userID`)
 );
